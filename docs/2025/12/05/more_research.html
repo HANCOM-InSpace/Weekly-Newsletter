@@ -2,443 +2,730 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>💡 최신 연구동향 - 추가 학술지</title>
+  <meta charset="UTF-8">
+  <title>최신 연구동향 - 추가 학술지</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","맑은 고딕",system-ui,sans-serif;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+      color: #e5e7eb;
+    }
+
+    .page-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      padding: 24px 16px 12px;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .logo-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .logo-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(135deg,#38bdf8,#4ade80);
+    }
+
+    .title-block-main {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .title-block-sub {
+      font-size: 13px;
+      color: #9ca3af;
+    }
+
+    .hero-card {
+      max-width: 900px;
+      margin: 0 auto;
+      margin-top: 14px;
+      background: rgba(15,23,42,0.80);
+      border-radius: 18px;
+      border:1px solid rgba(148,163,184,0.55);
+      box-shadow:0 18px 45px rgba(15,23,42,0.85);
+      padding: 18px 18px 20px;
+    }
+
+    .hero-top {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:8px;
+      margin-bottom:6px;
+    }
+
+    .hero-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .hero-meta {
+      font-size: 12px;
+      color:#9ca3af;
+      text-align:right;
+    }
+
+    .hero-meta div {
+      margin-bottom: 2px;
+    }
+
+    .back-wrap {
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    .back-button {
+      display:inline-block;
+      font-size:13px;
+      font-weight:600;
+      color:#0f172a;
+      text-decoration:none;
+      padding:7px 14px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,0.85);
+      background:linear-gradient(135deg,#e5e7eb,#ffffff);
+      box-shadow:0 8px 18px rgba(15,23,42,0.55);
+    }
+
+    .back-button span {
+      margin-right:4px;
+    }
+
+    .hero-desc {
+      margin-top: 6px;
+      font-size: 13px;
+      color:#cbd5f5;
+    }
+
+    .content {
+      flex:1;
+      padding: 24px 16px 40px;
+    }
+
+    .content-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(15,23,42,0.96);
+      border-radius: 18px;
+      border:1px solid rgba(55,65,81,0.9);
+      padding: 20px 18px 24px;
+      box-shadow:0 18px 45px rgba(15,23,42,0.9);
+    }
+
+    .section-header {
+      font-size: 15px;
+      font-weight: 600;
+      color:#e5e7eb;
+      margin-bottom: 18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+    }
+
+    .section-header-sub {
+      font-size: 12px;
+      color:#9ca3af;
+    }
+
+    .research-card {
+      display:block;
+      text-decoration:none;
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,0.7);
+      background:rgba(15,23,42,0.90);
+      padding:12px 12px;
+      transition:transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .research-card:hover {
+      transform:translateY(-3px);
+      box-shadow:0 16px 36px rgba(15,23,42,0.95);
+      border-color:rgba(191,219,254,1);
+      background:rgba(30,64,175,0.90);
+    }
+
+    .thumb-cell {
+      width:90px;
+      padding-right:10px;
+    }
+
+    .thumb {
+      width:86px;
+      height:86px;
+      border-radius:12px;
+      background-size:cover;
+      background-position:center;
+      background-color:#111827;
+    }
+
+    .text-cell {
+      padding-left:4px;
+    }
+
+    .journal {
+      font-size:11px;
+      text-transform:uppercase;
+      color:#bfdbfe;
+      letter-spacing:0.08em;
+      margin-bottom:4px;
+    }
+
+    .title {
+      font-size:15px;
+      font-weight:700;
+      color:#f9fafb;
+      margin-bottom:4px;
+      line-height:1.4;
+    }
+
+    .summary {
+      font-size:13px;
+      color:#e5e7eb;
+      line-height:1.6;
+      margin-bottom:4px;
+    }
+
+    .meta {
+      font-size:11px;
+      color:#cbd5f5;
+    }
+
+    .footer {
+      padding: 18px 16px 24px;
+      font-size: 11px;
+      color:#9ca3af;
+    }
+
+    .footer-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      border-top:1px solid rgba(55,65,81,0.9);
+      padding-top: 12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .footer-right {
+      font-size:11px;
+      color:#6b7280;
+      text-align:right;
+    }
+
+    @media (max-width: 640px) {
+      .hero-card {
+        padding: 14px 14px 16px;
+      }
+      .content-inner {
+        padding: 16px 14px 20px;
+      }
+      .hero-top {
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .hero-meta {
+        text-align:left;
+      }
+      .thumb-cell {
+        width:70px;
+      }
+      .thumb {
+        width:68px;
+        height:68px;
+      }
+    }
+  </style>
 </head>
-<body style="margin:0; padding:16px; background:#f3f4f6; font-family:Arial, sans-serif;">
 
-  <table width="100%" cellpadding="0" cellspacing="0" border="0"
-         style="max-width:700px; margin:0 auto; background:#ffffff;
-                border-radius:12px; border:1px solid #e5e7eb; padding:24px;">
-    <tr><td>
+<body>
+  <div class="page-wrap">
 
-      <div style="font-size:22px; font-weight:800; color:#111827; margin-bottom:8px;">
-        💡 최신 연구동향 - 추가 학술지
+    <!-- 상단 헤더 & 요약 카드 -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo-row">
+          <div class="logo-left">
+            <div class="logo-dot"></div>
+            <div>HANCOM INSPACE · WEEKLY GEOINT</div>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-top">
+            <div class="hero-title">💡 최신 연구동향 - 추가 학술지</div>
+            <div class="hero-meta">
+              <div>2025년 11월 29일 ~ 2025년 12월 4일</div>
+              <div>2025.12.05 뉴스레터 기준</div>
+            </div>
+          </div>
+
+          <div class="back-wrap">
+            <a href="https://hancom-inspace.github.io/Weekly-Newsletter/2025/12/05/index.html" class="back-button">
+              <span>←</span> 메인 뉴스레터로 돌아가기
+            </a>
+          </div>
+
+          <div class="hero-desc">
+            최신 지리공간·위성·지도 기반 분야 학술지 중, 메인 섹션에 다 담지 못한 추가 논문들을 모아 놓은 페이지입니다.
+          </div>
+        </div>
       </div>
-      <div style="font-size:13px; color:#6b7280; margin-bottom:16px;">
-        2025년 11월 29일 ~ 2025년 12월 4일 · 업데이트: 2025.12.05
+    </header>
+
+    <!-- 본문: 추가 학술지 카드 리스트 -->
+    <main class="content">
+      <div class="content-inner">
+        <div class="section-header">
+          <div>📚 추가 연구동향 논문 리스트</div>
+          <div class="section-header-sub">클릭 시 각 저널의 원문 페이지로 이동합니다.</div>
+        </div>
+
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+          
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.3390/rs17233926" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Remote Sensing (MDPI)</div>
+                    <div class="title">토양 LWIR 고분광 영상 실험실 구축</div>
+                    <div class="summary">본 연구는 토양의 장파 적외선(LWIR) 고분광 영상을 위한 통제된 실험실 환경을 제안합니다. 기존 반사율 기반 간접 측정과 달리, 이 시스템은 토양의 방사율을 직접 측정하여 항공 및 위성 관측과 유사한 데이터를 제공합니다. 실험실에서 얻은 스펙트럼은 야외 측정과 비교 검증되었으며, 이를 통해 토양 내 광물 성분을 정확히 분석할 수 있음을 확인했습니다. 이 방법은 기상 조건에 영향을 적게 받고 재현성이 높아 토양 모니터링과 원격탐사 분야에 유용할 것입니다.</div>
+                    <div class="meta">발행일: 2025-12-04</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.3390/rs17233928" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Remote Sensing (MDPI)</div>
+                    <div class="title">무인기 초분광 영상으로 콩병 조기진단</div>
+                    <div class="summary">이 논문은 무인항공기(UAV)로 촬영한 초분광 영상을 활용해 콩의 갑작스러운 죽음 증후군을 조기에 탐지하는 자가 지도 학습 기법을 제안합니다. 기존에는 많은 라벨링 데이터가 필요했으나, 본 연구는 데이터 자체에서 중간 라벨을 생성하고 새로운 손실 함수를 도입해 정확도를 크게 향상시켰습니다. 제안된 방법은 라벨이 부족한 상황에서도 높은 정확도와 안정성을 보여, 농작물 병해 진단에 효과적임을 입증했습니다.</div>
+                    <div class="meta">발행일: 2025-12-04</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.3390/rs17233925" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Remote Sensing (MDPI)</div>
+                    <div class="title">회전 인식 선박 탐지 신경망 RSDB-Net</div>
+                    <div class="summary">원격탐사 영상에서 선박 탐지는 배경 혼잡과 다양한 크기, 무작위 회전 방향 때문에 어려움이 많습니다. RSDB-Net은 회전에 민감한 이중 분기 구조를 도입해 전역 의미와 지역 세부 정보를 효과적으로 결합하고, 다양한 크기의 선박을 잘 탐지할 수 있도록 설계되었습니다. 실험 결과 기존 방법보다 정확도가 크게 향상되었으며, 빠른 처리 속도와 뛰어난 일반화 능력을 보여 원격탐사 선박 탐지에 유용한 솔루션임을 입증했습니다.</div>
+                    <div class="meta">발행일: 2025-12-04</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.1117/1.jrs.19.044511" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Journal of Applied Remote Sensing (SPIE)</div>
+                    <div class="title">해양 점액질 모니터링을 위한 혼합 모델 비교</div>
+                    <div class="summary">이 논문은 해양 점액질을 감지하고 모니터링하기 위한 스펙트럼 변동성을 고려한 다양한 혼합 모델을 비교 평가했습니다. 해양 점액질은 해양 생태계에 영향을 미치는 중요한 현상으로, 위성 데이터를 활용해 정확히 분석하는 것이 필요합니다. 연구 결과는 해양 점액질 감시에 적합한 모델 선택에 도움을 주며, 원격탐사 기술의 실용성을 높이는 데 기여합니다.</div>
+                    <div class="meta">발행일: 2025-12-04</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.3390/rs17233917" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Remote Sensing (MDPI)</div>
+                    <div class="title">초분광 영상 분류를 위한 S2GL-MambaResNet</div>
+                    <div class="summary">본 논문은 초분광 영상 분류에서 공간-스펙트럼 정보를 효과적으로 추출하는 S2GL-MambaResNet 네트워크를 제안합니다. 이 모델은 Mamba라는 상태 공간 모델을 기반으로 하여 전역과 지역의 공간-스펙트럼 특징을 동시에 학습하며, 다중 스케일 스펙트럼 패턴을 포착합니다. 또한, 정보 손실을 줄이고 계산 효율성을 높이기 위해 게이트 주의집중과 점진적 잔차 융합 기법을 도입하였습니다. 다양한 데이터셋 실험에서 적은 학습 데이터와 불균형한 클래스 상황에서도 우수한 분류 성능을 보였습니다.</div>
+                    <div class="meta">발행일: 2025-12-03</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.3390/rs17233915" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Remote Sensing (MDPI)</div>
+                    <div class="title">드론과 AI로 포도밭 생육 상태 예측</div>
+                    <div class="summary">이 연구는 드론으로 촬영한 다중 시기 영상과 머신러닝을 활용해 포도나무의 잎 면적 지수, 가지 생체량, 수확량을 정확히 예측하는 방법을 제시합니다. 포르투갈 두로 지역의 다양한 품종 포도밭에서 데이터를 수집하고, 스펙트럼과 지형 정보를 결합한 모델이 가장 높은 예측력을 보였습니다. 특히 랜덤 포레스트 알고리즘이 잎 면적과 수확량 예측에 뛰어난 성능을 나타냈으며, 이는 비침습적이고 확장 가능한 포도밭 관리에 유용할 것으로 기대됩니다.</div>
+                    <div class="meta">발행일: 2025-12-03</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.3390/rs17233920" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Remote Sensing (MDPI)</div>
+                    <div class="title">만달레이 지역 지반 변형 무감독 군집 분석</div>
+                    <div class="summary">본 연구는 미얀마 만달레이 지역의 도시 지반 침하 문제를 위성 레이더 시계열 자료를 활용해 분석했습니다. 새로운 군집화 기법을 통해 지반의 안정 상승, 안정 침하, 주요 침하, 부차적 침하 등 네 가지 변형 패턴을 분류했습니다. 또한, 일부 지역에서 대지진 발생 약 7개월 전에 침하에서 상승으로의 변화를 관찰했으며, 도시 확장과 강우 패턴과의 상관관계도 확인했습니다. 이 방법은 데이터가 부족한 열대 도시 환경에서도 변형 모니터링과 위험 평가에 활용할 수 있습니다.</div>
+                    <div class="meta">발행일: 2025-12-03</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.3390/rs17233918" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Remote Sensing (MDPI)</div>
+                    <div class="title">초분광과 머신러닝으로 포도 생리 예측</div>
+                    <div class="summary">이 연구는 독일 포도밭에서 초분광 데이터를 활용해 포도나무의 광합성 및 수분 상태를 비침습적으로 정확히 예측하는 방법을 제안합니다. 다양한 머신러닝 모델과 앙상블 기법을 적용해 광합성 효율과 전자 전달 속도 등을 높은 정확도로 추정했으며, 아침 시간대 측정이 생리 상태 평가에 가장 적합함을 밝혔습니다. 이를 통해 실시간 포도밭 관리와 비용 효율적인 센서 활용 가능성을 보여줍니다.</div>
+                    <div class="meta">발행일: 2025-12-03</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.1117/1.jrs.19.048502" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Journal of Applied Remote Sensing (SPIE)</div>
+                    <div class="title">SAR 영상 선박 탐지 위한 데이터 증강법 개선</div>
+                    <div class="summary">본 논문은 SAR(합성개구레이더) 영상에서 선박을 더 정확히 탐지하기 위해 적대적 예제를 활용한 데이터 증강 기법을 제안합니다. 이 방법은 기존 데이터 증강보다 다양한 학습 데이터를 생성하여 모델의 성능을 향상시킵니다. 결과적으로 선박 탐지의 정확도가 높아져 해양 감시 및 안전 관리에 도움을 줄 수 있습니다.</div>
+                    <div class="meta">발행일: 2025-11-27</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.1117/1.jrs.19.046515" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Journal of Applied Remote Sensing (SPIE)</div>
+                    <div class="title">SAR 데이터 적대적 샘플 생성 기법</div>
+                    <div class="summary">본 논문은 합성개구레이더(SAR) 데이터의 적대적 샘플을 생성하기 위한 새로운 방법을 제안합니다. 이 방법은 두 개의 판별기를 활용하는 이중 판별기 구조를 기반으로 하여, 서로 다른 도메인 간의 데이터 특성을 효과적으로 반영합니다. 이를 통해 SAR 데이터의 신뢰성과 견고성을 높이는 데 기여할 수 있습니다.</div>
+                    <div class="meta">발행일: 2025-11-27</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.1117/1.jrs.19.044509" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Journal of Applied Remote Sensing (SPIE)</div>
+                    <div class="title">얼음 구름에서 감지된 LWIR 편광 신호</div>
+                    <div class="summary">이 논문은 장파 적외선(LWIR) 영역에서 얼음 구름이 방출하는 편광 신호를 탐지한 연구를 다룹니다. 편광 신호 분석을 통해 구름의 물리적 특성과 구성 요소를 더 정확히 이해할 수 있음을 보여줍니다. 이러한 연구는 기상 관측과 기후 모델링에 중요한 정보를 제공합니다.</div>
+                    <div class="meta">발행일: 2025-11-26</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.1117/1.jrs.19.044510" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Journal of Applied Remote Sensing (SPIE)</div>
+                    <div class="title">토지 사막화 해석을 위한 융합 신경망</div>
+                    <div class="summary">본 논문은 토지 사막화를 원격탐사 영상으로 해석하기 위해 계층적 스펙트럼-공간 협력 융합 신경망을 제안합니다. 이 네트워크는 다양한 공간 및 스펙트럼 정보를 효과적으로 결합하여 사막화 지역을 정확하게 식별할 수 있습니다. 제안된 방법은 기존 기법보다 해석 성능이 뛰어나며, 토지 관리와 환경 보호에 유용한 도구로 활용될 수 있습니다.</div>
+                    <div class="meta">발행일: 2025-11-26</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.1117/1.jrs.19.046514" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Journal of Applied Remote Sensing (SPIE)</div>
+                    <div class="title">초분광 영상 분류를 위한 차원 축소 기법</div>
+                    <div class="summary">이 논문은 초분광 영상의 분류 정확도를 높이기 위해 공간과 스펙트럼 정보를 동시에 고려하는 차원 축소 방법을 제안합니다. 제안된 방법은 텐서 기반의 국소 보존 투영 기법을 활용하여 중요한 특징을 효과적으로 추출합니다. 이를 통해 고차원 데이터의 복잡성을 줄이면서도 분류 성능을 향상시킬 수 있음을 보였습니다.</div>
+                    <div class="meta">발행일: 2025-11-25</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.1117/1.jrs.19.048501" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Journal of Applied Remote Sensing (SPIE)</div>
+                    <div class="title">랜덤포레스트로 태풍 풍속 추정하기</div>
+                    <div class="summary">이 논문은 Sentinel-1 SAR 위성 영상을 활용해 태풍의 풍속을 추정하는 방법을 제안합니다. 랜덤 포레스트 기계학습 모델을 사용하여 SAR 이미지에서 태풍의 강한 바람 속도를 효과적으로 예측할 수 있음을 보여줍니다. 이 방법은 태풍 관측의 정확도를 높이고 재난 대응에 도움을 줄 수 있습니다.</div>
+                    <div class="meta">발행일: 2025-11-25</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.1117/1.jrs.19.046513" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Journal of Applied Remote Sensing (SPIE)</div>
+                    <div class="title">3D CNN과 Bi-LSTM 기반 초분광 영상 분류</div>
+                    <div class="summary">본 논문은 3D CNN과 주의(attention) 기반 Bi-LSTM을 결합하여 초분광 영상의 분류 성능을 향상시키는 방법을 제안합니다. 공간적 및 스펙트럼 정보를 효과적으로 융합하여 더 정확한 이미지 분류가 가능하도록 설계되었습니다. 이를 통해 복잡한 영상 데이터에서 더 세밀한 특징을 추출할 수 있으며, 원격탐사 분야에서 활용도가 높을 것으로 기대됩니다.</div>
+                    <div class="meta">발행일: 2025-11-24</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.1117/1.jrs.20.011204" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Journal of Applied Remote Sensing (SPIE)</div>
+                    <div class="title">스타일 보정 기반 원격탐사 장면 분류</div>
+                    <div class="summary">이 논문은 다양한 도메인에서 적은 학습 데이터만으로 원격탐사 영상의 장면을 분류하는 방법을 제안합니다. 스타일 보정과 동적 특징 정렬 기법을 활용해 서로 다른 영상 환경 간 차이를 줄이고, 분류 성능을 향상시켰습니다. 이를 통해 새로운 환경에서도 효과적으로 원격탐사 영상을 분석할 수 있음을 보여줍니다.</div>
+                    <div class="meta">발행일: 2025-11-22</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+
+        <tr>
+          <td style="padding-bottom:18px;">
+
+            <a href="https://doi.org/10.1117/1.jrs.20.021406" target="_blank" class="research-card">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td class="thumb-cell" valign="top">
+                    <div class="thumb" style="background-image:url('https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg');"></div>
+                  </td>
+                  <td class="text-cell" valign="top">
+                    <div class="journal">Journal of Applied Remote Sensing (SPIE)</div>
+                    <div class="title">멀티모달 원격탐사 영상 분류를 위한 CADSM 기법</div>
+                    <div class="summary">이 논문은 멀티모달 원격탐사 영상 분류를 위해 교차 주의력과 이중 스캐닝 방식을 결합한 CADSM 모델을 제안합니다. CADSM은 서로 다른 유형의 위성 영상을 효과적으로 통합하여 분류 정확도를 높입니다. 이를 통해 다양한 원격탐사 데이터의 활용도를 크게 향상시킬 수 있음을 보여줍니다.</div>
+                    <div class="meta">발행일: 2025-11-20</div>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+          </td>
+        </tr>
+        
+        </table>
       </div>
+    </main>
 
-      
-<div style="margin-bottom:16px; font-size:14px; color:#4b5563;">
-총 17편의 추가 학술지입니다.
-</div>
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.3390/rs17233926" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.3390/rs17233926" target="_blank" style="color:#111827; text-decoration:none;">
-              토양 LWIR 고분광 영상 실험실 구축
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">Advancing Hyperspectral LWIR Imaging of Soils with a Controlled Laboratory Setup</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-12-04</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
+    <!-- 푸터 -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>Hancom InSpace · Weekly GeoINT</div>
+        <div class="footer-right">
+          본 페이지는 내부 뉴스레터용 자동 생성 페이지입니다.<br>
+          문의: geoint@hancom.com (예시)
+        </div>
+      </div>
+    </footer>
 
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.3390/rs17233928" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.3390/rs17233928" target="_blank" style="color:#111827; text-decoration:none;">
-              무인기 초분광 영상으로 콩병 조기진단
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">Self-Supervised Learning for Soybean Disease Detection Using UAV Hyperspectral Imagery</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-12-04</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.3390/rs17233925" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.3390/rs17233925" target="_blank" style="color:#111827; text-decoration:none;">
-              회전 인식 선박 탐지 신경망 RSDB-Net
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">RSDB-Net: A Novel Rotation-Sensitive Dual-Branch Network with Enhanced Local Features for Remote Sensing Ship Detection</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-12-04</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.1117/1.jrs.19.044511" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.1117/1.jrs.19.044511" target="_blank" style="color:#111827; text-decoration:none;">
-              해양 점액질 모니터링을 위한 혼합 모델 비교
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">Comparative evaluation of spectral variability-aware mixing models for marine mucilage monitoring</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-12-04</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.3390/rs17233917" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.3390/rs17233917" target="_blank" style="color:#111827; text-decoration:none;">
-              초분광 영상 분류를 위한 S2GL-MambaResNet
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">S2GL-MambaResNet: A Spatial–Spectral Global–Local Mamba Residual Network for Hyperspectral Image Classification</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-12-03</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.3390/rs17233915" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.3390/rs17233915" target="_blank" style="color:#111827; text-decoration:none;">
-              드론과 AI로 포도밭 생육 상태 예측
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">Integrating UAV Multi-Temporal Imagery and Machine Learning to Assess Biophysical Parameters of Douro Grapevines</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-12-03</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.3390/rs17233920" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.3390/rs17233920" target="_blank" style="color:#111827; text-decoration:none;">
-              만달레이 지역 지반 변형 무감독 군집 분석
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">Unsupervised Clustering of InSAR Time-Series Deformation in Mandalay Region from 2022 to 2025 Using Dynamic Time Warping and Longest Common Subsequence</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-12-03</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.3390/rs17233918" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.3390/rs17233918" target="_blank" style="color:#111827; text-decoration:none;">
-              초분광과 머신러닝으로 포도 생리 예측
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">Estimating Plant Physiological Parameters for Vitis vinifera L. Using In Situ Hyperspectral Measurements and Ensemble Machine Learning</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-12-03</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.1117/1.jrs.19.048502" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.1117/1.jrs.19.048502" target="_blank" style="color:#111827; text-decoration:none;">
-              SAR 영상 선박 탐지 위한 데이터 증강법 개선
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">Improved data augmentation method for ship detection in SAR images utilizing adversarial examples</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-11-27</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.1117/1.jrs.19.046515" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.1117/1.jrs.19.046515" target="_blank" style="color:#111827; text-decoration:none;">
-              SAR 데이터 적대적 샘플 생성 기법
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">Cross-domain adversarial sample generation method for synthetic aperture radar data based on a dual-discriminator framework</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-11-27</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.1117/1.jrs.19.044509" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.1117/1.jrs.19.044509" target="_blank" style="color:#111827; text-decoration:none;">
-              얼음 구름에서 감지된 LWIR 편광 신호
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">LWIR polarized signals detected from ice clouds</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-11-26</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.1117/1.jrs.19.044510" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.1117/1.jrs.19.044510" target="_blank" style="color:#111827; text-decoration:none;">
-              토지 사막화 해석을 위한 융합 신경망
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">Hierarchical spectral–spatial collaborative fusion network for remote sensing interpretation of land desertification</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-11-26</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.1117/1.jrs.19.046514" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.1117/1.jrs.19.046514" target="_blank" style="color:#111827; text-decoration:none;">
-              초분광 영상 분류를 위한 차원 축소 기법
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">Dimension reduction for hyperspectral image classification via discriminant spatial–spectral tensor locality preserving projection</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-11-25</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.1117/1.jrs.19.048501" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.1117/1.jrs.19.048501" target="_blank" style="color:#111827; text-decoration:none;">
-              랜덤포레스트로 태풍 풍속 추정하기
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">Cyclone wind speed retrieval from Sentinel-1 SAR images based on random forest model</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-11-25</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.1117/1.jrs.19.046513" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.1117/1.jrs.19.046513" target="_blank" style="color:#111827; text-decoration:none;">
-              3D CNN과 Bi-LSTM 기반 초분광 영상 분류
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">Spectral spatial fusion using 3D CNN and attention-based Bi-LSTM for hyperspectral image classification</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-11-24</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.1117/1.jrs.20.011204" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.1117/1.jrs.20.011204" target="_blank" style="color:#111827; text-decoration:none;">
-              스타일 보정 기반 원격탐사 장면 분류
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">Cross-domain few-shot remote sensing image scene classification based on style calibration and dynamic feature alignment</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-11-22</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-<tr>
-  <td style="padding:12px 0; border-bottom:1px solid #e5e7eb;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td valign="top" width="96" style="padding-right:8px;">
-          <a href="https://doi.org/10.1117/1.jrs.20.021406" target="_blank">
-            <img src="https://img.freepik.com/premium-vector/laboratory-research-flat-style-design-vector-illustration-stock-illustration_357500-507.jpg" width="80" height="80"
-                 style="display:block; border-radius:12px; object-fit:cover; background:#ffffff;">
-          </a>
-        </td>
-        <td valign="top">
-          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">
-            <a href="https://doi.org/10.1117/1.jrs.20.021406" target="_blank" style="color:#111827; text-decoration:none;">
-              멀티모달 원격탐사 영상 분류를 위한 CADSM 기법
-            </a>
-          </div>
-          <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">CADSM: crossing-attention dual-scanning Mamba for multimodal remote sensing image classification</div>
-          <div style="font-size:12px; color:#9ca3af;">2025-11-20</div>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-
-</table>
-
-
-    </td></tr>
-  </table>
-
+  </div>
 </body>
 </html>
+    
