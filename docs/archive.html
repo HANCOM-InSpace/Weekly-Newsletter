@@ -225,121 +225,171 @@
   </div>
 
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var rows = Array.prototype.slice.call(document.querySelectorAll('.archive-row'));
-    var yearContainer = document.getElementById('year-chips');
-    var monthContainer = document.getElementById('month-chips');
+document.addEventListener('DOMContentLoaded', function() {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.archive-row'));
+  var chipsContainer = document.getElementById('month-chips');
+  if (!rows.length || !chipsContainer) return;
 
-    if (!rows.length || !yearContainer || !monthContainer) return;
-
-    // 존재하는 연도 수집
-    var yearSet = new Set();
-    rows.forEach(function(row) {
-      var y = row.getAttribute('data-year');
-      if (y) yearSet.add(y);
-    });
-    var years = Array.from(yearSet).sort().reverse(); // 최신 연도 먼저
-
-    // 현재 날짜 기준 기본 선택 (현재 연도 + 현재 월)
-    var today = new Date();
-    var currentYear = String(today.getFullYear());
-    var currentMonth = today.getMonth() + 1; // JS: 0~11 → 1~12
-
-    var state = {
-      year: yearSet.has(currentYear) ? currentYear : 'all',
-      month: currentMonth
-    };
-
-    function createYearChip(value, label) {
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'chip-base year-chip';
-      btn.setAttribute('data-year', value);
-      btn.textContent = label;
-      btn.addEventListener('click', function() {
-        state.year = value;
-
-        // 연도가 "전체"면 월은 단순히 모양만 남기고, 필터는 연도만 적용
-        updateView();
-      });
-      return btn;
+  // 각 row에서 연/월 추출해서 data-year, data-month 저장
+  rows.forEach(function(row) {
+    var ym = row.getAttribute('data-ym') || '';
+    var parts = ym.split('.');
+    if (parts.length >= 2) {
+      row.dataset.year = parts[0];
+      row.dataset.month = parts[1];
     }
-
-    function createMonthChip(monthNumber) {
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'chip-base month-chip';
-      btn.setAttribute('data-month', String(monthNumber));
-      btn.textContent = monthNumber + '월';
-      btn.addEventListener('click', function() {
-        state.month = monthNumber;
-
-        // 연도가 전체인 상태에서 월만 누르면,
-        // 가장 최신 연도로 자동 스위치해서 "해당 연도 + 이 월"을 보여주도록 함
-        if (state.year === 'all' && years.length > 0) {
-          state.year = years[0];
-        }
-
-        updateView();
-      });
-      return btn;
-    }
-
-    function updateView() {
-      // 카드 보이기/숨기기
-      rows.forEach(function(row) {
-        var rowYear = row.getAttribute('data-year');
-        var rowMonth = parseInt(row.getAttribute('data-month') || '0', 10);
-
-        var yearMatch = (state.year === 'all') || (rowYear === state.year);
-        var monthMatch;
-
-        if (state.year === 'all') {
-          // 전체 연도 선택이면 월은 신경 쓰지 않고 전부 보여줌
-          monthMatch = true;
-        } else {
-          monthMatch = (rowMonth === state.month);
-        }
-
-        if (yearMatch && monthMatch) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
-        }
-      });
-
-      // 연도 칩 active 상태
-      var yearChips = document.querySelectorAll('.year-chip');
-      yearChips.forEach(function(chip) {
-        var y = chip.getAttribute('data-year');
-        chip.classList.toggle('active', y === state.year);
-      });
-
-      // 월 칩 active 상태
-      var monthChips = document.querySelectorAll('.month-chip');
-      monthChips.forEach(function(chip) {
-        var m = parseInt(chip.getAttribute('data-month') || '0', 10);
-        // 연도가 전체일 때는 월을 선택해도 active 표시를 하지 않음
-        var isActive = (state.year !== 'all') && (m === state.month);
-        chip.classList.toggle('active', isActive);
-      });
-    }
-
-    // 연도 칩 구성: [전체] + 존재하는 연도들
-    var allYearChip = createYearChip('all', '전체');
-    yearContainer.appendChild(allYearChip);
-    years.forEach(function(y) {
-      yearContainer.appendChild(createYearChip(y, y + '년'));
-    });
-
-    // 월 칩 1~12 구성 (월 전체 없음)
-    for (var m = 1; m <= 12; m++) {
-      monthContainer.appendChild(createMonthChip(m));
-    }
-
-    // 초기 렌더링
-    updateView();
   });
+
+  var yearSet = new Set();
+  rows.forEach(function(row) {
+    if (row.dataset.year) {
+      yearSet.add(row.dataset.year);
+    }
+  });
+  var years = Array.from(yearSet).sort().reverse(); // 최신 연도 우선
+
+  var currentYear = null;
+  var currentMonth = null;
+
+  function clearChips() {
+    while (chipsContainer.firstChild) {
+      chipsContainer.removeChild(chipsContainer.firstChild);
+    }
+  }
+
+  function createChip(label, chipType, year, month) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'month-chip';
+    btn.textContent = label;
+    btn.dataset.chipType = chipType || '';
+    if (year) btn.dataset.year = year;
+    if (month) btn.dataset.month = month;
+
+    btn.addEventListener('click', function() {
+      if (btn.dataset.chipType === 'all') {
+        handleAllClick();
+      } else if (btn.dataset.chipType === 'year') {
+        handleYearClick(btn.dataset.year);
+      } else if (btn.dataset.chipType === 'month') {
+        handleMonthClick(btn.dataset.month);
+      }
+    });
+
+    return btn;
+  }
+
+  function setActiveChip(targetType, targetYear, targetMonth) {
+    var chips = chipsContainer.querySelectorAll('.month-chip');
+    chips.forEach(function(chip) {
+      var type = chip.dataset.chipType;
+      var y = chip.dataset.year || null;
+      var m = chip.dataset.month || null;
+
+      var isActive = false;
+      if (targetType === 'all' && type === 'all') {
+        isActive = true;
+      } else if (targetType === 'year' && type === 'year' && y === targetYear) {
+        isActive = true;
+      } else if (targetType === 'month' && type === 'month' && m === targetMonth) {
+        isActive = true;
+      }
+
+      if (isActive) {
+        chip.classList.add('active');
+      } else {
+        chip.classList.remove('active');
+      }
+    });
+  }
+
+  function applyFilter() {
+    rows.forEach(function(row) {
+      var match = true;
+
+      if (currentYear && row.dataset.year !== currentYear) {
+        match = false;
+      }
+      if (currentMonth && row.dataset.month !== currentMonth) {
+        match = false;
+      }
+
+      row.style.display = match ? '' : 'none';
+    });
+  }
+
+  function showOnlyYearLevelControls() {
+    var chips = chipsContainer.querySelectorAll('.month-chip');
+    chips.forEach(function(chip) {
+      var type = chip.dataset.chipType;
+      if (type === 'month') {
+        chip.style.display = 'none';
+      } else {
+        chip.style.display = '';
+      }
+    });
+  }
+
+  function showAllControls() {
+    var chips = chipsContainer.querySelectorAll('.month-chip');
+    chips.forEach(function(chip) {
+      chip.style.display = '';
+    });
+  }
+
+  function handleAllClick() {
+    currentYear = null;
+    currentMonth = null;
+    setActiveChip('all');
+    applyFilter();
+    showOnlyYearLevelControls();   // 전체 모드: 월 칩 숨김
+  }
+
+  function handleYearClick(year) {
+    currentYear = year;
+    currentMonth = null;
+    setActiveChip('year', year, null);
+    applyFilter();
+    showAllControls();             // 연도 선택 시: 월 칩 표시
+  }
+
+  function handleMonthClick(month) {
+    // 연도가 아직 선택 안 되어 있으면 가장 최신 연도로 고정
+    if (!currentYear && years.length) {
+      currentYear = years[0];
+    }
+    currentMonth = month;
+    setActiveChip('month', null, month);
+    applyFilter();
+    showAllControls();
+  }
+
+  function buildChips() {
+    clearChips();
+
+    // 1) 전체 칩
+    var allChip = createChip('전체', 'all');
+    chipsContainer.appendChild(allChip);
+
+    // 2) 연도 칩들
+    years.forEach(function(year) {
+      var yChip = createChip(year + '년', 'year', year, null);
+      chipsContainer.appendChild(yChip);
+    });
+
+    // 3) 월 칩들 (1~12, 처음에는 숨겨두되 DOM에는 넣어둠)
+    for (var m = 1; m <= 12; m++) {
+      var mm = String(m).padStart(2, '0'); // "01" ~ "12"
+      var label = m + '월';
+      var mChip = createChip(label, 'month', null, mm);
+      mChip.style.display = 'none'; // 초기에는 숨김
+      chipsContainer.appendChild(mChip);
+    }
+  }
+
+  buildChips();
+  handleAllClick(); // 첫 진입 시: 전체 모드 (연도 칩만 보이고, 월 칩은 숨김)
+});
   </script>
 
 </body>
