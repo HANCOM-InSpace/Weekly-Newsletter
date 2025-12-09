@@ -194,12 +194,16 @@
   // 스크롤 진행도(0~1)
   let scrollProgress = 0;
 
-  const PLAY_RATIO = 0.35; // 영상 앞부분 35%만 사용
+  const PLAY_RATIO = 0.35;     // 앞부분 35%만 사용
+  const SMOOTHING = 0.45;      // 따라가는 속도
+  const SNAP_THRESHOLD = 0.6;  // 이 이상 차이나면 바로 점프 (초)
 
+  // 비디오 메타데이터 로드
   video.addEventListener("loadedmetadata", () => {
     videoDuration = video.duration || 0;
   });
 
+  // 스크롤 진행도 계산만 담당
   function handleScroll() {
     const doc = document.documentElement;
     const scrollTop = doc.scrollTop || document.body.scrollTop;
@@ -217,20 +221,35 @@
     if (p > 1) p = 1;
 
     scrollProgress = p;
-
-    // ✅ 스크롤 할 때마다 바로 currentTime 설정
-    if (videoDuration) {
-      const targetTime = scrollProgress * videoDuration * PLAY_RATIO;
-      video.currentTime = targetTime;
-    }
   }
 
-  window.addEventListener("scroll", handleScroll);
+  window.addEventListener("scroll", handleScroll, { passive: true });
   window.addEventListener("resize", handleScroll);
 
-  // 처음에도 한 번 맞춰주기
+  // 부드럽게 따라가는 애니메이션 루프
+  function tick() {
+    if (videoDuration) {
+      const targetTime = scrollProgress * videoDuration * PLAY_RATIO;
+      const current = video.currentTime || 0;
+      const diff = targetTime - current;
+
+      if (Math.abs(diff) > 0.001) {
+        // 너무 멀면 즉시 맞추기
+        if (Math.abs(diff) > SNAP_THRESHOLD) {
+          video.currentTime = targetTime;
+        } else {
+          video.currentTime = current + diff * SMOOTHING;
+        }
+      }
+    }
+    window.requestAnimationFrame(tick);
+  }
+
+  // 초기 실행
   handleScroll();
+  window.requestAnimationFrame(tick);
 </script>
+
 
 
 </body>
