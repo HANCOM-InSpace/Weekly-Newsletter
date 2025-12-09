@@ -315,120 +315,127 @@
   <script>
   document.addEventListener('DOMContentLoaded', function() {
     var rows = Array.prototype.slice.call(document.querySelectorAll('.archive-row'));
-    var yearContainer = document.getElementById('year-chips');
-    var monthContainer = document.getElementById('month-chips');
+    var yearChipsContainer = document.getElementById('year-chips');
+    var monthChipsContainer = document.getElementById('month-chips');
+    var monthFilterBlock = document.getElementById('month-filter-block');
 
-    if (!rows.length || !yearContainer || !monthContainer) return;
+    if (!rows.length || !yearChipsContainer || !monthChipsContainer || !monthFilterBlock) return;
 
-    // 존재하는 연도 수집
+    // 아카이브에 실제로 존재하는 연도만 추출
     var yearSet = new Set();
     rows.forEach(function(row) {
-      var y = row.getAttribute('data-year');
-      if (y) yearSet.add(y);
+      var year = row.getAttribute('data-year');
+      if (year) yearSet.add(year);
     });
     var years = Array.from(yearSet).sort().reverse(); // 최신 연도 먼저
 
-    // 현재 날짜 기준 기본 선택 (현재 연도 + 현재 월)
-    var today = new Date();
-    var currentYear = String(today.getFullYear());
-    var currentMonth = today.getMonth() + 1; // JS: 0~11 → 1~12
+    var selectedYear = 'all';
+    var selectedMonth = null; // '01' ~ '12' 또는 null
 
-    var state = {
-      year: yearSet.has(currentYear) ? currentYear : 'all',
-      month: currentMonth
-    };
-
-    function createYearChip(value, label) {
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'chip-base year-chip';
-      btn.setAttribute('data-year', value);
-      btn.textContent = label;
-      btn.addEventListener('click', function() {
-        state.year = value;
-
-        // 연도가 "전체"면 월은 단순히 모양만 남기고, 필터는 연도만 적용
-        updateView();
-      });
-      return btn;
-    }
-
-    function createMonthChip(monthNumber) {
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'chip-base month-chip';
-      btn.setAttribute('data-month', String(monthNumber));
-      btn.textContent = monthNumber + '월';
-      btn.addEventListener('click', function() {
-        state.month = monthNumber;
-
-        // 연도가 전체인 상태에서 월만 누르면,
-        // 가장 최신 연도로 자동 스위치해서 "해당 연도 + 이 월"을 보여주도록 함
-        if (state.year === 'all' && years.length > 0) {
-          state.year = years[0];
-        }
-
-        updateView();
-      });
-      return btn;
-    }
-
-    function updateView() {
-      // 카드 보이기/숨기기
+    function applyFilter() {
       rows.forEach(function(row) {
         var rowYear = row.getAttribute('data-year');
-        var rowMonth = parseInt(row.getAttribute('data-month') || '0', 10);
+        var rowMonth = row.getAttribute('data-month');
+        var visible = true;
 
-        var yearMatch = (state.year === 'all') || (rowYear === state.year);
-        var monthMatch;
-
-        if (state.year === 'all') {
-          // 전체 연도 선택이면 월은 신경 쓰지 않고 전부 보여줌
-          monthMatch = true;
-        } else {
-          monthMatch = (rowMonth === state.month);
+        if (selectedYear !== 'all' && rowYear !== selectedYear) {
+          visible = false;
         }
 
-        if (yearMatch && monthMatch) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
+        if (selectedMonth !== null && rowMonth !== selectedMonth) {
+          visible = false;
         }
-      });
 
-      // 연도 칩 active 상태
-      var yearChips = document.querySelectorAll('.year-chip');
-      yearChips.forEach(function(chip) {
-        var y = chip.getAttribute('data-year');
-        chip.classList.toggle('active', y === state.year);
-      });
-
-      // 월 칩 active 상태
-      var monthChips = document.querySelectorAll('.month-chip');
-      monthChips.forEach(function(chip) {
-        var m = parseInt(chip.getAttribute('data-month') || '0', 10);
-        // 연도가 전체일 때는 월을 선택해도 active 표시를 하지 않음
-        var isActive = (state.year !== 'all') && (m === state.month);
-        chip.classList.toggle('active', isActive);
+        row.style.display = visible ? '' : 'none';
       });
     }
 
-    // 연도 칩 구성: [전체] + 존재하는 연도들
-    var allYearChip = createYearChip('all', '전체');
-    yearContainer.appendChild(allYearChip);
-    years.forEach(function(y) {
-      yearContainer.appendChild(createYearChip(y, y + '년'));
+    function setActiveChip(container, attrName, value) {
+      var chips = container.querySelectorAll('.month-chip');
+      chips.forEach(function(chip) {
+        if (chip.getAttribute(attrName) === String(value)) {
+          chip.classList.add('active');
+        } else {
+          chip.classList.remove('active');
+        }
+      });
+    }
+
+    function clearMonthActive() {
+      var chips = monthChipsContainer.querySelectorAll('.month-chip');
+      chips.forEach(function(chip) {
+        chip.classList.remove('active');
+      });
+    }
+
+    function onYearClick(year) {
+      selectedYear = year;
+      selectedMonth = null;
+
+      setActiveChip(yearChipsContainer, 'data-year', year);
+      clearMonthActive();
+
+      if (year === 'all') {
+        // 전체: 월 칩 숨기고, 모두 보여주기
+        monthFilterBlock.style.display = 'none';
+      } else {
+        // 특정 연도: 월 칩 보이기 (월 선택은 옵션)
+        monthFilterBlock.style.display = '';
+      }
+
+      applyFilter();
+    }
+
+    function onMonthClick(month) {
+      selectedMonth = month;
+      setActiveChip(monthChipsContainer, 'data-month', month);
+      applyFilter();
+    }
+
+    // ===== 연도 칩 생성 =====
+    var allYearChip = document.createElement('button');
+    allYearChip.type = 'button';
+    allYearChip.className = 'month-chip active';
+    allYearChip.setAttribute('data-year', 'all');
+    allYearChip.textContent = '전체';
+    allYearChip.addEventListener('click', function() {
+      onYearClick('all');
+    });
+    yearChipsContainer.appendChild(allYearChip);
+
+    years.forEach(function(year) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'month-chip';
+      btn.setAttribute('data-year', year);
+      btn.textContent = year + '년';
+      btn.addEventListener('click', function() {
+        onYearClick(year);
+      });
+      yearChipsContainer.appendChild(btn);
     });
 
-    // 월 칩 1~12 구성 (월 전체 없음)
+    // ===== 월 칩 생성 (1~12) - 처음에는 숨겨진 상태 =====
     for (var m = 1; m <= 12; m++) {
-      monthContainer.appendChild(createMonthChip(m));
+      var mm = (m < 10 ? '0' + m : '' + m);
+      var btnM = document.createElement('button');
+      btnM.type = 'button';
+      btnM.className = 'month-chip';
+      btnM.setAttribute('data-month', mm);
+      btnM.textContent = m + '월';
+      btnM.addEventListener('click', function(evt) {
+        var value = evt.currentTarget.getAttribute('data-month');
+        onMonthClick(value);
+      });
+      monthChipsContainer.appendChild(btnM);
     }
 
-    // 초기 렌더링
-    updateView();
+    // 초기 상태: 전체 (연도만 보이고, 월 블록은 display:none)
+    monthFilterBlock.style.display = 'none';
+    applyFilter();
   });
   </script>
+
 
 </body>
 </html>
