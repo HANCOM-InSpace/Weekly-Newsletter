@@ -1332,8 +1332,17 @@
         infoEl.textContent = from + '–' + to + ' of ' + total;
       }
 
-      if (prevEl) prevEl.style.visibility = (currentPage === 1) ? 'hidden' : 'visible';
-      if (nextEl) nextEl.style.visibility = (currentPage === totalPages) ? 'hidden' : 'visible';
+      if (prevEl) {
+        if (currentPage === 1) {
+          prevEl.style.opacity = '0.3';
+          prevEl.style.pointerEvents = 'none';
+        } else {
+          prevEl.style.opacity = '1';
+          prevEl.style.pointerEvents = 'auto';
+        }
+      }
+
+
     }
 
     if (prevEl) prevEl.addEventListener('click', function(e) {
