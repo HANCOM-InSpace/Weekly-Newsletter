@@ -2,7 +2,7 @@ name: Weekly Newsletter
 
 on:
   schedule:
-    - cron: '50 0 * * 5'  # 목요일 오후 7시 KST
+    - cron: '*/10 * * * *'  # 목요일 오후 7시 KST
   workflow_dispatch:  # 수동 실행
 
 jobs:
