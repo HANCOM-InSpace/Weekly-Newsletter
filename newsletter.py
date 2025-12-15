@@ -5272,6 +5272,7 @@ print("="*70 + "\n")
 
 # ============================================================
 # Colab 전용: 현재 노트북 전체를 .py로 변환해 GitHub의 newsletter.py를 교체
+# + (추가) newsletter_history/ 폴더에 타임스탬프 파일로 스냅샷 저장
 # ============================================================
 
 def _in_colab() -> bool:
@@ -5353,7 +5354,51 @@ if _in_colab():
 
     print(f"✅ GitHub에 {TARGET_PATH} 업데이트 완료: {GITHUB_OWNER}/{GITHUB_REPO}@{BRANCH}")
 
+    # ============================================================
+    # (추가) 히스토리 파일 저장:
+    # newsletter_history/newsletter_YYYY_MM_DD_HH_MM.py
+    # ============================================================
+    HISTORY_DIR = "newsletter_history"
+
+    # KST 타임스탬프 생성 (같은 분에 2번 저장하면 충돌할 수 있어 재시도 로직 포함)
+    from datetime import datetime, timezone, timedelta
+    KST = timezone(timedelta(hours=9))
+    ts = datetime.now(KST).strftime("%Y_%m_%d_%H_%M")
+
+    history_path = f"{HISTORY_DIR}/newsletter_{ts}.py"
+    api_url_hist = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents/{history_path}"
+
+    payload_hist = {
+        "message": f"Archive snapshot: {history_path}",
+        "content": content_b64,
+        "branch": BRANCH,
+    }
+
+    resp = requests.put(api_url_hist, headers=headers, json=payload_hist)
+
+    if resp.status_code in (200, 201):
+        print(f"✅ 히스토리 저장 완료: {history_path}")
+    else:
+        # 같은 분에 중복 저장 등으로 실패 시 -> 초까지 붙여 재시도
+        ts2 = datetime.now(KST).strftime("%Y_%m_%d_%H_%M_%S")
+        history_path2 = f"{HISTORY_DIR}/newsletter_{ts2}.py"
+        api_url_hist2 = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents/{history_path2}"
+
+        payload_hist["message"] = f"Archive snapshot: {history_path2}"
+        resp2 = requests.put(api_url_hist2, headers=headers, json=payload_hist)
+
+        if resp2.status_code in (200, 201):
+            print(f"✅ 히스토리 저장 완료(초 포함): {history_path2}")
+        else:
+            raise RuntimeError(f"히스토리 저장 실패: {resp2.status_code} / {resp2.text}")
+
 else:
     # Colab이 아닌 환경(예: GitHub Actions)에서는 아무 것도 하지 않음
     pass
+
+
+# In[ ]:
+
+
+
 
