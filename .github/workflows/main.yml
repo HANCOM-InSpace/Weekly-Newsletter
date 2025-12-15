@@ -1,27 +1,35 @@
-name: Weekly Newsletter
+name: Generate Weekly Newsletter
 
 on:
-  workflow_dispatch:  # 수동 실행만 남기기
+  workflow_dispatch:
+
+permissions:
+  contents: write   # ← 이게 없으면 파일 업로드(커밋) 안 됨
 
 jobs:
-  generate-newsletter:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
-          pip install requests pandas python-dateutil openai beautifulsoup4 feedparser
+          pip install --upgrade pip
+          pip install -r requirements.txt || true
 
       - name: Run newsletter script
         env:
+          # 🔴 핵심
+          GITHUB_TOKEN: ${{ github.token }}
+
+          # 🔹 기존에 쓰던 API 키들
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
@@ -29,8 +37,11 @@ jobs:
           MEDIASTACK_API_KEY: ${{ secrets.MEDIASTACK_API_KEY }}
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
           CURRENTS_API_KEY: ${{ secrets.CURRENTS_API_KEY }}
+
+          # 🔹 메일 발송 관련
           TO_EMAIL: ${{ secrets.TO_EMAIL }}
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+
         run: |
           python newsletter.py
