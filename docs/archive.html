@@ -54,12 +54,6 @@
   }
 
 
-  @media (min-width: 769px) {
-    .archive-wrap {
-      padding-bottom: calc(64px + 200vh);
-    }
-  }
-
   .filter-wrap {
     margin: 0 16px 12px 16px;
   }
@@ -230,7 +224,7 @@
 
               
           <div class="archive-card-insight">
-            이번 주에는 지리공간 정보의 전략적 인프라 전환이 가속되며 AI 융합과 산업·안보 활용 확산이 두드러지고 있습니다.
+            이번 주에는 지리공간 정보와 위성 데이터가 전략적 인프라로 전환되는 흐름이 가속되며, AI 기반 분석과 글로벌 생태계 강화가 함께 나타나고 있습니다.
           </div>
         
 
@@ -542,7 +536,20 @@
       if (p < 0) p = 0;
       if (p > 1) p = 1;
 
-      var t = p * duration;
+
+
+      // ✅ 옵션 A: 영상 일부 구간만 사용 + 초반 느리게(easing)
+      // - SCRUB_PORTION: 영상 전체 중 몇 %만 스크럽할지 (0.25~0.6 추천)
+      // - EASE_GAMMA: 1보다 크면 초반이 더 느려짐 (1.2~2.2 추천)
+    
+      var SCRUB_PORTION = 0.25;
+      var EASE_GAMMA = 1.6;
+
+      var eased = Math.pow(p, EASE_GAMMA);
+      var t = eased * duration * SCRUB_PORTION;
+
+
+
 
       try { video.currentTime = t; } catch (e) {}
     }
@@ -574,12 +581,6 @@
       calcAndApply();
     });
   });
-
-    @media (min-width: 769px) {
-      .archive-wrap {
-        padding-bottom: calc(64px + 200vh);
-      }
-    }
 
 </script>
 
