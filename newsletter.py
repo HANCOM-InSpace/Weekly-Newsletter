@@ -1037,6 +1037,76 @@ def gpt_process_article(row, system_prompt=SYSTEM_PROMPT_STRICT, model=MODEL_NAM
 print("\n=== [4단계] GPT 엄격 필터링 + 한컴 강제 포함 로직 ===")
 
 
+# ============================================================
+# ✅ (NEW) GPT 기반 "같은 사건/같은 내용" 중복 판별
+# - 제목이 달라도 요약/내용이 같으면 중복으로 간주
+# - 비용/속도 때문에 1차(문자 유사도) → 2차(GPT) 2단계로 사용 권장
+# ============================================================
+
+SEMANTIC_DEDUP_ENABLE = True
+
+# 제목 유사도가 이 값 이상이면 GPT 없이도 중복 처리(빠르고 저렴)
+FAST_TITLE_DUP_THRESHOLD = 0.88
+
+# 제목 유사도가 이 구간이면(애매) GPT에게 의미중복 여부를 물어봄
+SEMANTIC_CHECK_MIN = 0.45
+SEMANTIC_CHECK_MAX = 0.88
+
+def gpt_is_same_story(a_title: str, a_summary: str, b_title: str, b_summary: str, model=MODEL_NAME) -> bool:
+    """
+    GPT가 두 기사가 같은 사건/내용인지(의미 중복) 판단.
+    반환: True(중복) / False(중복 아님)
+    """
+    # 입력이 너무 비면 판단 불가 → 중복 아님 처리
+    if not (a_title or a_summary) or not (b_title or b_summary):
+        return False
+
+    system = (
+        "You are a strict news deduplication engine.\n"
+        "Decide whether two news items refer to the same underlying event/story.\n"
+        "Return ONLY valid JSON."
+    )
+
+    user = f"""
+[Article A]
+title: {a_title}
+summary: {a_summary}
+
+[Article B]
+title: {b_title}
+summary: {b_summary}
+
+Rules:
+- Consider them duplicates if they describe the same event/announcement/deal/report, even if wording differs.
+- Consider them NOT duplicates if they are different events, different companies, different timeframes, or one is analysis/opinion while the other is a different news event.
+Output JSON schema:
+{{"duplicate": true/false, "confidence": 0-100}}
+"""
+
+    try:
+        resp = client.responses.create(
+            model=model,
+            input=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            temperature=0.0,
+        )
+        out = resp.output[0].content[0].text
+        data = json.loads(out)
+        dup = bool(data.get("duplicate", False))
+        conf = int(data.get("confidence", 0) or 0)
+
+        # 보수적으로: confidence가 너무 낮으면 중복으로 안 봄
+        if dup and conf >= 65:
+            return True
+        return False
+
+    except Exception as e:
+        print(f"[WARN] gpt_is_same_story 실패: {e}")
+        return False
+
+
 def is_korean_article_row(row) -> bool:
     """
     df_raw의 한 행이 한국어 기사인지 간단히 판별:
@@ -1516,32 +1586,45 @@ for topic_num in [1, 2, 3, 4]:
         ascending=False
     )
 
-
-    # 2) 거의 동일한 내용(제목/요약) 기사 제거
-    #    - 제목(한글/원문)이 완전히 같거나
-    #    - 제목 텍스트 유사도가 threshold 이상이면 중복으로 간주
+    # 2) 거의 동일한 내용 기사 제거 (✅ GPT 의미 기반 dedup)
     dedup_rows = []
     for _, row in topic_df.iterrows():
-        # 한글 제목이 있으면 우선 사용하고, 없으면 원 제목 사용
         cur_title_raw = row.get("title_ko") or row.get("original_title") or ""
         cur_title = _normalize_text(cur_title_raw)
-        # 요약은 매체마다 표현이 크게 달라서, 중복 판정은 "제목" 위주로만 진행
-        cur_text = cur_title
+        cur_summary = (row.get("summary_ko") or "").strip()
 
         is_dup = False
+
         for kept in dedup_rows:
             kept_title_raw = kept.get("title_ko") or kept.get("original_title") or ""
             kept_title = _normalize_text(kept_title_raw)
-            kept_text = kept_title
+            kept_summary = (kept.get("summary_ko") or "").strip()
 
-            # ① 제목이 완전히 같거나
-            # ② 제목 텍스트 유사도가 threshold 이상이면 중복 기사로 처리
+            # ① 완전 동일 제목이면 즉시 중복
             if cur_title and kept_title and cur_title == kept_title:
                 is_dup = True
                 break
-            if is_near_duplicate(cur_text, kept_text, threshold=0.75):
+
+            # ② 제목 유사도(빠른 1차)
+            title_sim_dup = is_near_duplicate(cur_title, kept_title, threshold=FAST_TITLE_DUP_THRESHOLD)
+            if title_sim_dup:
                 is_dup = True
                 break
+
+            # ③ 애매한 구간이면 GPT로 "의미 중복" 판별
+            if SEMANTIC_DEDUP_ENABLE:
+                # 제목 유사도 수치가 필요하므로 SequenceMatcher 직접 계산
+                a = _normalize_text(cur_title)
+                b = _normalize_text(kept_title)
+                sim = difflib.SequenceMatcher(None, a, b).ratio() if a and b else 0.0
+
+                if SEMANTIC_CHECK_MIN <= sim < SEMANTIC_CHECK_MAX:
+                    if gpt_is_same_story(
+                        a_title=cur_title_raw, a_summary=cur_summary,
+                        b_title=kept_title_raw, b_summary=kept_summary,
+                    ):
+                        is_dup = True
+                        break
 
         if not is_dup:
             dedup_rows.append(row)
@@ -4088,12 +4171,158 @@ def build_research_more_page_html(extra_articles, date_range, newsletter_date):
     return more_html
 
 
+# ============================================================
+# Weekly Focus Insight (주간 포커스 인사이트)
+# - 입력: 주제별 뉴스(우선순위 상위 10개) + 연구동향(상위 10개)
+# - 출력: 1~3줄 한국어 조언(문장형)
+# ============================================================
+
+WEEKLY_FOCUS_TITLE = "Weekly Focus Insight"
+MAX_INSIGHT_ITEMS_PER_TOPIC = 10
+MAX_INSIGHT_ITEMS_RESEARCH = 10
+
+def _take_top_n(items, n):
+    return (items or [])[:n]
+
+def build_weekly_focus_context(topic_main_articles, topic_extra_articles,
+                               research_main_articles, research_extra_articles):
+    """
+    주제당 10개까지만 GPT에 제공.
+    주의: topic_main_articles는 이미 상위 3개이고,
+          topic_extra_articles는 그 다음 우선순위들이라고 가정(현재 파이프라인 구조상).
+    """
+    ctx = {"topics": {}, "research": []}
+
+    # 토픽(1~4)
+    for t in [1, 2, 3, 4]:
+        combined = (topic_main_articles.get(t, []) or []) + (topic_extra_articles.get(t, []) or [])
+        top10 = _take_top_n(combined, MAX_INSIGHT_ITEMS_PER_TOPIC)
+        ctx["topics"][f"topic_{t}"] = [
+            {
+                "title_ko": a.get("title_ko") or "",
+                "original_title": a.get("original_title") or "",
+                "summary_ko": a.get("summary_ko") or "",
+                "date": a.get("date") or "",
+                "url": a.get("url") or "",
+            }
+            for a in top10
+        ]
+
+    # 연구동향(상위 10개)
+    research_combined = (research_main_articles or []) + (research_extra_articles or [])
+    research_top10 = _take_top_n(research_combined, MAX_INSIGHT_ITEMS_RESEARCH)
+    ctx["research"] = [
+        {
+            "original_title": a.get("original_title") or "",
+            "summary_en": a.get("summary_en") or "",
+            "journal_name": a.get("journal_name") or "",
+            "date": a.get("date") or "",
+            "url": a.get("url") or "",
+        }
+        for a in research_top10
+    ]
+
+    return ctx
+
+def generate_weekly_focus_insight(
+    topic_main_articles,
+    topic_extra_articles,
+    research_main_articles,
+    research_extra_articles,
+    top_k_per_topic=10
+):
+    """
+    Weekly Focus Insight:
+    - 토픽(1~4) 뉴스 + 최신 연구동향 요약(상위 항목들)을 읽고
+      한컴인스페이스에게 1~3줄 한국어 조언을 생성.
+    - 토큰 절약: 토픽별 상위 top_k_per_topic개까지만 사용.
+    """
+
+    def _pick_top_k(article_list, k):
+        return (article_list or [])[:k]
+
+    def _news_payload(a: dict):
+        # ✅ (중요) 기존 파이프라인 키(ko_title/summary) + 과거 키(title_ko/summary_ko) 모두 호환
+        return {
+            "title_ko": (a.get("ko_title") or a.get("title_ko") or "").strip(),
+            "original_title": (a.get("orig_title") or a.get("original_title") or "").strip(),
+            "summary_ko": (a.get("summary") or a.get("summary_ko") or "").strip(),
+            "source": (a.get("source") or "").strip(),
+            "date": (a.get("date") or "").strip(),
+            "url": (a.get("url") or "").strip(),
+            "priority": a.get("priority", None),
+        }
+
+    def _research_payload(a: dict):
+        return {
+            "title_ko": (a.get("title_ko") or a.get("ko_title") or "").strip(),
+            "original_title": (a.get("original_title") or a.get("orig_title") or "").strip(),
+            "summary_ko": (a.get("summary_ko") or a.get("summary") or "").strip(),
+            "journal": (a.get("journal_name") or a.get("journal") or "").strip(),
+            "published_at": (a.get("published_at") or a.get("date") or "").strip(),
+            "url": (a.get("url") or "").strip(),
+            "priority": a.get("priority", None),
+        }
+
+    ctx = {
+        "topics": {},
+        "research": {
+            "main": [],
+            "extra": []
+        }
+    }
+
+    for topic_num in [1, 2, 3, 4]:
+        main_top = _pick_top_k(topic_main_articles.get(topic_num, []), top_k_per_topic)
+        extra_top = _pick_top_k(topic_extra_articles.get(topic_num, []), top_k_per_topic)
+
+        ctx["topics"][str(topic_num)] = {
+            "main": [_news_payload(a) for a in main_top],
+            "extra": [_news_payload(a) for a in extra_top],
+        }
+
+    research_main_top = _pick_top_k(research_main_articles or [], top_k_per_topic)
+    research_extra_top = _pick_top_k(research_extra_articles or [], top_k_per_topic)
+
+    ctx["research"]["main"] = [_research_payload(a) for a in research_main_top]
+    ctx["research"]["extra"] = [_research_payload(a) for a in research_extra_top]
+
+    system = (
+        "너는 한컴인스페이스를 위한 전략 리서치 어드바이저다. "
+        "입력으로 주간 뉴스/연구동향 요약(상위 항목들)이 주어진다. "
+        "그 주의 핵심 흐름을 간파해 1~3줄 한국어 '조언'을 문장형으로 작성하라. "
+        "불릿/번호 금지. 과장/추측 금지. 너무 일반론 금지."
+    )
+
+    user = json.dumps(ctx, ensure_ascii=False)
+
+    try:
+        resp = client.responses.create(
+            model=MODEL_NAME,
+            input=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            temperature=0.4,
+        )
+        text = (resp.output[0].content[0].text or "").strip()
+        lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+        return "\n".join(lines[:3]) if lines else ""
+    except Exception as e:
+        print(f"[WARN] Weekly Focus Insight 생성 실패: {e}")
+        return ""
+
+
+
 
 
 def build_archive_page_html(archive_items):
     rows = []
+
     for item in archive_items:
         date_str = item.get("date_str", "")
+        insight = (item.get("insight") or "").strip()
+
         year_attr = ""
         month_attr = ""
 
@@ -4105,6 +4334,12 @@ def build_archive_page_html(archive_items):
                 year_attr = year
                 month_attr = str(int(month_part))  # "03" → "3"
 
+        insight_html = f"""
+          <div class="archive-card-insight">
+            {h(insight)}
+          </div>
+        """ if insight else ""
+
         rows.append(f"""
         <tr class="archive-row" data-year="{year_attr}" data-month="{month_attr}">
           <td style="padding-bottom:16px;">
@@ -4112,8 +4347,11 @@ def build_archive_page_html(archive_items):
               <div class="archive-card-label">
                 {item['label']}
               </div>
+
+              {insight_html}
+
               <div class="archive-card-date">
-                업로드: {item['date_str']}
+                업로드: {item.get('date_str','')}
               </div>
             </a>
           </td>
@@ -4191,6 +4429,20 @@ def build_archive_page_html(archive_items):
     outline:none;
     white-space:nowrap;
     transition:background 0.18s ease, border-color 0.18s ease, transform 0.12s ease, box-shadow 0.12s ease;
+  }}
+
+  /* ✅ Weekly Focus Insight(아카이브 카드용) */
+  .archive-card-insight {{
+    font-size:13px;
+    line-height:1.45;
+    color:#cbd5e1;
+    margin:6px 0 8px 0;
+    opacity:0.92;
+
+    display:-webkit-box;
+    -webkit-line-clamp:2;        /* 2줄 제한 */
+    -webkit-box-orient:vertical;
+    overflow:hidden;
   }}
 
   .chip-base:hover {{
@@ -4282,18 +4534,15 @@ def build_archive_page_html(archive_items):
           </td>
         </tr>
 
-        <!-- 필터 영역 -->
         <tr>
           <td>
             <div class="filter-wrap">
               <div id="year-chips" class="chips-row"></div>
-
               <div id="month-chips" class="chips-row"></div>
             </div>
           </td>
         </tr>
 
-        <!-- 카드 리스트 -->
         <tr>
           <td style="padding:4px 16px 8px 16px;">
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -4315,11 +4564,8 @@ def build_archive_page_html(archive_items):
 
     if (!rows.length || !yearContainer || !monthContainer) return;
 
-    // -----------------------------
-    // 1) 연도 / 연도별 존재 월 수집
-    // -----------------------------
     var yearSet = new Set();
-    var yearMonthMap = {{}}; // {{ '2025': Set{{12, 11, ...}}, ... }}
+    var yearMonthMap = {{}};
 
     rows.forEach(function(row) {{
       var y = row.getAttribute('data-year');
@@ -4336,9 +4582,8 @@ def build_archive_page_html(archive_items):
       }}
     }});
 
-    var years = Array.from(yearSet).sort(); // 연도 순서 정리
+    var years = Array.from(yearSet).sort();
 
-    // 현재 날짜 기준 기본 선택
     var today = new Date();
     var currentYear = String(today.getFullYear());
 
@@ -4347,12 +4592,8 @@ def build_archive_page_html(archive_items):
       month: null
     }};
 
-    // 처음에는 월칩 숨김
     monthContainer.style.display = 'none';
 
-    // -----------------------------
-    // 2) 칩 생성 함수들
-    // -----------------------------
     function createYearChip(value, label) {{
       var btn = document.createElement('button');
       btn.type = 'button';
@@ -4415,9 +4656,6 @@ def build_archive_page_html(archive_items):
       monthContainer.style.display = 'flex';
     }}
 
-    // -----------------------------
-    // 3) 화면 업데이트
-    // -----------------------------
     function updateView() {{
       rows.forEach(function(row) {{
         var rowYear = row.getAttribute('data-year');
@@ -4434,11 +4672,7 @@ def build_archive_page_html(archive_items):
           monthMatch = (rowMonth === state.month);
         }}
 
-        if (yearMatch && monthMatch) {{
-          row.style.display = '';
-        }} else {{
-          row.style.display = 'none';
-        }}
+        row.style.display = (yearMatch && monthMatch) ? '' : 'none';
       }});
 
       var yearChips = document.querySelectorAll('.year-chip');
@@ -4455,9 +4689,6 @@ def build_archive_page_html(archive_items):
       }});
     }}
 
-    // -----------------------------
-    // 4) 초기 칩 구성
-    // -----------------------------
     var allYearChip = createYearChip('all', '전체');
     yearContainer.appendChild(allYearChip);
 
@@ -4475,10 +4706,10 @@ def build_archive_page_html(archive_items):
   }});
 </script>
 
-
 </body>
 </html>
 """
+
 
 
 
@@ -4543,15 +4774,59 @@ def list_github_directory(path_in_repo: str):
         return []
 
 
+import base64
+
+def get_github_file_text(path_in_repo: str):
+    """
+    GitHub repo 안의 파일을 읽어서 텍스트로 반환
+    (예: docs/archive.json)
+    """
+    if not GITHUB_TOKEN:
+        return None
+
+    api_url = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents/{path_in_repo}"
+    headers = {
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github+json",
+    }
+
+    resp = requests.get(api_url, headers=headers)
+    if resp.status_code != 200:
+        return None
+
+    data = resp.json()
+    if data.get("encoding") != "base64":
+        return None
+
+    try:
+        return base64.b64decode(data["content"]).decode("utf-8")
+    except Exception:
+        return None
+
+
 def load_existing_archive():
     """
-    GitHub의 docs/ 연/월/일 폴더 구조를 읽어서
-    index.html이 있는 날짜들을 모두 아카이브 목록으로 만든다.
-    - 폴더 구조 예: docs/2025/11/26/index.html
+    ✅ 1순위: docs/archive.json 이 있으면 그걸 그대로 사용 (insight 유지)
+    ✅ 2순위: 없으면 기존 방식대로 폴더 스캔
     """
+
+    # --------------------------------------------------
+    # 1) archive.json 먼저 시도
+    # --------------------------------------------------
+    json_text = get_github_file_text("docs/archive.json")
+    if json_text:
+        try:
+            items = json.loads(json_text)
+            if isinstance(items, list):
+                return items
+        except Exception:
+            pass  # 실패하면 fallback
+
+    # --------------------------------------------------
+    # 2) fallback: 기존 폴더 스캔 방식
+    # --------------------------------------------------
     archive_items = []
 
-    # 1) docs/ 안에서 "연도" 폴더 찾기 (숫자 4자리 폴더)
     docs_children = list_github_directory("docs")
     year_dirs = [
         item["name"]
@@ -4560,10 +4835,7 @@ def load_existing_archive():
     ]
 
     for year_name in year_dirs:
-        year = int(year_name)
         year_path = f"docs/{year_name}"
-
-        # 2) 연도 안에서 "월" 폴더 찾기 (숫자 폴더)
         month_children = list_github_directory(year_path)
         month_dirs = [
             m["name"]
@@ -4572,10 +4844,7 @@ def load_existing_archive():
         ]
 
         for month_name in month_dirs:
-            month = int(month_name)
             month_path = f"docs/{year_name}/{month_name}"
-
-            # 3) 월 안에서 "일" 폴더 찾기 (숫자 폴더)
             day_children = list_github_directory(month_path)
             day_dirs = [
                 d["name"]
@@ -4584,11 +4853,9 @@ def load_existing_archive():
             ]
 
             for day_name in day_dirs:
-                day = int(day_name)
                 day_path = f"docs/{year_name}/{month_name}/{day_name}"
-
-                # 4) 해당 날짜 폴더 안에 index.html 이 있는 경우만 "뉴스레터 1건"으로 취급
                 files = list_github_directory(day_path)
+
                 has_index = any(
                     f.get("type") == "file" and f.get("name") == "index.html"
                     for f in files
@@ -4596,36 +4863,25 @@ def load_existing_archive():
                 if not has_index:
                     continue
 
-                # 날짜 객체
                 try:
                     date_obj = datetime(int(year_name), int(month_name), int(day_name)).date()
                 except ValueError:
-                    # 잘못된 날짜(예: 2025/02/31)는 스킵
                     continue
 
                 date_str = date_obj.strftime("%Y.%m.%d")
-
-                # 해당 달에서 몇 번째 주인지 계산 (1~7: 1주차, 8~14: 2주차, ...)
                 week_no = ((date_obj.day - 1) // 7) + 1
                 label = f"{date_obj.month}월 {week_no}주차 뉴스레터"
-
                 url = f"{BASE_URL}/{year_name}/{month_name}/{day_name}/index.html"
 
                 archive_items.append({
                     "label": label,
                     "date_str": date_str,
                     "url": url,
-                    "date_obj": date_obj,  # 정렬용 키
+                    "insight": "",   # fallback에는 insight 없음
                 })
 
-    # 날짜 기준 최신순(내림차순) 정렬
-    archive_items.sort(key=lambda x: x["date_obj"], reverse=True)
-
-    # 정렬용 키 제거
-    for item in archive_items:
-        item.pop("date_obj", None)
-
     return archive_items
+
 
 
 # 실행 시점에 이전 아카이브 목록 로딩
@@ -4660,6 +4916,30 @@ research_section_html = build_research_section_html(
 )
 
 sections_html = sections_html + research_section_html
+
+
+weekly_focus_insight = generate_weekly_focus_insight(
+    topic_main_articles, topic_extra_articles,
+    research_main_articles, research_extra_articles
+)
+
+weekly_focus_html = f"""
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
+  <tr><td align="center">
+    <table cellpadding="0" cellspacing="0" border="0"
+           style="width:100%; max-width:{CONTENT_WIDTH}px;
+                  background:#ffffff; border:1px solid #e5e7eb;
+                  border-radius:12px; padding:18px; box-sizing:border-box;">
+      <tr><td style="font-size:14px; font-weight:800; color:#111827;">
+        {WEEKLY_FOCUS_TITLE}
+      </td></tr>
+      <tr><td style="font-size:14px; color:#374151; line-height:1.7; padding-top:8px; white-space:pre-line;">
+        {h(weekly_focus_insight) if weekly_focus_insight else "이번 주 포커스 인사이트를 생성하지 못했습니다."}
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+"""
 
 
 # 날짜 범위 계산 (기존 로직 유지)
@@ -4907,6 +5187,7 @@ newsletter_html = f"""
               </td></tr>
             </table>
 
+            {weekly_focus_html}
             {sections_html}
 
           </td>
@@ -4989,7 +5270,8 @@ archive_items = list(NEWSLETTER_ARCHIVE_BASE)
 today_item = {
     "label": f"{WEEK_LABEL} 뉴스레터",
     "date_str": NEWSLETTER_DATE,
-    "url": MAIN_PAGE_URL
+    "url": MAIN_PAGE_URL,
+    "insight": weekly_focus_insight,
 }
 
 # 같은 URL이 이미 있으면 중복으로 추가하지 않음
