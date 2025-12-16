@@ -224,7 +224,7 @@
 
               
           <div class="archive-card-insight">
-            이번 주에는 지리공간 정보가 전략적 인프라로 전환되며 국가 안보와 AI 기반 민간 산업에서 부상하고 있습니다.
+            이번 주에는 지리공간 정보의 전략 자산 전환이 가속되며, 군사·민간 분야에서 첨단 분석 기술과 결합한 활용이 확산되고 있습니다.
           </div>
         
 
@@ -364,14 +364,118 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+
     // =========================================================
-    // 1) 연/월 필터(기존 코드)
+    // 0) 비디오 스크롤 스크럽(스무딩) — 필터 return과 무관하게 항상 동작
+    // =========================================================
+    var video = document.getElementById('bgVideo');
+
+    if (video) {
+      try { video.pause(); } catch (e) {}
+
+      var duration = 0;
+      var ready = false;
+
+      // ✅ 옵션 A 파라미터
+      var SCRUB_PORTION = 0.25;
+      var EASE_GAMMA = 1.6;
+
+      // ✅ 스무딩 파라미터
+      var SMOOTHING = 0.12; // 0.08~0.2 추천
+
+      var targetTime = 0;
+      var smoothTime = 0;
+      var animating = false;
+
+      function calcTargetTimeFromScroll() {
+        if (!ready || !duration) return;
+
+        var doc = document.documentElement;
+        var scrollTop = window.pageYOffset || doc.scrollTop || 0;
+        var maxScroll = (doc.scrollHeight - window.innerHeight);
+
+        var p = (maxScroll > 0) ? (scrollTop / maxScroll) : 0;
+        if (p < 0) p = 0;
+        if (p > 1) p = 1;
+
+        var eased = Math.pow(p, EASE_GAMMA);
+        targetTime = eased * duration * SCRUB_PORTION;
+      }
+
+      function applyTime(t) {
+        // 너무 잦은 seek 방지(디코더 부담↓)
+        var EPS = 0.02;
+        if (Math.abs((video.currentTime || 0) - t) < EPS) return;
+
+        try {
+          if (typeof video.fastSeek === 'function') {
+            video.fastSeek(t);
+          } else {
+            video.currentTime = t;
+          }
+        } catch (e) {}
+      }
+
+      function animate() {
+        if (!animating) return;
+
+        smoothTime = smoothTime + (targetTime - smoothTime) * SMOOTHING;
+        applyTime(smoothTime);
+
+        window.requestAnimationFrame(animate);
+      }
+
+      function startAnimLoop() {
+        if (animating) return;
+        animating = true;
+        smoothTime = video.currentTime || 0;
+        window.requestAnimationFrame(animate);
+      }
+
+      function onMetaReady() {
+        duration = video.duration || 0;
+        ready = duration > 0;
+
+        // 메타데이터 준비 후 첫 동기화 + 루프 시작
+        calcTargetTimeFromScroll();
+        startAnimLoop();
+      }
+
+      video.addEventListener('loadedmetadata', onMetaReady);
+
+      // 이미 준비된 경우 대비
+      if (video.readyState >= 1) {
+        onMetaReady();
+      } else {
+        // 일부 환경에서 안전하게 metadata를 당기기
+        try { video.load(); } catch (e) {}
+      }
+
+      window.addEventListener(
+        'scroll',
+        function() {
+          calcTargetTimeFromScroll();
+          startAnimLoop();
+        },
+        { passive: true }
+      );
+
+      window.addEventListener('resize', function() {
+        calcTargetTimeFromScroll();
+      });
+    }
+
+    // =========================================================
+    // 1) 연/월 필터(기존 코드) — 없으면 필터만 스킵
     // =========================================================
     var rows = Array.prototype.slice.call(document.querySelectorAll('.archive-row'));
     var yearContainer = document.getElementById('year-chips');
     var monthContainer = document.getElementById('month-chips');
 
-    if (!rows.length || !yearContainer || !monthContainer) return;
+    // ✅ 여기서 return 하지 말고, 필터만 종료
+    if (!rows.length || !yearContainer || !monthContainer) {
+      return;
+    }
 
     var yearSet = new Set();
     var yearMonthMap = {};
@@ -512,101 +616,9 @@
     }
 
     updateView();
-
-    // =========================================================
-    // 2) 스크롤 → 배경 비디오 프레임 (옵션 A + 스무딩)
-    // =========================================================
-    var video = document.getElementById('bgVideo');
-    if (!video) return;
-
-    try { video.pause(); } catch (e) {}
-
-    var duration = 0;
-    var ready = false;
-
-    // ✅ 옵션 A 파라미터
-    var SCRUB_PORTION = 0.25; // 0.20~0.45 추천
-    var EASE_GAMMA = 1.6;     // 1.2~2.2 추천
-
-    // ✅ 스무딩 파라미터 (값이 클수록 더 빨리 따라감)
-    var SMOOTHING = 0.12;     // 0.08~0.20 추천
-
-    var targetTime = 0;
-    var smoothTime = 0;
-    var animating = false;
-
-    function calcTargetTimeFromScroll() {
-      if (!ready || !duration) return;
-
-      var doc = document.documentElement;
-      var scrollTop = window.pageYOffset || doc.scrollTop || 0;
-      var maxScroll = (doc.scrollHeight - window.innerHeight);
-
-      var p = (maxScroll > 0) ? (scrollTop / maxScroll) : 0;
-      if (p < 0) p = 0;
-      if (p > 1) p = 1;
-
-      var eased = Math.pow(p, EASE_GAMMA);
-      targetTime = eased * duration * SCRUB_PORTION;
-    }
-
-    function applyTime(t) {
-      // 너무 작은 변화는 무시해서 디코더 부담을 줄임
-      var EPS = 0.02; // 20ms
-      if (Math.abs((video.currentTime || 0) - t) < EPS) return;
-
-      try {
-        if (typeof video.fastSeek === 'function') {
-          video.fastSeek(t);
-        } else {
-          video.currentTime = t;
-        }
-      } catch (e) {}
-    }
-
-    function animate() {
-      if (!animating) return;
-
-      smoothTime = smoothTime + (targetTime - smoothTime) * SMOOTHING;
-      applyTime(smoothTime);
-
-      window.requestAnimationFrame(animate);
-    }
-
-    function startAnimLoop() {
-      if (animating) return;
-      animating = true;
-      smoothTime = video.currentTime || 0;
-      window.requestAnimationFrame(animate);
-    }
-
-    function onMetaReady() {
-      duration = video.duration || 0;
-      ready = duration > 0;
-
-      calcTargetTimeFromScroll();
-      startAnimLoop();
-    }
-
-    video.addEventListener('loadedmetadata', onMetaReady);
-    if (video.readyState >= 1) onMetaReady();
-
-    window.addEventListener(
-      'scroll',
-      function() {
-        calcTargetTimeFromScroll();
-        startAnimLoop();
-      },
-      { passive: true }
-    );
-
-    window.addEventListener('resize', function() {
-      calcTargetTimeFromScroll();
-    });
-
-
-
+  });
 </script>
+
 
 
 </body>
