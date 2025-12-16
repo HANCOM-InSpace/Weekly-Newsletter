@@ -2946,7 +2946,7 @@ else:
 # 
 # # **08 카드/섹션 HTML + 최종 뉴스레터 HTML 생성**
 
-# In[40]:
+# In[44]:
 
 
 # ============================
@@ -4181,7 +4181,7 @@ def build_research_more_page_html(extra_articles, date_range, newsletter_date):
 # - 출력: 1~3줄 한국어 조언(문장형)
 # ============================================================
 
-WEEKLY_FOCUS_TITLE = "Weekly Focus Insight 🔍"
+WEEKLY_FOCUS_TITLE = "🔍 Weekly Focus Insight"
 MAX_INSIGHT_ITEMS_PER_TOPIC = 10
 MAX_INSIGHT_ITEMS_RESEARCH = 10
 
@@ -4322,6 +4322,55 @@ def generate_weekly_focus_insight(
         return ""
 
 
+# =========================
+# ✅ Archive 카드용 1줄 Insight 생성
+# =========================
+def summarize_insight_for_archive(one_to_three_lines: str) -> str:
+    """
+    메인 Weekly Focus Insight(1~3줄)를 입력으로 받아,
+    아카이브 카드에 넣을 '한 줄' 요약을 생성합니다.
+    - 너무 길면 자동으로 짧게
+    - 실패 시: 첫 문장/첫 줄을 잘라서라도 반환
+    """
+    src = (one_to_three_lines or "").strip()
+    if not src:
+        return ""
+
+    # 1) 가벼운 fallback(모델 실패 대비)
+    fallback = src.splitlines()[0].strip()
+    if len(fallback) > 120:
+        fallback = fallback[:117].rstrip() + "…"
+
+    # 2) GPT로 "한 문장" 압축
+    try:
+        system = (
+            "너는 주간 산업/기술 동향을 한 문장으로 요약하는 에디터다. "
+            "입력 텍스트를 바탕으로 '이번 주 흐름'을 1문장 한국어로 요약하라. "
+            "특정 회사(한컴인스페이스 등)를 직접 지칭하지 말고, "
+            "존댓말(합니다/됩니다) 톤으로 작성하라. "
+            "과장/추측/불릿/번호 금지."
+        )
+        user = src
+
+        resp = client.responses.create(
+            model=MODEL_NAME,
+            input=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            temperature=0.3,
+        )
+        text = (resp.output[0].content[0].text or "").strip()
+        # 한 문장만 사용
+        text = text.replace("\n", " ").strip()
+        if not text:
+            return fallback
+        if len(text) > 140:
+            text = text[:137].rstrip() + "…"
+        return text
+    except Exception as e:
+        print(f"[WARN] Archive 1줄 Insight 생성 실패: {e}")
+        return fallback
 
 
 
@@ -4330,7 +4379,7 @@ def build_archive_page_html(archive_items):
 
     for item in archive_items:
         date_str = item.get("date_str", "")
-        insight = (item.get("insight") or "").strip()
+        insight = (item.get("insight") or item.get("insight_full") or "").strip()
 
         year_attr = ""
         month_attr = ""
@@ -5275,13 +5324,20 @@ upload_file_to_github(main_repo_path, newsletter_html, commit_msg_main)
 # ▼ 이전 뉴스레터 아카이브 페이지 생성
 archive_items = list(NEWSLETTER_ARCHIVE_BASE)
 
-# 오늘 뉴스레터 기록 생성
+# ✅ 메인 페이지용(1~3줄) insight는 그대로 유지
+weekly_focus_insight_full = weekly_focus_insight
+
+# ✅ 아카이브 카드에는 1줄로 재요약해서 저장
+weekly_focus_insight_card = summarize_insight_for_archive(weekly_focus_insight_full)
+
 today_item = {
     "label": f"{WEEK_LABEL} 뉴스레터",
     "date_str": NEWSLETTER_DATE,
     "url": MAIN_PAGE_URL,
-    "insight": weekly_focus_insight,
+    # ✅ 아카이브 카드에서 바로 쓰는 값(1줄)
+    "insight": weekly_focus_insight_card,
 }
+
 
 # 같은 URL이 이미 있으면 중복으로 추가하지 않음
 already_exists = any(item.get("url") == today_item["url"] for item in archive_items)
@@ -5345,7 +5401,7 @@ for topic_num, url in TOPIC_MORE_URLS.items():
 # # **09 이메일 자동 발송**
 # ### **(Colab에서 실행하면 테스트 이메일로, Github 실행 시, 실제 수신자에게)**
 
-# In[41]:
+# In[45]:
 
 
 SEND_EMAIL = os.environ.get("SEND_EMAIL", "true").lower() == "true"
@@ -5398,7 +5454,7 @@ else:
 
 # # **10. 최종 통계 출력**
 
-# In[42]:
+# In[46]:
 
 
 # ============================
