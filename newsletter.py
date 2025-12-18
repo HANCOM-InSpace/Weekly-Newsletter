@@ -9,7 +9,7 @@
 
 # # **01-1 설치 & import**
 
-# In[17]:
+# In[ ]:
 
 
 # ============================
@@ -49,7 +49,7 @@ if IN_COLAB:
 
 # # **01-2 라이브러리 설치**
 
-# In[18]:
+# In[ ]:
 
 
 # ============================
@@ -93,7 +93,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # # **02-1 설정 (API 키)**
 
-# In[19]:
+# In[ ]:
 
 
 # ============================================================
@@ -118,7 +118,7 @@ NEWSDATA_BASE_URL_LATEST = "https://newsdata.io/api/1/latest"
 
 # # **02-2 설정 (날짜, 주제, 키워드, 상수)**
 
-# In[20]:
+# In[ ]:
 
 
 # 사용할 GPT mini 모델 이름 (예: "gpt-4.1-mini", 나중에 "gpt-5.1-mini"로 교체 가능)
@@ -338,7 +338,7 @@ MIN_TOTAL_PER_TOPIC = ARTICLES_PER_TOPIC_FINAL + 6  # 3 + 6 = 9
 
 # # **03 NewsAPI로 기사 수집**
 
-# In[21]:
+# In[ ]:
 
 
 # ============================
@@ -1560,7 +1560,7 @@ if IN_COLAB:
 
 # # **03-1 언어별 비율 계산 함수**
 
-# In[22]:
+# In[ ]:
 
 
 # ============================
@@ -1617,7 +1617,7 @@ def is_korean_article(article_dict):
 
 # # **04 GPT (엄격 필터링/분류/요약)**
 
-# In[23]:
+# In[ ]:
 
 
 # ============================
@@ -1927,7 +1927,7 @@ if IN_COLAB:
 
 # # **05 부족한 토픽은 백업 프롬프트로 채우기 + 토픽당 3개 맞추기**
 
-# In[24]:
+# In[ ]:
 
 
 # ============================
@@ -2050,7 +2050,7 @@ print("CSV 저장 완료: newsletter_articles.csv")
 
 # # **06 메인(3개) + 더보기 기사 분리**
 
-# In[25]:
+# In[ ]:
 
 
 # ============================
@@ -2461,7 +2461,7 @@ print("\n" + "="*60 + "\n")
 
 # # **07 최신 연구동향 (학술지 섹션) 설정**
 
-# In[26]:
+# In[ ]:
 
 
 # ============================================
@@ -2896,17 +2896,505 @@ def collect_research_articles_from_crossref(
     return collected
 
 
-# # **07-1 썸네일 추출 (기본 썸네일 포함)**
+# # **07-2 최신 연구동향 추가**
 
-# In[27]:
+# In[ ]:
 
 
-# ============================
-# 7-1. 썸네일 추출 (후보 영역 한정 + 스마트 필터 + canonical 추적)
-# ============================
+# ============================================
+# 7-2. 최신 연구동향(학술지) 수집 & 요약
+# ============================================
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlsplit  # urlsplit 추가
+
+def clean_and_shorten_summary(text, max_chars=220):
+    """
+    CrossRef에서 가져온 영어 초록을 정리하고,
+    너무 길면 max_chars 기준으로 잘라서 '... '을 붙여준다.
+    """
+    if not text:
+        return ""
+
+    # 줄바꿈/공백 정리
+    text = " ".join(str(text).split())
+
+    # 이미 충분히 짧으면 그대로 사용
+    if len(text) <= max_chars:
+        return text
+
+    # 글자 수 기준으로 자르되, 단어 중간에서 끊기지 않게 마지막 공백 기준으로 자르기
+    cut = text[:max_chars]
+    last_space = cut.rfind(" ")
+    if last_space > 0:
+        cut = cut[:last_space]
+
+    return cut + "..."
+
+def fetch_publisher_abstract(url, timeout=8):
+    """
+    CrossRef 요약이 너무 짧을 때, 원문 페이지에서 abstract를 한 번 더 뽑아보는 함수.
+    - 실패하면 ""을 반환 (절대 예외를 위로 올리지 않음)
+    """
+    if not url:
+        return ""
+
+    # SPIE 같은 데서 403 막는 걸 피하려고 브라우저 User-Agent 세팅
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/123.0 Safari/537.36"
+        ),
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+
+    try:
+        resp = requests.get(url, timeout=timeout, headers=headers)
+        resp.raise_for_status()
+    except Exception as e:
+        print(f"[연구동향] fallback 요약 수집 실패({url}): {e}")
+        return ""
+
+    html = resp.text
+    soup = BeautifulSoup(html, "html.parser")
+
+    # 사이트마다 구조가 다르지만, 가장 흔한 abstract 영역 몇 군데를 순서대로 시도
+    selectors = [
+        "section.abstract",
+        "section#abstract",
+        "div.abstract",
+        "div#abstract",
+        "div.article__body",
+    ]
+
+    abstract_el = None
+    for sel in selectors:
+        abstract_el = soup.select_one(sel)
+        if abstract_el:
+            break
+
+    if not abstract_el:
+        return ""
+
+    text = " ".join(abstract_el.get_text(" ", strip=True).split())
+    return text
+
+
+def fetch_article_abstract_fallback(url, timeout=15):
+    """
+    CrossRef 요약이 없거나 너무 짧을 때,
+    실제 저널 페이지(SPIE, MDPI 등)에 들어가서 abstract/description을 최대한 뽑아오는 함수.
+    """
+    if not url:
+        return ""
+
+    try:
+        headers = {
+            "User-Agent": "InspaceNewsletterBot/1.0 (mailto:newsletter@example.com)"
+        }
+        resp = requests.get(url, headers=headers, timeout=timeout)
+        resp.raise_for_status()
+    except Exception as e:
+        print(f"[연구동향] fallback 요약 수집 실패({url}): {e}")
+        return ""
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+
+    # 1) meta 태그 쪽에서 abstract/description 우선 시도
+    for meta in soup.find_all("meta"):
+        name = (meta.get("name") or "").lower()
+        prop = (meta.get("property") or "").lower()
+        content = (meta.get("content") or "").strip()
+
+        if not content:
+            continue
+
+        # SPIE/저널 사이트들이 자주 쓰는 패턴들
+        if name in ["description", "dc.description", "citation_abstract"] or prop in ["og:description"]:
+            content = " ".join(content.split())
+            if len(content) > 40:
+                return content
+
+    # 2) 'abstract' 관련 블록을 직접 찾아보기
+    candidates = []
+    selectors = [
+        "div.abstract",
+        "section.abstract",
+        "div#abstract",
+        "section#abstract",
+        "div.article__abstract",
+    ]
+    for sel in selectors:
+        for node in soup.select(sel):
+            text = " ".join(node.get_text(" ", strip=True).split())
+            if len(text) > 40:
+                candidates.append(text)
+
+    if candidates:
+        # 길이가 제일 긴 걸 하나 고름
+        return max(candidates, key=len)
+
+    # 3) 그래도 못 찾으면, 본문 <p> 중 앞의 몇 개를 이어붙여서 pseudo-abstract로 사용
+    paras = []
+    for p in soup.find_all("p"):
+        t = " ".join(p.get_text(" ", strip=True).split())
+        if len(t) < 40:
+            continue
+        paras.append(t)
+        if len(paras) >= 3:
+            break
+
+    return " ".join(paras)
+
+print("\n=== [7-2 단계] 최신 연구동향(학술지) 수집 & 요약 ===")
+
+# 1순위: OpenAlex 기반 논문 메타 수집
+research_raw_articles = collect_research_articles_from_openalex(
+    max_per_journal=RESEARCH_MAX_PER_JOURNAL
+)
+print("OpenAlex 기반 학술 논문 개수:", len(research_raw_articles))
+
+# OpenAlex에서 아무것도 못 가져왔을 때만 CrossRef로 폴백
+if not research_raw_articles:
+    print("[연구동향] OpenAlex 결과 없음 → CrossRef로 폴백 시도")
+    research_raw_articles = collect_research_articles_from_crossref(
+        max_per_journal=RESEARCH_MAX_PER_JOURNAL
+    )
+    print("CrossRef 기반 학술 논문 개수:", len(research_raw_articles))
+
+# (선택) 그래도 0개면, 마지막으로 RSS까지 써보고 싶다면:
+if not research_raw_articles:
+    print("[연구동향] OpenAlex + CrossRef 모두 실패 → RSS로 폴백 시도")
+    research_raw_articles = collect_research_articles_from_rss(
+        max_per_journal=RESEARCH_MAX_PER_JOURNAL
+    )
+    print("RSS 기반 학술 논문 개수:", len(research_raw_articles))
+
+
+# 2) CrossRef 결과가 0편이면 → RSS 백업 소스 사용
+if not research_raw_articles:
+    print("[연구동향] CrossRef 결과 0편 → RSS 백업 소스 시도")
+    research_raw_articles = collect_research_articles_from_rss(
+        max_per_journal=RESEARCH_MAX_PER_JOURNAL
+    )
+    print("RSS 기반 학술 논문 개수:", len(research_raw_articles))
+
+
+research_processed_articles = []
+
+# 연구 논문 병렬 처리 함수
+def process_single_research_article(meta):
+    """
+    단일 연구 논문을 처리하는 함수
+    """
+    try:
+        # 1) CrossRef에서 가져온 영어 요약 먼저 꺼내기
+        raw_summary_en = (meta.get("summary_en") or "").strip()
+
+        # 요약이 완전히 비었는지 여부
+        has_any_crossref_text = bool(raw_summary_en)
+
+        # 너무 짧거나(= 거의 없음) 아예 없어도 한 번은 원문 페이지에서 보충 시도
+        MIN_LEN_FOR_FALLBACK = 80
+
+        fallback_summary = ""
+        if len(raw_summary_en) < MIN_LEN_FOR_FALLBACK:
+            target_url = meta.get("publisher_url") or meta.get("url")
+            print(
+                f"  - [fallback 시도] CrossRef 요약 부족 → 원문 페이지 파싱 시도: "
+                f"{meta.get('original_title')} | {target_url}"
+            )
+            fallback_summary = fetch_publisher_abstract(target_url)
+
+        # 2단계: fallback 요약이 있으면 그걸 우선 사용, 없으면 CrossRef 요약 사용
+        final_summary_en = (fallback_summary or raw_summary_en).strip()
+
+        # 3단계: 그래도 둘 다 비어 있으면, 스킵하지 말고 최소 설명으로 살려두기
+        if not final_summary_en:
+            title = (meta.get("original_title") or "").strip()
+            journal = (meta.get("journal_name") or "").strip()
+            final_summary_en = (
+                f"No abstract available. This paper ({title}) was published in {journal}."
+            )
+
+        # 여기까지 오면 final_summary_en에는 뭔가 텍스트가 들어있음
+        raw_summary_en = final_summary_en
+
+        # 3) 요약 길이 정리
+        short_summary_en = clean_and_shorten_summary(raw_summary_en, max_chars=200)
+
+        # 4) 한글 요약 (GPT)
+        try:
+            ko_data = summarize_research_article_to_ko({
+                **meta,
+                "summary_en": short_summary_en,
+            })
+        except Exception as e:
+            print(f"[연구동향 요약 오류] {meta.get('url')}: {e}")
+            ko_data = {}
+
+        thumb_url = RESEARCH_THUMB
+
+        return {
+            "journal_name": meta["journal_name"],
+            "logo_url": meta["logo_url"],
+            "original_title": meta["original_title"],
+            "summary_en": short_summary_en,
+            "url": meta["url"],
+            "published_at": meta["published_at"],
+            "title_ko": ko_data.get("title_ko", meta["original_title"][:30]),
+            "summary_ko": ko_data.get("summary_ko", short_summary_en),
+            "thumbnail_url": thumb_url,
+        }
+    except Exception as e:
+        print(f"[연구동향 처리 오류] {meta.get('url')}: {e}")
+        return None
+
+
+# 병렬 처리 실행
+print(f"\n총 {len(research_raw_articles)}개 연구 논문을 병렬 처리합니다 (동시 처리: 20개)...")
+research_processed_articles = []
+
+with ThreadPoolExecutor(max_workers=20) as executor:
+    futures = {executor.submit(process_single_research_article, meta): idx
+               for idx, meta in enumerate(research_raw_articles)}
+
+    completed = 0
+    for future in as_completed(futures):
+        result = future.result()
+        if result:
+            research_processed_articles.append(result)
+
+        completed += 1
+        if completed % 5 == 0:
+            print(f"  진행: {completed}/{len(research_raw_articles)} ({completed*100//len(research_raw_articles)}%) - 성공: {len(research_processed_articles)}개")
+
+print(f"\n연구 논문 병렬 처리 완료! 총 {len(research_processed_articles)}개 논문 처리됨")
+
+# ─────────────────────────────────────
+# ✅ 여기부터 새로 추가: 연구동향 날짜 필터
+#    (뉴스 섹션에 쓰는 DATE_FROM ~ DATE_TO와 맞추기)
+# ─────────────────────────────────────
+try:
+    from_dt = datetime.fromisoformat(DATE_FROM).date()
+    to_dt = datetime.fromisoformat(DATE_TO).date()
+except Exception as e:
+    print("[연구동향] DATE_FROM/DATE_TO 파싱 오류, 필터를 건너뜁니다:", e)
+else:
+    def _parse_pubdate_safe(s: str):
+        try:
+            # CrossRef에서 만든 published_at은 'YYYY-MM-DD' 형식
+            return datetime.strptime(s, "%Y-%m-%d").date()
+        except Exception:
+            return None
+
+    filtered = []
+    for art in research_processed_articles:
+        d = _parse_pubdate_safe(art.get("published_at", ""))
+        if d is None:
+            continue  # 날짜 이상한 건 버림
+        if from_dt <= d <= to_dt:
+            filtered.append(art)
+
+    print(f"[연구동향] 날짜 필터 적용 전: {len(research_processed_articles)}편")
+    print(f"[연구동향] {DATE_FROM} ~ {DATE_TO} 범위 내: {len(filtered)}편")
+
+    research_processed_articles = filtered
+
+    # (옵션) 다시 날짜 기준 내림차순 정렬
+    research_processed_articles = sorted(
+        research_processed_articles,
+        key=lambda x: datetime.strptime(x["published_at"], "%Y-%m-%d"),
+        reverse=True,
+    )
+
+# 메인 3개 + 추가 학술지 + (추가 페이지용) 리스트 분리
+research_main_articles = []
+research_extra_articles = []
+research_more_articles = []
+
+if research_processed_articles:
+    # 1) 메인 섹션에 보여줄 3개
+    research_main_articles = research_processed_articles[:3]
+
+    # 2) 메인 3개 이후를 '추가 학술지'로 사용
+    if len(research_processed_articles) > 3:
+        research_extra_articles = research_processed_articles[3:]
+        # 3) 추가 연구동향 페이지에는
+        #    "메인 3개를 제외한 나머지 전부"만 넣기
+        research_more_articles = research_extra_articles[:]   # ✅ 여기만 변경
+    else:
+        research_extra_articles = []
+        research_more_articles = []
+
+    print("연구동향 메인 학술지 개수:", len(research_main_articles))
+    print("연구동향 추가 학술지 개수:", len(research_extra_articles))
+else:
+    print("[알림] 연구동향 (CrossRef)에서 가져온 논문이 없습니다.")
+
+
+# # **07-1 썸네일 추출 (기본 썸네일 포함)**
+
+# In[ ]:
+
+
+import re
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin, urlparse, parse_qs, unquote
+
+def _is_google_host(host: str) -> bool:
+    host = (host or "").lower()
+    return ("google." in host) or host.endswith("google.com") or host.endswith("gstatic.com")
+
+def _extract_publisher_url_from_google_html(base_url: str, html: str) -> str:
+    """
+    news.google.com/rss/articles/... 또는 news.google.com/articles/... (HTTP 200) HTML에서
+    실제 퍼블리셔 원문 링크를 최대한 찾아 반환.
+    """
+    if not html:
+        return ""
+
+    def _clean_and_validate(candidate: str) -> str:
+        if not candidate:
+            return ""
+        candidate = candidate.strip().strip("'\"")
+        candidate = urljoin(base_url, candidate)
+        parsed = urlparse(candidate)
+        if not parsed.scheme.startswith("http"):
+            return ""
+        if not parsed.netloc or _is_google_host(parsed.netloc):
+            return ""
+        return candidate
+
+    try:
+        soup = BeautifulSoup(html, "html.parser")
+
+        # 1) meta refresh (있으면 최우선)
+        meta = soup.find("meta", attrs={"http-equiv": lambda v: v and v.lower() == "refresh"})
+        if meta and meta.get("content"):
+            content = meta["content"]
+            if "url=" in content.lower():
+                target = content.split("url=", 1)[-1]
+                target = _clean_and_validate(target)
+                if target:
+                    return target
+
+        # 2) rel=canonical (퍼블리셔로 박혀있는 케이스)
+        link = soup.find("link", rel=lambda v: v and "canonical" in str(v).lower())
+        if link and link.get("href"):
+            target = _clean_and_validate(link["href"])
+            if target:
+                return target
+
+        # 3) a[href]를 훑으며:
+        #    (a) 바로 외부 절대 URL이면 반환
+        #    (b) google.com/url?... 에 숨겨진 url/q 파라미터를 파싱해서 반환
+        for a in soup.find_all("a", href=True):
+            href = (a["href"] or "").strip()
+            if not href:
+                continue
+
+            full = urljoin(base_url, href)
+            p = urlparse(full)
+
+            # (a) 외부 절대 URL
+            direct = _clean_and_validate(full)
+            if direct:
+                return direct
+
+            # (b) google redirect URL 패턴: https://www.google.com/url?url=...
+            if _is_google_host(p.netloc) and p.path.startswith("/url"):
+                qs = parse_qs(p.query)
+                for key in ("url", "q"):
+                    if key in qs and qs[key]:
+                        cand = unquote(qs[key][0])
+                        cand = _clean_and_validate(cand)
+                        if cand:
+                            return cand
+
+        # 4) HTML 본문에서 url= 로 박혀있는 퍼블리셔 URL을 정규식으로라도 찾기 (마지막 보루)
+        #    너무 공격적으로 잡지 않게 http(s)만 대상으로.
+        for m in re.finditer(r"https?%3A%2F%2F[^\"'<>\\s]+", html):
+            cand = unquote(m.group(0))
+            cand = _clean_and_validate(cand)
+            if cand:
+                return cand
+
+        for m in re.finditer(r"https?://[^\"'<>\\s]+", html):
+            cand = m.group(0)
+            cand = _clean_and_validate(cand)
+            if cand:
+                return cand
+
+    except Exception:
+        return ""
+
+    return ""
+
+
+
+from urllib.parse import urlparse, parse_qs, unquote
+
+# --- (A) URL resolve 캐시 (동일 URL 반복 호출 방지) ---
+_URL_RESOLVE_CACHE = {}
+
+def resolve_final_url(url: str, headers: dict, timeout: int = 6) -> str:
+    if not url:
+        return url
+    if url in _URL_RESOLVE_CACHE:
+        return _URL_RESOLVE_CACHE[url]
+
+    final = url
+    html = ""
+
+    try:
+        resp = requests.get(
+            url,
+            headers=headers or {},
+            timeout=timeout,
+            allow_redirects=True,
+        )
+        if resp is not None and getattr(resp, "url", None):
+            final = resp.url
+        try:
+            html = resp.text if resp is not None else ""
+        except Exception:
+            html = ""
+    except Exception:
+        _URL_RESOLVE_CACHE[url] = url
+        return url
+
+    # 1) 최종 URL 자체가 google.com/url?url=... 형태면 즉시 해제
+    try:
+        p = urlparse(final)
+        if _is_google_host(p.netloc) and p.path.startswith("/url"):
+            qs = parse_qs(p.query)
+            for key in ("url", "q"):
+                if key in qs and qs[key]:
+                    cand = unquote(qs[key][0]).strip()
+                    if cand and not _is_google_host(urlparse(cand).netloc):
+                        final = cand
+                        _URL_RESOLVE_CACHE[url] = final
+                        return final
+    except Exception:
+        pass
+
+    # 2) 여전히 google/news.google면 HTML에서 퍼블리셔 링크 추출
+    try:
+        host = (urlparse(final).netloc or "").lower()
+        if ("news.google.com" in host) or host.endswith("google.com"):
+            pub = _extract_publisher_url_from_google_html(final, html)
+            if pub:
+                final = pub
+    except Exception:
+        pass
+
+    _URL_RESOLVE_CACHE[url] = final
+    return final
+
+
+
 
 # 광고/트래킹 전용 "영구 블랙리스트" (이건 썸네일이 될 일이 없음)
 ALWAYS_BAD_HOST_SNIPPETS = [
@@ -3219,13 +3707,6 @@ def _maybe_follow_canonical(page_url, html, timeout=6, headers=None):
 
 
 def fetch_thumbnail(url, timeout=6):
-    """
-    뉴스 URL에서 썸네일 추출:
-    - 메타 태그 기반 후보 + 본문 영역 이미지만 사용
-    - sidebar/related 영역은 아예 후보에서 제외
-    - is_bad_image_url 로 1차 필터
-    - 애그리게이터인 경우 canonical 을 따라가서 원본 기사에서 다시 추출
-    """
     if not url:
         return DEFAULT_THUMB
 
@@ -3237,8 +3718,11 @@ def fetch_thumbnail(url, timeout=6):
         )
     }
 
+    # ✅ (1) Google RSS/News 중계 URL이면 최종 원문 URL로 먼저 resolve
+    resolved_url = resolve_final_url(url, headers=headers, timeout=timeout)
+
     try:
-        resp = requests.get(url, timeout=timeout, headers=headers)
+        resp = requests.get(resolved_url, timeout=timeout, headers=headers)
         if resp.status_code != 200:
             return DEFAULT_THUMB
     except Exception:
@@ -3246,9 +3730,9 @@ def fetch_thumbnail(url, timeout=6):
 
     html = resp.text
 
-    # 🔹 여기서 canonical 을 한 번 따라가 본다 (애그리게이터 특이 케이스용)
+    # (2) 기존 로직 유지: canonical 한 번 더 추적(애그리게이터 케이스)
     page_for_image, html_for_image = _maybe_follow_canonical(
-        url, html, timeout=timeout, headers=headers
+        resolved_url, html, timeout=timeout, headers=headers
     )
 
     candidates = extract_image_candidates(page_for_image, html_for_image)
@@ -3260,8 +3744,8 @@ def fetch_thumbnail(url, timeout=6):
         except Exception:
             continue
 
-    # 적절한 후보가 하나도 없으면 기본 썸네일
     return DEFAULT_THUMB
+
 
 
 # 메인 + 추가 기사 모두에 대해 썸네일 채우기 (병렬 처리)
@@ -3314,408 +3798,10 @@ print(f"\n썸네일 추출 완료! 성공: {success}/{total_articles}개")
 print("(본문 영역 위주 + sidebar/related 제외 + 스마트 필터 + canonical 추적)")
 
 
-# # **07-2 최신 연구동향 추가**
-
-# In[28]:
-
-
-# ============================================
-# 7-2. 최신 연구동향(학술지) 수집 & 요약
-# ============================================
-
-def clean_and_shorten_summary(text, max_chars=220):
-    """
-    CrossRef에서 가져온 영어 초록을 정리하고,
-    너무 길면 max_chars 기준으로 잘라서 '... '을 붙여준다.
-    """
-    if not text:
-        return ""
-
-    # 줄바꿈/공백 정리
-    text = " ".join(str(text).split())
-
-    # 이미 충분히 짧으면 그대로 사용
-    if len(text) <= max_chars:
-        return text
-
-    # 글자 수 기준으로 자르되, 단어 중간에서 끊기지 않게 마지막 공백 기준으로 자르기
-    cut = text[:max_chars]
-    last_space = cut.rfind(" ")
-    if last_space > 0:
-        cut = cut[:last_space]
-
-    return cut + "..."
-
-def fetch_publisher_abstract(url, timeout=8):
-    """
-    CrossRef 요약이 너무 짧을 때, 원문 페이지에서 abstract를 한 번 더 뽑아보는 함수.
-    - 실패하면 ""을 반환 (절대 예외를 위로 올리지 않음)
-    """
-    if not url:
-        return ""
-
-    # SPIE 같은 데서 403 막는 걸 피하려고 브라우저 User-Agent 세팅
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/123.0 Safari/537.36"
-        ),
-        "Accept-Language": "en-US,en;q=0.9",
-    }
-
-    try:
-        resp = requests.get(url, timeout=timeout, headers=headers)
-        resp.raise_for_status()
-    except Exception as e:
-        print(f"[연구동향] fallback 요약 수집 실패({url}): {e}")
-        return ""
-
-    html = resp.text
-    soup = BeautifulSoup(html, "html.parser")
-
-    # 사이트마다 구조가 다르지만, 가장 흔한 abstract 영역 몇 군데를 순서대로 시도
-    selectors = [
-        "section.abstract",
-        "section#abstract",
-        "div.abstract",
-        "div#abstract",
-        "div.article__body",
-    ]
-
-    abstract_el = None
-    for sel in selectors:
-        abstract_el = soup.select_one(sel)
-        if abstract_el:
-            break
-
-    if not abstract_el:
-        return ""
-
-    text = " ".join(abstract_el.get_text(" ", strip=True).split())
-    return text
-
-
-def fetch_article_abstract_fallback(url, timeout=15):
-    """
-    CrossRef 요약이 없거나 너무 짧을 때,
-    실제 저널 페이지(SPIE, MDPI 등)에 들어가서 abstract/description을 최대한 뽑아오는 함수.
-    """
-    if not url:
-        return ""
-
-    try:
-        headers = {
-            "User-Agent": "InspaceNewsletterBot/1.0 (mailto:newsletter@example.com)"
-        }
-        resp = requests.get(url, headers=headers, timeout=timeout)
-        resp.raise_for_status()
-    except Exception as e:
-        print(f"[연구동향] fallback 요약 수집 실패({url}): {e}")
-        return ""
-
-    soup = BeautifulSoup(resp.text, "html.parser")
-
-    # 1) meta 태그 쪽에서 abstract/description 우선 시도
-    for meta in soup.find_all("meta"):
-        name = (meta.get("name") or "").lower()
-        prop = (meta.get("property") or "").lower()
-        content = (meta.get("content") or "").strip()
-
-        if not content:
-            continue
-
-        # SPIE/저널 사이트들이 자주 쓰는 패턴들
-        if name in ["description", "dc.description", "citation_abstract"] or prop in ["og:description"]:
-            content = " ".join(content.split())
-            if len(content) > 40:
-                return content
-
-    # 2) 'abstract' 관련 블록을 직접 찾아보기
-    candidates = []
-    selectors = [
-        "div.abstract",
-        "section.abstract",
-        "div#abstract",
-        "section#abstract",
-        "div.article__abstract",
-    ]
-    for sel in selectors:
-        for node in soup.select(sel):
-            text = " ".join(node.get_text(" ", strip=True).split())
-            if len(text) > 40:
-                candidates.append(text)
-
-    if candidates:
-        # 길이가 제일 긴 걸 하나 고름
-        return max(candidates, key=len)
-
-    # 3) 그래도 못 찾으면, 본문 <p> 중 앞의 몇 개를 이어붙여서 pseudo-abstract로 사용
-    paras = []
-    for p in soup.find_all("p"):
-        t = " ".join(p.get_text(" ", strip=True).split())
-        if len(t) < 40:
-            continue
-        paras.append(t)
-        if len(paras) >= 3:
-            break
-
-    return " ".join(paras)
-
-print("\n=== [7-2 단계] 최신 연구동향(학술지) 수집 & 요약 ===")
-
-# 1순위: OpenAlex 기반 논문 메타 수집
-research_raw_articles = collect_research_articles_from_openalex(
-    max_per_journal=RESEARCH_MAX_PER_JOURNAL
-)
-print("OpenAlex 기반 학술 논문 개수:", len(research_raw_articles))
-
-# OpenAlex에서 아무것도 못 가져왔을 때만 CrossRef로 폴백
-if not research_raw_articles:
-    print("[연구동향] OpenAlex 결과 없음 → CrossRef로 폴백 시도")
-    research_raw_articles = collect_research_articles_from_crossref(
-        max_per_journal=RESEARCH_MAX_PER_JOURNAL
-    )
-    print("CrossRef 기반 학술 논문 개수:", len(research_raw_articles))
-
-# (선택) 그래도 0개면, 마지막으로 RSS까지 써보고 싶다면:
-if not research_raw_articles:
-    print("[연구동향] OpenAlex + CrossRef 모두 실패 → RSS로 폴백 시도")
-    research_raw_articles = collect_research_articles_from_rss(
-        max_per_journal=RESEARCH_MAX_PER_JOURNAL
-    )
-    print("RSS 기반 학술 논문 개수:", len(research_raw_articles))
-
-
-# 2) CrossRef 결과가 0편이면 → RSS 백업 소스 사용
-if not research_raw_articles:
-    print("[연구동향] CrossRef 결과 0편 → RSS 백업 소스 시도")
-    research_raw_articles = collect_research_articles_from_rss(
-        max_per_journal=RESEARCH_MAX_PER_JOURNAL
-    )
-    print("RSS 기반 학술 논문 개수:", len(research_raw_articles))
-
-
-research_processed_articles = []
-
-# for meta in research_raw_articles:
-#     # 1) CrossRef에서 가져온 영어 요약 먼저 꺼내기
-#     raw_summary_en = (meta.get("summary_en") or "").strip()
-
-#     # 요약이 완전히 비었는지 여부
-#     has_any_crossref_text = bool(raw_summary_en)
-
-#     # 너무 짧거나(= 거의 없음) 아예 없어도 한 번은 원문 페이지에서 보충 시도
-#     MIN_LEN_FOR_FALLBACK = 80  # 필요하면 60~100 사이에서 조절 가능
-
-#     fallback_summary = ""
-#     if len(raw_summary_en) < MIN_LEN_FOR_FALLBACK:
-#         target_url = meta.get("publisher_url") or meta.get("url")
-#         print(
-#             f"  - [fallback 시도] CrossRef 요약 부족 → 원문 페이지 파싱 시도: "
-#             f"{meta.get('original_title')} | {target_url}"
-#         )
-#         fallback_summary = fetch_publisher_abstract(target_url)
-
-
-
-#     # 2단계: fallback 요약이 있으면 그걸 우선 사용, 없으면 CrossRef 요약 사용
-#     final_summary_en = (fallback_summary or raw_summary_en).strip()
-
-#     # 3단계: 그래도 둘 다 비어 있으면, 스킵하지 말고 최소 설명으로 살려두기
-#     if not final_summary_en:
-#         title = (meta.get("original_title") or "").strip()
-#         journal = (meta.get("journal_name") or "").strip()
-#         final_summary_en = (
-#             f"No abstract available. This paper ({title}) was published in {journal}."
-#         )
-
-
-
-#     # 여기까지 오면 final_summary_en에는 뭔가 텍스트가 들어있음
-#     raw_summary_en = final_summary_en
-
-#     # 3) 요약 길이 정리 (줄바꿈 제거 + 1~2줄 정도로 자르기)
-#     short_summary_en = clean_and_shorten_summary(raw_summary_en, max_chars=200)
-
-#     # 4) 한글 요약 (GPT)
-#     try:
-#         ko_data = summarize_research_article_to_ko({
-#             **meta,
-#             "summary_en": short_summary_en,  # 정리된 영어 요약 기준으로 전달
-#         })
-#     except Exception as e:
-#         print(f"[연구동향 요약 오류] {meta.get('url')}: {e}")
-#         ko_data = {}
-
-#     thumb_url = RESEARCH_THUMB
-
-#     research_processed_articles.append({
-#         "journal_name": meta["journal_name"],
-#         "logo_url": meta["logo_url"],
-#         "original_title": meta["original_title"],
-#         "summary_en": short_summary_en,
-#         "url": meta["url"],
-#         "published_at": meta["published_at"],
-#         "title_ko": ko_data.get("title_ko", meta["original_title"][:30]),
-#         "summary_ko": ko_data.get("summary_ko", short_summary_en),
-#         "thumbnail_url": thumb_url,
-#     })
-# 연구 논문 병렬 처리 함수
-def process_single_research_article(meta):
-    """
-    단일 연구 논문을 처리하는 함수
-    """
-    try:
-        # 1) CrossRef에서 가져온 영어 요약 먼저 꺼내기
-        raw_summary_en = (meta.get("summary_en") or "").strip()
-
-        # 요약이 완전히 비었는지 여부
-        has_any_crossref_text = bool(raw_summary_en)
-
-        # 너무 짧거나(= 거의 없음) 아예 없어도 한 번은 원문 페이지에서 보충 시도
-        MIN_LEN_FOR_FALLBACK = 80
-
-        fallback_summary = ""
-        if len(raw_summary_en) < MIN_LEN_FOR_FALLBACK:
-            target_url = meta.get("publisher_url") or meta.get("url")
-            print(
-                f"  - [fallback 시도] CrossRef 요약 부족 → 원문 페이지 파싱 시도: "
-                f"{meta.get('original_title')} | {target_url}"
-            )
-            fallback_summary = fetch_publisher_abstract(target_url)
-
-        # 2단계: fallback 요약이 있으면 그걸 우선 사용, 없으면 CrossRef 요약 사용
-        final_summary_en = (fallback_summary or raw_summary_en).strip()
-
-        # 3단계: 그래도 둘 다 비어 있으면, 스킵하지 말고 최소 설명으로 살려두기
-        if not final_summary_en:
-            title = (meta.get("original_title") or "").strip()
-            journal = (meta.get("journal_name") or "").strip()
-            final_summary_en = (
-                f"No abstract available. This paper ({title}) was published in {journal}."
-            )
-
-        # 여기까지 오면 final_summary_en에는 뭔가 텍스트가 들어있음
-        raw_summary_en = final_summary_en
-
-        # 3) 요약 길이 정리
-        short_summary_en = clean_and_shorten_summary(raw_summary_en, max_chars=200)
-
-        # 4) 한글 요약 (GPT)
-        try:
-            ko_data = summarize_research_article_to_ko({
-                **meta,
-                "summary_en": short_summary_en,
-            })
-        except Exception as e:
-            print(f"[연구동향 요약 오류] {meta.get('url')}: {e}")
-            ko_data = {}
-
-        thumb_url = RESEARCH_THUMB
-
-        return {
-            "journal_name": meta["journal_name"],
-            "logo_url": meta["logo_url"],
-            "original_title": meta["original_title"],
-            "summary_en": short_summary_en,
-            "url": meta["url"],
-            "published_at": meta["published_at"],
-            "title_ko": ko_data.get("title_ko", meta["original_title"][:30]),
-            "summary_ko": ko_data.get("summary_ko", short_summary_en),
-            "thumbnail_url": thumb_url,
-        }
-    except Exception as e:
-        print(f"[연구동향 처리 오류] {meta.get('url')}: {e}")
-        return None
-
-
-# 병렬 처리 실행
-print(f"\n총 {len(research_raw_articles)}개 연구 논문을 병렬 처리합니다 (동시 처리: 20개)...")
-research_processed_articles = []
-
-with ThreadPoolExecutor(max_workers=20) as executor:
-    futures = {executor.submit(process_single_research_article, meta): idx
-               for idx, meta in enumerate(research_raw_articles)}
-
-    completed = 0
-    for future in as_completed(futures):
-        result = future.result()
-        if result:
-            research_processed_articles.append(result)
-
-        completed += 1
-        if completed % 5 == 0:
-            print(f"  진행: {completed}/{len(research_raw_articles)} ({completed*100//len(research_raw_articles)}%) - 성공: {len(research_processed_articles)}개")
-
-print(f"\n연구 논문 병렬 처리 완료! 총 {len(research_processed_articles)}개 논문 처리됨")
-
-# ─────────────────────────────────────
-# ✅ 여기부터 새로 추가: 연구동향 날짜 필터
-#    (뉴스 섹션에 쓰는 DATE_FROM ~ DATE_TO와 맞추기)
-# ─────────────────────────────────────
-try:
-    from_dt = datetime.fromisoformat(DATE_FROM).date()
-    to_dt = datetime.fromisoformat(DATE_TO).date()
-except Exception as e:
-    print("[연구동향] DATE_FROM/DATE_TO 파싱 오류, 필터를 건너뜁니다:", e)
-else:
-    def _parse_pubdate_safe(s: str):
-        try:
-            # CrossRef에서 만든 published_at은 'YYYY-MM-DD' 형식
-            return datetime.strptime(s, "%Y-%m-%d").date()
-        except Exception:
-            return None
-
-    filtered = []
-    for art in research_processed_articles:
-        d = _parse_pubdate_safe(art.get("published_at", ""))
-        if d is None:
-            continue  # 날짜 이상한 건 버림
-        if from_dt <= d <= to_dt:
-            filtered.append(art)
-
-    print(f"[연구동향] 날짜 필터 적용 전: {len(research_processed_articles)}편")
-    print(f"[연구동향] {DATE_FROM} ~ {DATE_TO} 범위 내: {len(filtered)}편")
-
-    research_processed_articles = filtered
-
-    # (옵션) 다시 날짜 기준 내림차순 정렬
-    research_processed_articles = sorted(
-        research_processed_articles,
-        key=lambda x: datetime.strptime(x["published_at"], "%Y-%m-%d"),
-        reverse=True,
-    )
-
-# 메인 3개 + 추가 학술지 + (추가 페이지용) 리스트 분리
-research_main_articles = []
-research_extra_articles = []
-research_more_articles = []
-
-if research_processed_articles:
-    # 1) 메인 섹션에 보여줄 3개
-    research_main_articles = research_processed_articles[:3]
-
-    # 2) 메인 3개 이후를 '추가 학술지'로 사용
-    if len(research_processed_articles) > 3:
-        research_extra_articles = research_processed_articles[3:]
-        # 3) 추가 연구동향 페이지에는
-        #    "메인 3개를 제외한 나머지 전부"만 넣기
-        research_more_articles = research_extra_articles[:]   # ✅ 여기만 변경
-    else:
-        research_extra_articles = []
-        research_more_articles = []
-
-    print("연구동향 메인 학술지 개수:", len(research_main_articles))
-    print("연구동향 추가 학술지 개수:", len(research_extra_articles))
-else:
-    print("[알림] 연구동향 (CrossRef)에서 가져온 논문이 없습니다.")
-
-
 # 
 # # **08 카드/섹션 HTML + 최종 뉴스레터 HTML 생성**
 
-# In[29]:
+# In[ ]:
 
 
 # ============================
@@ -6435,7 +6521,7 @@ for topic_num, url in TOPIC_MORE_URLS.items():
 # # **09 이메일 자동 발송**
 # ### **(Colab에서 실행하면 테스트 이메일로, Github 실행 시, 실제 수신자에게)**
 
-# In[30]:
+# In[ ]:
 
 
 SEND_EMAIL = os.environ.get("SEND_EMAIL", "true").lower() == "true"
@@ -6488,7 +6574,7 @@ else:
 
 # # **10. 최종 통계 출력**
 
-# In[31]:
+# In[ ]:
 
 
 # ============================
