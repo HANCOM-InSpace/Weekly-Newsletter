@@ -248,7 +248,7 @@
 
             <div style="font-size:14px; color:#000000; line-height:1.7; font-weight:500;
                         padding-top:10px; word-break: keep-all; overflow-wrap: break-word;">
-              <p style='margin:0 0 10px 0; line-height:1.75;'>이번 주 지리공간 정보와 원격탐사 기술의 발전은 단순한 데이터 수집을 넘어 전략적 인프라와 거버넌스 체계로 전환되는 중대한 변곡점에 있음을 보여줍니다. 예컨대, 산청군의 지적·공간정보 우수사례 수상과 인도 마하라슈트라 주정부의 GIS 기반 학교 위치 등록 의무화는 지리공간 정보가 행정과 공공 서비스의 핵심 인프라로 자리매김하고 있음을 시사합니다.</p><p style='margin:0 0 10px 0; line-height:1.75;'>이러한 흐름은 위성 및 SAR 영상의 고도화와 AI 분석 기술 접목으로 더욱 가속화되는데, 미국 내 고위험 댐의 지반 침하 조기 감지와 우크라이나 해군 기지 침투 사건의 위성 영상 활용은 위성 데이터가 재난 및 안보 거버넌스에 필수적인 증거와 대응 수단으로 자리잡고 있음을 보여줍니다. 또한, 딥러닝 기반 그래프 신경망과 파운데이션 모델의 도입, 그리고 AI 통합 위성 영상 분석 플랫폼 개발은 지리공간 정보가 단순한 도구를 넘어 복잡한 환경 변화와 위기 대응을 위한 전략적 자산으로 진화하고 있음을 의미하며, 이로 인해 정책 수립과 산업 경쟁력 강화에 중대한 영향을 미치고 있습니다.</p>
+              <p style='margin:0 0 10px 0; line-height:1.75;'>이번 주 지리공간 정보와 원격탐사 기술의 발전은 단순한 데이터 수집을 넘어 전략적 자산으로서의 전환을 가속화하고 있음을 보여줍니다. 예컨대, 산청군의 우수사례 수상과 인도 마하라슈트라 주정부의 GIS 기반 학교 위치 등록 의무화는 지리공간 정보가 지역 행정과 인프라 거버넌스의 핵심 도구에서 필수 인프라로 자리매김하고 있음을 시사합니다.</p><p style='margin:0 0 10px 0; line-height:1.75;'>동시에, 고산 아시아 지역 눈 밀도 분석과 미국 고위험 댐 지반 침하 감지 연구에서는 위성 및 레이더 기반 원격탐사 데이터가 기후변화와 재난 대응의 과학적 근거를 제공하며, 이는 환경 및 안전 거버넌스 체계의 혁신적 전환을 촉진합니다. 이러한 흐름은 위성 영상의 법의학적 활용과 군사 작전 평가, 그리고 AI 결합을 통한 고도화된 위성 데이터 분석으로 확장되며, 지리공간 정보가 단순한 기술 도구를 넘어 국제법 집행과 국가 안보 전략의 핵심 인프라로 자리잡는 변화를 의미합니다.</p><p style='margin:0 0 10px 0; line-height:1.75;'>따라서 지리공간 정보와 원격탐사 기술은 기후·재난·안보·행정 전 분야에서 운영적 도구에서 전략적 거버넌스로 진화하며, 이로 인해 관련 산업과 정책 환경 전반에 걸친 통합적 혁신이 가속화될 것으로 전망됩니다.</p>
             </div>
 
           </div>
@@ -1432,12 +1432,12 @@
     if (!video || !ready || !duration) return 0;
 
     var scrollMax = getDocScrollMax();
-    var start = FADE_END;
-    var usable = Math.max(1, scrollMax - start);
+    var usable = Math.max(1, scrollMax);   // 전체 스크롤 구간 사용
+    var p = clamp01(scrollY / usable);     // 0부터 바로 매핑
 
-    var p = clamp01((scrollY - start) / usable);
     return p * duration;
   }
+
 
   function tick() {
     if (video && ready && duration) {
@@ -1451,12 +1451,14 @@
 
   function onScroll() {
     var y = window.scrollY || window.pageYOffset || 0;
-    var fadeT = updateFade(y);
 
-    if (fadeT > 0.15) {
-      targetTime = computeTargetTime(y);
-    }
+    // fade는 독립적으로 계속 계산
+    updateFade(y);
+
+    // (NEW) fade 진행 중에도 항상 타임라인 목표값 갱신
+    targetTime = computeTargetTime(y);
   }
+
 
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
