@@ -37,7 +37,9 @@ jobs:
           MEDIASTACK_API_KEY: ${{ secrets.MEDIASTACK_API_KEY }}
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
           CURRENTS_API_KEY: ${{ secrets.CURRENTS_API_KEY }}
-
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          
           # 🔹 메일 발송 관련
           TO_EMAIL: ${{ secrets.TO_EMAIL }}
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
