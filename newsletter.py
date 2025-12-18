@@ -3801,7 +3801,7 @@ print("(본문 영역 위주 + sidebar/related 제외 + 스마트 필터 + canon
 # 
 # # **08 카드/섹션 HTML + 최종 뉴스레터 HTML 생성**
 
-# In[ ]:
+# In[59]:
 
 
 # ============================
@@ -5875,6 +5875,17 @@ ARCHIVE_PAGE_URL = f"{BASE_URL}/archive.html"
 # ▼ 아카이브 상단 스크롤 비디오(mp4) 경로 (여기에 네 영상 URL 넣기)
 ARCHIVE_VIDEO_URL = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/archivebg1.mp4"
 
+# ============================================================
+# ▼ (NEW) 메인 뉴스레터 배경 스크롤 비디오/대체 이미지 설정
+# ============================================================
+MAIN_BG_VIDEO_URL = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/archivebg1.mp4"  # ← 메인에 깔 영상
+MAIN_BG_FALLBACK_IMAGE_URL = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/archive_bg_fallback.png"  # ← 모바일 대체 이미지
+
+# fade/인터랙션 시작 스크롤 위치(px) (2~3번 스크롤 느낌으로 조정)
+MAIN_BG_FADE_START_PX = 200
+MAIN_BG_FADE_END_PX   = 800
+
+
 # ▼ 아카이브 데이터를 JSON 파일로도 관리 (매번 깃허브 폴더를 읽어서 갱신)
 ARCHIVE_JSON_PATH = "docs/archive.json"
 
@@ -6203,9 +6214,10 @@ newsletter_html = f"""
 
 
 <title>한컴인스페이스 {WEEK_LABEL} 뉴스레터</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 
 <style>
-  /* 화면 폭이 768px 이하(모바일)일 때 적용 */
   @media (max-width: 768px) {{
     .hero-bg {{
       background-position: center 0 !important;
@@ -6224,12 +6236,117 @@ newsletter_html = f"""
       font-size: 14px !important;
     }}
   }}
+
+  /* ===============================
+     메인 배경 스크롤 비디오
+     =============================== */
+  .main-bg-layer {{
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }}
+
+  .main-bg-video,
+  .main-bg-image,
+  .main-bg-whitewash {{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }}
+
+  .main-bg-video {{
+    object-fit: cover;
+    opacity: 0;
+  }}
+
+  .main-bg-image {{
+    background-image: url('{MAIN_BG_FALLBACK_IMAGE_URL}');
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    display: none;
+    opacity: 0;
+  }}
+
+  .main-bg-whitewash {{
+    background: #f3f4f6;
+    opacity: 1;
+  }}
+
+  @media (max-width: 768px) {{
+    .main-bg-video {{ display: none !important; }}
+    .main-bg-image {{ display: block !important; }}
+  }}
+
+    /* 푸터를 항상 아래로 밀어주는 레이아웃 (iOS 100vh 이슈 대응) */
+  html, body {{
+    margin: 0;
+    padding: 0;
+  }}
+
+  body {{
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
+
+    background: #f3f4f6;
+
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont,
+               "Apple SD Gothic Neo", "맑은 고딕", system-ui, sans-serif;
+  }}
+
+
+  .content-wrapper {{
+    flex: 1 0 auto;
+  }}
+
+  .footer-wrap {{
+    flex-shrink: 0;
+  }}
+
+  body {{
+    letter-spacing: -0.01em;
+    font-weight: 400;
+  }}
+  .main-title,
+  .topic-title,
+  h1,h2,h3 {{
+    letter-spacing: -0.015em;
+    font-weight: 700;
+  }}
+
 </style>
+
+
 
 </head>
 
-<body style="margin:0; padding:0; background:#f3f4f6;
-             font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","맑은 고딕",system-ui,sans-serif;">
+<body style="margin:0; padding:0; background:transparent;
+             font-family:-apple-system,BlinkMacSystemFont,
+             'Apple SD Gothic Neo','맑은 고딕',system-ui,sans-serif;">
+
+
+<!-- (NEW) 메인 배경 레이어: 이메일에서는 JS가 안 돌아 display:none 그대로라 영상/이미지가 “안 보임(흰색 유지)” -->
+<div class="main-bg-layer" id="main-bg-layer" style="display:none;">
+  <video
+    class="main-bg-video"
+    id="main-bg-video"
+    playsinline
+    muted
+    preload="auto"
+  >
+    <source src="{MAIN_BG_VIDEO_URL}" type="video/mp4">
+  </video>
+
+  <div class="main-bg-image" id="main-bg-image"></div>
+  <div class="main-bg-whitewash" id="main-bg-whitewash"></div>
+</div>
+
 
 
 <!-- 헤더 -->
@@ -6366,8 +6483,9 @@ newsletter_html = f"""
 </table>
 
 <!-- 푸터 -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0"
+<table class="footer-wrap" width="100%" cellpadding="0" cellspacing="0" border="0"
        style="background:#1e293b; padding:24px 0 32px 0;">
+
   <tr>
     <td align="center">
       <table cellpadding="0" cellspacing="0" border="0"
@@ -6390,6 +6508,96 @@ newsletter_html = f"""
     </td>
   </tr>
 </table>
+
+
+<script>
+(function () {{
+  var layer = document.getElementById('main-bg-layer');
+  var video = document.getElementById('main-bg-video');
+  var img   = document.getElementById('main-bg-image');
+  var wash  = document.getElementById('main-bg-whitewash');
+
+  if (!layer || !wash) return;
+
+  layer.style.display = 'block';
+
+  var FADE_START = {MAIN_BG_FADE_START_PX};
+  var FADE_END   = {MAIN_BG_FADE_END_PX};
+
+  var duration = 0;
+  var ready = false;
+
+  if (video) {{
+    video.addEventListener('loadedmetadata', function () {{
+      duration = video.duration || 0;
+      ready = true;
+    }});
+  }}
+
+  function clamp01(x) {{
+    return Math.max(0, Math.min(1, x));
+  }}
+
+  function getDocScrollMax() {{
+    var doc = document.documentElement;
+    return Math.max(0, (doc.scrollHeight || 0) - window.innerHeight);
+  }}
+
+  function updateFade(scrollY) {{
+    var t = clamp01((scrollY - FADE_START) / Math.max(1, (FADE_END - FADE_START)));
+
+    wash.style.opacity = String(1 - t);
+
+    if (video) video.style.opacity = String(t);
+    if (img)   img.style.opacity   = String(t);
+
+    return t;
+  }}
+
+  var targetTime = 0;
+  var currentTime = 0;
+  var easing = 0.08;
+
+  function computeTargetTime(scrollY) {{
+    if (!video || !ready || !duration) return 0;
+
+    var scrollMax = getDocScrollMax();
+    var usable = Math.max(1, scrollMax);   // 전체 스크롤 구간 사용
+    var p = clamp01(scrollY / usable);     // 0부터 바로 매핑
+
+    return p * duration;
+  }}
+
+
+  function tick() {{
+    if (video && ready && duration) {{
+      currentTime += (targetTime - currentTime) * easing;
+      if (isFinite(currentTime)) {{
+        try {{ video.currentTime = currentTime; }} catch(e) {{}}
+      }}
+    }}
+    requestAnimationFrame(tick);
+  }}
+
+  function onScroll() {{
+    var y = window.scrollY || window.pageYOffset || 0;
+
+    // fade는 독립적으로 계속 계산
+    updateFade(y);
+
+    // (NEW) fade 진행 중에도 항상 타임라인 목표값 갱신
+    targetTime = computeTargetTime(y);
+  }}
+
+
+  window.addEventListener('scroll', onScroll, {{ passive: true }});
+  window.addEventListener('resize', onScroll);
+
+  onScroll();
+  requestAnimationFrame(tick);
+}})();
+</script>
+
 
 
 </body>
@@ -6521,7 +6729,7 @@ for topic_num, url in TOPIC_MORE_URLS.items():
 # # **09 이메일 자동 발송**
 # ### **(Colab에서 실행하면 테스트 이메일로, Github 실행 시, 실제 수신자에게)**
 
-# In[ ]:
+# In[60]:
 
 
 SEND_EMAIL = os.environ.get("SEND_EMAIL", "true").lower() == "true"
@@ -6574,7 +6782,7 @@ else:
 
 # # **10. 최종 통계 출력**
 
-# In[ ]:
+# In[61]:
 
 
 # ============================
