@@ -3798,15 +3798,302 @@ print(f"\n썸네일 추출 완료! 성공: {success}/{total_articles}개")
 print("(본문 영역 위주 + sidebar/related 제외 + 스마트 필터 + canonical 추적)")
 
 
-# 
-# # **08 카드/섹션 HTML + 최종 뉴스레터 HTML 생성**
+# # **08-1 인사이트 생성**
 
-# In[13]:
+# In[20]:
+
+
+# ============================================================
+# 08-1 Weekly Focus Insight (주간 포커스 인사이트)
+# - 입력: 주제별 뉴스(우선순위 상위 10개) + 연구동향(상위 10개)
+# - 출력: 5~8줄 한국어 조언(문장형)
+# ============================================================
+
+WEEKLY_FOCUS_TITLE = "🔍 Weekly Focus Insight"
+MAX_INSIGHT_ITEMS_PER_TOPIC = 10
+MAX_INSIGHT_ITEMS_RESEARCH = 10
+
+def _take_top_n(items, n):
+    return (items or [])[:n]
+
+
+def generate_weekly_focus_insight(
+    topic_main_articles,
+    topic_extra_articles,
+    research_main_articles,
+    research_extra_articles,
+    top_k_per_topic=10
+):
+    """
+    Weekly Focus Insight:
+    - 토픽(1~4) 뉴스 + 최신 연구동향 요약(상위 항목들)을 읽고
+      한컴인스페이스에게 3~5줄 한국어 조언을 생성.
+    """
+
+    def _pick_top_k(article_list, k):
+        items = list(article_list or [])
+        # priority가 높은 것이 먼저 오도록 (None은 0 취급)
+        items.sort(key=lambda x: (x.get("priority") or 0), reverse=True)
+        return items[:k]
+
+
+    def _news_payload(a: dict):
+        # ✅ (중요) 기존 파이프라인 키(ko_title/summary) + 과거 키(title_ko/summary_ko) 모두 호환
+        return {
+            "title_ko": (a.get("ko_title") or a.get("title_ko") or "").strip(),
+            "original_title": (a.get("orig_title") or a.get("original_title") or "").strip(),
+            "summary_ko": (a.get("summary") or a.get("summary_ko") or "").strip(),
+            "source": (a.get("source") or "").strip(),
+            "date": (a.get("date") or "").strip(),
+            "url": (a.get("url") or "").strip(),
+            "priority": a.get("priority", None),
+        }
+
+    def _research_payload(a: dict):
+        return {
+            "title_ko": (a.get("title_ko") or a.get("ko_title") or "").strip(),
+            "original_title": (a.get("original_title") or a.get("orig_title") or "").strip(),
+            "summary_ko": (a.get("summary_ko") or a.get("summary") or "").strip(),
+            "journal": (a.get("journal_name") or a.get("journal") or "").strip(),
+            "published_at": (a.get("published_at") or a.get("date") or "").strip(),
+            "url": (a.get("url") or "").strip(),
+            "priority": a.get("priority", None),
+        }
+
+    ctx = {
+        "topics": {},
+        "research": {
+            "main": [],
+            "extra": []
+        }
+    }
+
+    for topic_num in [1, 2, 3, 4]:
+        main_top = _pick_top_k(topic_main_articles.get(topic_num, []), top_k_per_topic)
+        extra_top = _pick_top_k(topic_extra_articles.get(topic_num, []), top_k_per_topic)
+
+        ctx["topics"][str(topic_num)] = {
+            "main": [_news_payload(a) for a in main_top],
+            "extra": [_news_payload(a) for a in extra_top],
+        }
+
+    research_main_top = _pick_top_k(research_main_articles or [], top_k_per_topic)
+    research_extra_top = _pick_top_k(research_extra_articles or [], top_k_per_topic)
+
+    ctx["research"]["main"] = [_research_payload(a) for a in research_main_top]
+    ctx["research"]["extra"] = [_research_payload(a) for a in research_extra_top]
+
+    system = (
+        "너는 글로벌 산업·기술 변화를 구조적으로 해석하는 시니어 리서치 애널리스트입니다. "
+        "입력으로 해당 주의 뉴스와 연구동향 요약이 주어집니다. "
+        "출력은 메인 뉴스레터에 들어갈 'Weekly Focus Insight'입니다. "
+
+        "이 인사이트는 단순 요약이나 현상 나열이 아니라, "
+        "여러 사건과 기술 변화를 하나의 관점으로 묶어 해석하는 분석 문단이어야 합니다. "
+
+        "다음 기준을 반드시 지키세요: "
+        "1) 글 전체는 하나의 중심 논지(throughline)를 가져야 합니다. "
+        "   (예: '지리공간 정보가 기술을 넘어 전략 자산으로 전환되고 있다') "
+        "2) 각 문장은 앞 문장의 원인·결과·의미 확장 관계로 연결되어야 하며, "
+        "   독립적인 요약 문장을 나열하지 않습니다. "
+        "3) 'A도 일어나고 B도 일어나고 C도 일어난다' 식의 병렬 나열은 금지합니다. "
+        "4) 최소 한 번 이상 '이로 인해 / 그 결과 / 이에 따라 / 이러한 흐름은'과 같은 "
+        "   인과 또는 구조적 연결 표현을 사용합니다. "
+        "5) 변화의 의미가 드러나도록 "
+        "   '기술 → 전략', '도구 → 인프라', '운영 → 거버넌스'와 같은 전환 관점을 포함합니다. "
+        "6) 특정 기업이나 조직(한컴인스페이스 등)을 직접 지칭하지 않습니다. "
+        "7) 존댓말 서술형으로 5~8문장으로 작성합니다. 각 문장은 줄바꿈으로 분리해 한 줄에 한 문장만 씁니다. "
+        "   (불릿/번호/라벨/콜론 사용 금지, 빈 줄 금지) "
+        "8) 문장 역할(순서)을 다음 흐름으로 구성합니다: "
+        "   (1) 이번 주 핵심 변화(현상/결론) "
+        "→ (2) 구조적 원인 또는 메커니즘(왜 지금 이런 변화가 나타나는지) "
+        "→ (3) 근거 앵커 1(입력의 서로 다른 항목 중 1개를 활용해 메커니즘을 뒷받침) "
+        "→ (4) 근거 앵커 2(다른 항목 1개를 추가로 연결해 관점을 강화) "
+        "→ (5) 전환의 의미(예: 기술→전략, 도구→인프라 등) "
+        "→ (6) 실무적 조언/행동(이번 주 독자가 무엇을 점검·준비·실험해야 하는지) "
+        "→ (선택) (7) 리스크/한계 "
+        "→ (선택) (8) 다음 주 관측 포인트. "
+        "9) 입력에 포함된 서로 다른 항목(기사/연구) 최소 2개를 근거 앵커로 삼되, "
+        "   '요약'이 아니라 '메커니즘'이 드러나도록 문장 속에 녹여 씁니다. "
+        "10) 입력에 없는 사건·기술을 새로 단정해 추가하지 않습니다. "
+
+        "과장되거나 단정적인 예측은 사용하지 않습니다."
+    )
+
+
+
+
+
+    def _trim(s, n=220):
+        s = (s or "").replace("\n", " ").strip()
+        return s if len(s) <= n else s[:n-1].rstrip() + "…"
+
+    lines = []
+    for topic_num in [1, 2, 3, 4]:
+        lines.append(f"[Topic {topic_num}]")
+        items = ctx["topics"][str(topic_num)]["main"] + ctx["topics"][str(topic_num)]["extra"]
+        # 안전하게 한 번 더 priority 정렬(있으면)
+        items = sorted(items, key=lambda x: (x.get("priority") or 0), reverse=True)
+        for a in items[:top_k_per_topic]:
+            title = a.get("title_ko") or a.get("original_title")
+            summ = a.get("summary_ko")
+            if title and summ:
+                lines.append(f"- { _trim(title, 120) } :: { _trim(summ, 240) }")
+
+    lines.append("[Research]")
+    r_items = ctx["research"]["main"] + ctx["research"]["extra"]
+    r_items = sorted(r_items, key=lambda x: (x.get("priority") or 0), reverse=True)
+    for r in r_items[:top_k_per_topic]:
+        title = r.get("title_ko") or r.get("original_title")
+        summ = r.get("summary_ko")
+        if title and summ:
+            lines.append(f"- { _trim(title, 120) } :: { _trim(summ, 240) }")
+
+    user = "\n".join(lines)
+
+
+    try:
+        resp = client.responses.create(
+            model=MODEL_NAME,
+            input=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            temperature=0.3,
+        )
+        text = (resp.output[0].content[0].text or "").strip()
+        lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+        return "\n".join(lines[:8]) if len(lines) > 8 else "\n".join(lines)
+    except Exception as e:
+        print(f"[WARN] Weekly Focus Insight 생성 실패: {e}")
+        return ""
+
+def to_paragraph_html_auto(text: str, target_paragraphs: int = 3) -> str:
+    text = (text or "").strip()
+    if not text:
+        return "<p style='margin:0;'>이번 주 포커스 인사이트를 생성하지 못했습니다.</p>"
+
+    # 1) 이미 빈 줄(문단 구분)이 있으면 그걸 우선 사용
+    if "\n\n" in text:
+        parts = [p.strip() for p in text.split("\n\n") if p.strip()]
+    else:
+        # 2) 빈 줄이 없으면 문장 단위로 대충 쪼개서 2~3문단으로 묶기
+        # - 마침표/물음표/느낌표 뒤 공백 기준
+        sents = [s.strip() for s in re.split(r"(?<=[\.!?])\s+", text) if s.strip()]
+
+        # 문장이 너무 적으면 그냥 1문단
+        if len(sents) <= 2:
+            parts = [text]
+        else:
+            # 목표 문단 수에 맞춰 균등 분배
+            chunk = max(2, (len(sents) + target_paragraphs - 1) // target_paragraphs)
+            parts = [" ".join(sents[i:i+chunk]) for i in range(0, len(sents), chunk)]
+
+    # 3) 각 문단을 <p>로 감싸기 (escape 처리 포함)
+    return "".join(
+        f"<p style='margin:0 0 10px 0; line-height:1.75;'>{h(p)}</p>"
+        for p in parts
+    )
+
+# =========================
+# ✅ Archive 카드용 1줄 Insight 생성
+# =========================
+def summarize_insight_for_archive(one_to_three_lines: str) -> str:
+    """
+    메인 Weekly Focus Insight(1~3줄)를 입력으로 받아,
+    아카이브 카드에 넣을 '한 줄' 요약을 생성합니다.
+    - 너무 길면 자동으로 짧게
+    - 실패 시: 첫 문장/첫 줄을 잘라서라도 반환
+    """
+    src = (one_to_three_lines or "").strip()
+    if not src:
+        return ""
+
+    # 1) 가벼운 fallback(모델 실패 대비)
+    fallback = src.splitlines()[0].strip()
+    if len(fallback) > 120:
+        fallback = fallback[:117].rstrip() + "…"
+
+    # 2) GPT로 "한 문장" 압축
+    try:
+        system = (
+            "너는 주간 산업/기술 흐름을 아카이브 카드용 '한 문장'으로 만드는 에디터입니다. "
+            "입력은 주간 인사이트(1~3줄)이며, 출력은 한국어 존댓말 1문장(마침표 1개)입니다. "
+            "\n\n"
+            "[필수 규칙]\n"
+            "1) 반드시 동향 동사(강화/가속/확산/부상/전환/재편 중 1개 이상)를 포함해, "
+            "‘무엇이 어떻게 변하고 있는지’를 흐름 중심으로 말합니다.\n"
+            "2) 주제 나열(예: ‘A와 B와 C’)이나 메타 설명(예: ‘~를 다룹니다/소개합니다/요약합니다/전반적으로’)은 금지합니다.\n"
+            "3) 특정 기업/조직/브랜드(한컴인스페이스 등) 직접 지칭은 금지합니다.\n"
+            "4) 과장, 단정적 예측, 과도한 결론, 불릿/번호는 금지합니다.\n"
+            "5) 80자 이내의 한 문장으로 작성합니다.\n"
+            "\n"
+            "[권장 구성]\n"
+            "‘이번 주에는 [핵심 흐름]이 [강화/가속/확산/부상]되고 있으며, [이유/방향]이 함께 나타나고 있습니다.’\n"
+            "\n"
+            "[좋은 예]\n"
+            "‘이번 주에는 실시간 공간정보와 무인체계 결합 흐름이 강화되며, 군·상업 활용 확산이 두드러지고 있습니다.’\n"
+            "\n"
+            "[나쁜 예]\n"
+            "‘이번 주에는 위성, 드론, AI를 다룹니다.’\n"
+            "‘A와 B가 소개되었습니다.’"
+        )
+        user = src
+
+        resp = client.responses.create(
+            model=MODEL_NAME,
+            input=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            temperature=0.3,
+        )
+        text = (resp.output[0].content[0].text or "").strip()
+
+        MAX_ARCHIVE_INSIGHT_CHARS = 150
+
+        # 한 문장만 사용
+        text = text.replace("\n", " ").strip()
+        if not text:
+            return fallback
+        if len(text) > MAX_ARCHIVE_INSIGHT_CHARS:
+            text = text[:MAX_ARCHIVE_INSIGHT_CHARS-1].rstrip() + "…"
+        return text
+    except Exception as e:
+        print(f"[WARN] Archive 1줄 Insight 생성 실패: {e}")
+        return fallback
+
+weekly_focus_insight = generate_weekly_focus_insight(
+    topic_main_articles, topic_extra_articles,
+    research_main_articles, research_extra_articles
+)
+
+print("\n" + "="*60)
+print("[Weekly Focus Insight OUTPUT]")
+print("="*60)
+print(weekly_focus_insight)
+print("="*60 + "\n")
+
+
+# # **08-2 카드/섹션 HTML + 최종 뉴스레터 HTML 생성**
+
+# In[52]:
 
 
 # ============================
-# 8. 카드/섹션 HTML + 더보기 페이지 + 최종 뉴스레터 HTML
+# 08-2. 카드/섹션 HTML + 더보기 페이지 + 최종 뉴스레터 HTML
 # ============================
+W_HEADER_BACKGROUND = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/hheader.jpg"
+HLOGO_URL = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/hlogo.png"
+if "weekly_focus_insight" not in globals() or not (weekly_focus_insight or "").strip():
+    print("[INFO] weekly_focus_insight가 없어서 1회 생성합니다.")
+    weekly_focus_insight = generate_weekly_focus_insight(
+        topic_main_articles, topic_extra_articles,
+        research_main_articles, research_extra_articles
+    )
+else:
+    print("[INFO] 기존 weekly_focus_insight를 재사용합니다. (GPT 호출 없음)")
+
 
 # 토픽별 추가 기사 전용 페이지 파일명
 # (원하는 이름으로 바꿔도 되는데, 메인 버튼 링크와 같이 써야 함)
@@ -4397,7 +4684,7 @@ def build_more_page_html(topic_extra_articles, date_range, newsletter_date, head
 
   <!-- 헤더 (메일과 유사한 스타일) -->
   <table class="hero-bg" width="100%" cellpadding="0" cellspacing="0" border="0"
-       style="background-image:url('{HEADER_BACKGROUND}');
+       style="background-image:url('{W_HEADER_BACKGROUND}');
               background-size:cover;
               background-position:center -60px;
               background-repeat:no-repeat;">
@@ -4419,7 +4706,7 @@ def build_more_page_html(topic_extra_articles, date_range, newsletter_date, head
               <table width="100%">
                 <tr>
                   <td align="left">
-                    <img src="{LOGO_URL}" style="max-width:110px; display:block;">
+                    <img src="{HLOGO_URL}" style="max-width:110px; display:block;">
                   </td>
                   <td align="right"
                       style="text-transform:uppercase; font-size:13px;
@@ -4835,7 +5122,7 @@ def build_research_more_page_html(extra_articles, date_range, newsletter_date):
 
   <!-- 헤더 (more_geoint와 동일 구조) -->
   <table class="hero-bg" width="100%" cellpadding="0" cellspacing="0" border="0"
-       style="background-image:url('{HEADER_BACKGROUND}');
+       style="background-image:url('{W_HEADER_BACKGROUND}');
               background-size:cover;
               background-position:center -60px;
               background-repeat:no-repeat;">
@@ -4857,7 +5144,7 @@ def build_research_more_page_html(extra_articles, date_range, newsletter_date):
               <table width="100%">
                 <tr>
                   <td align="left">
-                    <img src="{LOGO_URL}" style="max-width:110px; display:block;">
+                    <img src="{HLOGO_URL}" style="max-width:110px; display:block;">
                   </td>
                   <td align="right"
                       style="text-transform:uppercase; font-size:13px;
@@ -5031,266 +5318,6 @@ def build_research_more_page_html(extra_articles, date_range, newsletter_date):
 """
     return more_html
 
-
-# ============================================================
-# Weekly Focus Insight (주간 포커스 인사이트)
-# - 입력: 주제별 뉴스(우선순위 상위 10개) + 연구동향(상위 10개)
-# - 출력: 5~8줄 한국어 조언(문장형)
-# ============================================================
-
-WEEKLY_FOCUS_TITLE = "🔍 Weekly Focus Insight"
-MAX_INSIGHT_ITEMS_PER_TOPIC = 10
-MAX_INSIGHT_ITEMS_RESEARCH = 10
-
-def _take_top_n(items, n):
-    return (items or [])[:n]
-
-
-def generate_weekly_focus_insight(
-    topic_main_articles,
-    topic_extra_articles,
-    research_main_articles,
-    research_extra_articles,
-    top_k_per_topic=10
-):
-    """
-    Weekly Focus Insight:
-    - 토픽(1~4) 뉴스 + 최신 연구동향 요약(상위 항목들)을 읽고
-      한컴인스페이스에게 3~5줄 한국어 조언을 생성.
-    """
-
-    def _pick_top_k(article_list, k):
-        items = list(article_list or [])
-        # priority가 높은 것이 먼저 오도록 (None은 0 취급)
-        items.sort(key=lambda x: (x.get("priority") or 0), reverse=True)
-        return items[:k]
-
-
-    def _news_payload(a: dict):
-        # ✅ (중요) 기존 파이프라인 키(ko_title/summary) + 과거 키(title_ko/summary_ko) 모두 호환
-        return {
-            "title_ko": (a.get("ko_title") or a.get("title_ko") or "").strip(),
-            "original_title": (a.get("orig_title") or a.get("original_title") or "").strip(),
-            "summary_ko": (a.get("summary") or a.get("summary_ko") or "").strip(),
-            "source": (a.get("source") or "").strip(),
-            "date": (a.get("date") or "").strip(),
-            "url": (a.get("url") or "").strip(),
-            "priority": a.get("priority", None),
-        }
-
-    def _research_payload(a: dict):
-        return {
-            "title_ko": (a.get("title_ko") or a.get("ko_title") or "").strip(),
-            "original_title": (a.get("original_title") or a.get("orig_title") or "").strip(),
-            "summary_ko": (a.get("summary_ko") or a.get("summary") or "").strip(),
-            "journal": (a.get("journal_name") or a.get("journal") or "").strip(),
-            "published_at": (a.get("published_at") or a.get("date") or "").strip(),
-            "url": (a.get("url") or "").strip(),
-            "priority": a.get("priority", None),
-        }
-
-    ctx = {
-        "topics": {},
-        "research": {
-            "main": [],
-            "extra": []
-        }
-    }
-
-    for topic_num in [1, 2, 3, 4]:
-        main_top = _pick_top_k(topic_main_articles.get(topic_num, []), top_k_per_topic)
-        extra_top = _pick_top_k(topic_extra_articles.get(topic_num, []), top_k_per_topic)
-
-        ctx["topics"][str(topic_num)] = {
-            "main": [_news_payload(a) for a in main_top],
-            "extra": [_news_payload(a) for a in extra_top],
-        }
-
-    research_main_top = _pick_top_k(research_main_articles or [], top_k_per_topic)
-    research_extra_top = _pick_top_k(research_extra_articles or [], top_k_per_topic)
-
-    ctx["research"]["main"] = [_research_payload(a) for a in research_main_top]
-    ctx["research"]["extra"] = [_research_payload(a) for a in research_extra_top]
-
-    system = (
-        "너는 글로벌 산업·기술 변화를 구조적으로 해석하는 시니어 리서치 애널리스트입니다. "
-        "입력으로 해당 주의 뉴스와 연구동향 요약이 주어집니다. "
-        "출력은 메인 뉴스레터에 들어갈 'Weekly Focus Insight'입니다. "
-
-        "이 인사이트는 단순 요약이나 현상 나열이 아니라, "
-        "여러 사건과 기술 변화를 하나의 관점으로 묶어 해석하는 분석 문단이어야 합니다. "
-
-        "다음 기준을 반드시 지키세요: "
-        "1) 글 전체는 하나의 중심 논지(throughline)를 가져야 합니다. "
-        "   (예: '지리공간 정보가 기술을 넘어 전략 자산으로 전환되고 있다') "
-        "2) 각 문장은 앞 문장의 원인·결과·의미 확장 관계로 연결되어야 하며, "
-        "   독립적인 요약 문장을 나열하지 않습니다. "
-        "3) 'A도 일어나고 B도 일어나고 C도 일어난다' 식의 병렬 나열은 금지합니다. "
-        "4) 최소 한 번 이상 '이로 인해 / 그 결과 / 이에 따라 / 이러한 흐름은'과 같은 "
-        "   인과 또는 구조적 연결 표현을 사용합니다. "
-        "5) 변화의 의미가 드러나도록 "
-        "   '기술 → 전략', '도구 → 인프라', '운영 → 거버넌스'와 같은 전환 관점을 포함합니다. "
-        "6) 특정 기업이나 조직(한컴인스페이스 등)을 직접 지칭하지 않습니다. "
-        "7) 존댓말 서술형으로 5~8문장으로 작성합니다. 각 문장은 줄바꿈으로 분리해 한 줄에 한 문장만 씁니다. "
-        "   (불릿/번호/라벨/콜론 사용 금지, 빈 줄 금지) "
-        "8) 문장 역할(순서)을 다음 흐름으로 구성합니다: "
-        "   (1) 이번 주 핵심 변화(현상/결론) "
-        "→ (2) 구조적 원인 또는 메커니즘(왜 지금 이런 변화가 나타나는지) "
-        "→ (3) 근거 앵커 1(입력의 서로 다른 항목 중 1개를 활용해 메커니즘을 뒷받침) "
-        "→ (4) 근거 앵커 2(다른 항목 1개를 추가로 연결해 관점을 강화) "
-        "→ (5) 전환의 의미(예: 기술→전략, 도구→인프라 등) "
-        "→ (6) 실무적 조언/행동(이번 주 독자가 무엇을 점검·준비·실험해야 하는지) "
-        "→ (선택) (7) 리스크/한계 "
-        "→ (선택) (8) 다음 주 관측 포인트. "
-        "9) 입력에 포함된 서로 다른 항목(기사/연구) 최소 2개를 근거 앵커로 삼되, "
-        "   '요약'이 아니라 '메커니즘'이 드러나도록 문장 속에 녹여 씁니다. "
-        "10) 입력에 없는 사건·기술을 새로 단정해 추가하지 않습니다. "
-
-        "과장되거나 단정적인 예측은 사용하지 않습니다."
-    )
-
-
-
-
-
-    def _trim(s, n=220):
-        s = (s or "").replace("\n", " ").strip()
-        return s if len(s) <= n else s[:n-1].rstrip() + "…"
-
-    lines = []
-    for topic_num in [1, 2, 3, 4]:
-        lines.append(f"[Topic {topic_num}]")
-        items = ctx["topics"][str(topic_num)]["main"] + ctx["topics"][str(topic_num)]["extra"]
-        # 안전하게 한 번 더 priority 정렬(있으면)
-        items = sorted(items, key=lambda x: (x.get("priority") or 0), reverse=True)
-        for a in items[:top_k_per_topic]:
-            title = a.get("title_ko") or a.get("original_title")
-            summ = a.get("summary_ko")
-            if title and summ:
-                lines.append(f"- { _trim(title, 120) } :: { _trim(summ, 240) }")
-
-    lines.append("[Research]")
-    r_items = ctx["research"]["main"] + ctx["research"]["extra"]
-    r_items = sorted(r_items, key=lambda x: (x.get("priority") or 0), reverse=True)
-    for r in r_items[:top_k_per_topic]:
-        title = r.get("title_ko") or r.get("original_title")
-        summ = r.get("summary_ko")
-        if title and summ:
-            lines.append(f"- { _trim(title, 120) } :: { _trim(summ, 240) }")
-
-    user = "\n".join(lines)
-
-
-    try:
-        resp = client.responses.create(
-            model=MODEL_NAME,
-            input=[
-                {"role": "system", "content": system},
-                {"role": "user", "content": user},
-            ],
-            temperature=0.3,
-        )
-        text = (resp.output[0].content[0].text or "").strip()
-        lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
-        return "\n".join(lines[:8]) if len(lines) > 8 else "\n".join(lines)
-    except Exception as e:
-        print(f"[WARN] Weekly Focus Insight 생성 실패: {e}")
-        return ""
-
-def to_paragraph_html_auto(text: str, target_paragraphs: int = 3) -> str:
-    text = (text or "").strip()
-    if not text:
-        return "<p style='margin:0;'>이번 주 포커스 인사이트를 생성하지 못했습니다.</p>"
-
-    # 1) 이미 빈 줄(문단 구분)이 있으면 그걸 우선 사용
-    if "\n\n" in text:
-        parts = [p.strip() for p in text.split("\n\n") if p.strip()]
-    else:
-        # 2) 빈 줄이 없으면 문장 단위로 대충 쪼개서 2~3문단으로 묶기
-        # - 마침표/물음표/느낌표 뒤 공백 기준
-        sents = [s.strip() for s in re.split(r"(?<=[\.!?])\s+", text) if s.strip()]
-
-        # 문장이 너무 적으면 그냥 1문단
-        if len(sents) <= 2:
-            parts = [text]
-        else:
-            # 목표 문단 수에 맞춰 균등 분배
-            chunk = max(2, (len(sents) + target_paragraphs - 1) // target_paragraphs)
-            parts = [" ".join(sents[i:i+chunk]) for i in range(0, len(sents), chunk)]
-
-    # 3) 각 문단을 <p>로 감싸기 (escape 처리 포함)
-    return "".join(
-        f"<p style='margin:0 0 10px 0; line-height:1.75;'>{h(p)}</p>"
-        for p in parts
-    )
-
-# =========================
-# ✅ Archive 카드용 1줄 Insight 생성
-# =========================
-def summarize_insight_for_archive(one_to_three_lines: str) -> str:
-    """
-    메인 Weekly Focus Insight(1~3줄)를 입력으로 받아,
-    아카이브 카드에 넣을 '한 줄' 요약을 생성합니다.
-    - 너무 길면 자동으로 짧게
-    - 실패 시: 첫 문장/첫 줄을 잘라서라도 반환
-    """
-    src = (one_to_three_lines or "").strip()
-    if not src:
-        return ""
-
-    # 1) 가벼운 fallback(모델 실패 대비)
-    fallback = src.splitlines()[0].strip()
-    if len(fallback) > 120:
-        fallback = fallback[:117].rstrip() + "…"
-
-    # 2) GPT로 "한 문장" 압축
-    try:
-        system = (
-            "너는 주간 산업/기술 흐름을 아카이브 카드용 '한 문장'으로 만드는 에디터입니다. "
-            "입력은 주간 인사이트(1~3줄)이며, 출력은 한국어 존댓말 1문장(마침표 1개)입니다. "
-            "\n\n"
-            "[필수 규칙]\n"
-            "1) 반드시 동향 동사(강화/가속/확산/부상/전환/재편 중 1개 이상)를 포함해, "
-            "‘무엇이 어떻게 변하고 있는지’를 흐름 중심으로 말합니다.\n"
-            "2) 주제 나열(예: ‘A와 B와 C’)이나 메타 설명(예: ‘~를 다룹니다/소개합니다/요약합니다/전반적으로’)은 금지합니다.\n"
-            "3) 특정 기업/조직/브랜드(한컴인스페이스 등) 직접 지칭은 금지합니다.\n"
-            "4) 과장, 단정적 예측, 과도한 결론, 불릿/번호는 금지합니다.\n"
-            "5) 80자 이내의 한 문장으로 작성합니다.\n"
-            "\n"
-            "[권장 구성]\n"
-            "‘이번 주에는 [핵심 흐름]이 [강화/가속/확산/부상]되고 있으며, [이유/방향]이 함께 나타나고 있습니다.’\n"
-            "\n"
-            "[좋은 예]\n"
-            "‘이번 주에는 실시간 공간정보와 무인체계 결합 흐름이 강화되며, 군·상업 활용 확산이 두드러지고 있습니다.’\n"
-            "\n"
-            "[나쁜 예]\n"
-            "‘이번 주에는 위성, 드론, AI를 다룹니다.’\n"
-            "‘A와 B가 소개되었습니다.’"
-        )
-        user = src
-
-        resp = client.responses.create(
-            model=MODEL_NAME,
-            input=[
-                {"role": "system", "content": system},
-                {"role": "user", "content": user},
-            ],
-            temperature=0.3,
-        )
-        text = (resp.output[0].content[0].text or "").strip()
-
-        MAX_ARCHIVE_INSIGHT_CHARS = 150
-
-        # 한 문장만 사용
-        text = text.replace("\n", " ").strip()
-        if not text:
-            return fallback
-        if len(text) > MAX_ARCHIVE_INSIGHT_CHARS:
-            text = text[:MAX_ARCHIVE_INSIGHT_CHARS-1].rstrip() + "…"
-        return text
-    except Exception as e:
-        print(f"[WARN] Archive 1줄 Insight 생성 실패: {e}")
-        return fallback
 
 
 
@@ -6251,6 +6278,20 @@ newsletter_html = f"""
     }}
   }}
 
+    /* 데스크톱 기본 */
+    .header {{
+      background-size: cover;
+      background-position: center top;
+    }}
+
+    /* 모바일 전용 */
+    @media screen and (max-width: 600px) {{
+      .header {{
+        background-size: 200% auto;
+        background-position: center -120px;
+        min-height: 200px;
+      }}
+    }}
 
   /* ===============================
      메인 배경 스크롤 비디오
@@ -6356,33 +6397,32 @@ newsletter_html = f"""
 <!-- 헤더 -->
 
 <table class="hero-bg" width="100%" cellpadding="0" cellspacing="0" border="0"
-       style="background-image:url('{HEADER_BACKGROUND}');
+       style="background-image:url('{W_HEADER_BACKGROUND}');
               background-size:cover;
-              background-position:center -80px;
+              background-position:center;
               background-repeat:no-repeat;">
   <tr>
     <td align="center" class="hero-header-cell"
-        bgcolor="#000000"
-        style="padding:12px 24px 10px 24px;
-               background: linear-gradient(to bottom right,
-                           rgba(0,0,40,0.55),
-                           rgba(0,0,0,0.55));
-               color:#ffffff; ;">
+        bgcolor="#ffffff"
+        style="padding:16px 24px 14px 24px;
+              background: rgba(255,255,255,0.2);
+              color:#000000;">
+
 
       <table cellpadding="0" cellspacing="0" border="0"
              style="max-width:{CONTENT_WIDTH}px; width:100%;
-                    color:#ffffff; margin:0 auto;">
+                    color:#000000; margin:0 auto;">
 
         <tr>
           <td class="inner-padding" style="padding:16px 24px 8px 24px;">
             <table width="100%">
               <tr>
                 <td align="left">
-                  <img src="{LOGO_URL}" style="max-width:110px; display:block;">
+                  <img src="{HLOGO_URL}" style="max-width:110px; display:block;">
                 </td>
                 <td align="right"
-                    style="text-transform:uppercase; font-size:13px;
-                           color:#ffffff; ;">
+                    style="text-transform:uppercase; font-size:13px; font-weight:500;
+                           color:#000000; ;">
                   WWW.INSPACE.CO.KR
                 </td>
               </tr>
@@ -6392,11 +6432,11 @@ newsletter_html = f"""
 
         <tr>
           <td align="center" class="inner-padding"
-              style="padding:12px 24px 6px 24px;
-                     font-size:40px; font-weight:600;
-                     color:#ffffff; ;">
+              style="padding:32px 24px 6px 24px;
+                     font-size:40px; font-weight:850;
+                     color:#000000; ;">
             <div class="main-title"
-                 style="color:#ffffff; ;">
+                 style="color:#000000; ;">
               InSpace Weekly
             </div>
           </td>
@@ -6405,8 +6445,8 @@ newsletter_html = f"""
         <tr>
           <td align="center" class="inner-padding sub-title"
               style="padding:0 24px 8px 24px;
-                     font-size:15px; font-weight:300; opacity:0.85;
-                     color:#ffffff; ;">
+                     font-size:15px; font-weight:500; opacity:0.85;
+                     color:#000000; ;">
             {date_range}
           </td>
         </tr>
@@ -6417,11 +6457,11 @@ newsletter_html = f"""
               <tr>
                 <td></td>
                 <td align="right"
-                    style="font-size:13px; line-height:1.6;
-                           color:#ffffff; ;">
+                    style="font-size:13px; line-height:1.6; font-weight:500;
+                           color:#000000; ;">
                   한컴 인스페이스<br>{WEEK_LABEL} 뉴스레터
                   <div style="margin-top:4px; letter-spacing:0.14em;
-                              color:#ffffff; ;">
+                              color:#000000; ;">
                     업데이트: {NEWSLETTER_DATE}
                   </div>
                 </td>
@@ -6734,7 +6774,7 @@ for topic_num, url in TOPIC_MORE_URLS.items():
 # # **09 이메일 자동 발송**
 # ### **(Colab에서 실행하면 테스트 이메일로, Github 실행 시, 실제 수신자에게)**
 
-# In[14]:
+# In[53]:
 
 
 SEND_EMAIL = os.environ.get("SEND_EMAIL", "true").lower() == "true"
@@ -6787,7 +6827,7 @@ else:
 
 # # **10. 최종 통계 출력**
 
-# In[15]:
+# In[55]:
 
 
 # ============================
