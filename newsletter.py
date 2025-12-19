@@ -9,7 +9,7 @@
 
 # # **01-1 설치 & import**
 
-# In[ ]:
+# In[1]:
 
 
 # ============================
@@ -49,7 +49,7 @@ if IN_COLAB:
 
 # # **01-2 라이브러리 설치**
 
-# In[ ]:
+# In[2]:
 
 
 # ============================
@@ -93,7 +93,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # # **02-1 설정 (API 키)**
 
-# In[ ]:
+# In[3]:
 
 
 # ============================================================
@@ -118,7 +118,7 @@ NEWSDATA_BASE_URL_LATEST = "https://newsdata.io/api/1/latest"
 
 # # **02-2 설정 (날짜, 주제, 키워드, 상수)**
 
-# In[ ]:
+# In[4]:
 
 
 # 사용할 GPT mini 모델 이름 (예: "gpt-4.1-mini", 나중에 "gpt-5.1-mini"로 교체 가능)
@@ -338,7 +338,7 @@ MIN_TOTAL_PER_TOPIC = ARTICLES_PER_TOPIC_FINAL + 6  # 3 + 6 = 9
 
 # # **03 NewsAPI로 기사 수집**
 
-# In[ ]:
+# In[5]:
 
 
 # ============================
@@ -1560,7 +1560,7 @@ if IN_COLAB:
 
 # # **03-1 언어별 비율 계산 함수**
 
-# In[ ]:
+# In[6]:
 
 
 # ============================
@@ -1617,7 +1617,7 @@ def is_korean_article(article_dict):
 
 # # **04 GPT (엄격 필터링/분류/요약)**
 
-# In[ ]:
+# In[7]:
 
 
 # ============================
@@ -1927,7 +1927,7 @@ if IN_COLAB:
 
 # # **05 부족한 토픽은 백업 프롬프트로 채우기 + 토픽당 3개 맞추기**
 
-# In[ ]:
+# In[8]:
 
 
 # ============================
@@ -2050,7 +2050,7 @@ print("CSV 저장 완료: newsletter_articles.csv")
 
 # # **06 메인(3개) + 더보기 기사 분리**
 
-# In[ ]:
+# In[9]:
 
 
 # ============================
@@ -2461,7 +2461,7 @@ print("\n" + "="*60 + "\n")
 
 # # **07 최신 연구동향 (학술지 섹션) 설정**
 
-# In[ ]:
+# In[10]:
 
 
 # ============================================
@@ -2898,7 +2898,7 @@ def collect_research_articles_from_crossref(
 
 # # **07-2 최신 연구동향 추가**
 
-# In[ ]:
+# In[11]:
 
 
 # ============================================
@@ -3236,7 +3236,7 @@ else:
 
 # # **07-1 썸네일 추출 (기본 썸네일 포함)**
 
-# In[ ]:
+# In[12]:
 
 
 import re
@@ -3801,7 +3801,7 @@ print("(본문 영역 위주 + sidebar/related 제외 + 스마트 필터 + canon
 # 
 # # **08 카드/섹션 HTML + 최종 뉴스레터 HTML 생성**
 
-# In[67]:
+# In[13]:
 
 
 # ============================
@@ -6358,7 +6358,7 @@ newsletter_html = f"""
 <table class="hero-bg" width="100%" cellpadding="0" cellspacing="0" border="0"
        style="background-image:url('{HEADER_BACKGROUND}');
               background-size:cover;
-              background-position:center -60px;
+              background-position:center -80px;
               background-repeat:no-repeat;">
   <tr>
     <td align="center" class="hero-header-cell"
@@ -6734,7 +6734,7 @@ for topic_num, url in TOPIC_MORE_URLS.items():
 # # **09 이메일 자동 발송**
 # ### **(Colab에서 실행하면 테스트 이메일로, Github 실행 시, 실제 수신자에게)**
 
-# In[68]:
+# In[14]:
 
 
 SEND_EMAIL = os.environ.get("SEND_EMAIL", "true").lower() == "true"
@@ -6787,7 +6787,7 @@ else:
 
 # # **10. 최종 통계 출력**
 
-# In[69]:
+# In[15]:
 
 
 # ============================
