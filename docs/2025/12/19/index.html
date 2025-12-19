@@ -1,0 +1,1519 @@
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<title>한컴인스페이스 12월 3주차 뉴스레터</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+
+<style>
+  @media (max-width: 768px) {
+    .hero-bg {
+      background-position: center 0 !important;
+    }
+    .hero-header-cell {
+      padding: 32px 0 28px 0 !important;
+    }
+    .inner-padding {
+      padding-left: 16px !important;
+      padding-right: 16px !important;
+    }
+    .main-title {
+      font-size: 32px !important;
+    }
+    .sub-title {
+      font-size: 14px !important;
+    }
+  }
+
+
+  /* ===============================
+     메인 배경 스크롤 비디오
+     =============================== */
+  .main-bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .main-bg-video,
+  .main-bg-image,
+  .main-bg-whitewash {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .main-bg-video {
+    object-fit: cover;
+    opacity: 0;
+  }
+
+  .main-bg-image {
+    background-image: url('https://hancom-inspace.github.io/Weekly-Newsletter/assets/archive_bg_fallback.png');
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    display: none;
+    opacity: 0;
+  }
+
+  .main-bg-whitewash {
+    background: #f3f4f6;
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .main-bg-video { display: none !important; }
+    .main-bg-image { display: block !important; }
+  }
+
+    /* 푸터를 항상 아래로 밀어주는 레이아웃 (iOS 100vh 이슈 대응) */
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
+
+    background: #f3f4f6;
+
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont,
+                "Apple SD Gothic Neo", "맑은 고딕", system-ui, sans-serif;
+  }
+
+
+  .content-wrapper {
+    flex: 1 0 auto;
+  }
+
+  .footer-wrap {
+    flex-shrink: 0;
+  }
+
+
+</style>
+
+
+
+</head>
+
+<body style="margin:0; padding:0; background:#f3f4f6;
+             font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","맑은 고딕",system-ui,sans-serif;">
+
+
+<!-- (NEW) 메인 배경 레이어: 이메일에서는 JS가 안 돌아 display:none 그대로라 영상/이미지가 “안 보임(흰색 유지)” -->
+<div class="main-bg-layer" id="main-bg-layer" style="display:none;">
+  <video
+    class="main-bg-video"
+    id="main-bg-video"
+    playsinline
+    muted
+    preload="auto"
+  >
+    <source src="https://hancom-inspace.github.io/Weekly-Newsletter/assets/archivebg1.mp4" type="video/mp4">
+  </video>
+
+  <div class="main-bg-image" id="main-bg-image"></div>
+  <div class="main-bg-whitewash" id="main-bg-whitewash"></div>
+</div>
+
+
+
+<!-- 헤더 -->
+
+<table class="hero-bg" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background-image:url('https://static.wixstatic.com/media/b749e1_60701dc82eb542149d95637ce7a34802~mv2_d_5568_3712_s_4_2.jpg/v1/fill/w_1553,h_1071,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/b749e1_60701dc82eb542149d95637ce7a34802~mv2_d_5568_3712_s_4_2.jpg');
+              background-size:cover;
+              background-position:center -60px;
+              background-repeat:no-repeat;">
+  <tr>
+    <td align="center" class="hero-header-cell"
+        bgcolor="#000000"
+        style="padding:12px 24px 10px 24px;
+               background: linear-gradient(to bottom right,
+                           rgba(0,0,40,0.55),
+                           rgba(0,0,0,0.55));
+               color:#ffffff; ;">
+
+      <table cellpadding="0" cellspacing="0" border="0"
+             style="max-width:700px; width:100%;
+                    color:#ffffff; margin:0 auto;">
+
+        <tr>
+          <td class="inner-padding" style="padding:16px 24px 8px 24px;">
+            <table width="100%">
+              <tr>
+                <td align="left">
+                  <img src="https://static.wixstatic.com/media/0c4f16_c8132c52e3ef485286a1f0ec457a5cdb~mv2.png/v1/fill/w_111,h_44,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logotype_vert_rgb_v2__w__w500.png%201x,%20https://static.wixstatic.com/media/0c4f16_c8132c52e3ef485286a1f0ec457a5cdb~mv2.png/v1/fill/w_222,h_88,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logotype_vert_rgb_v2__w__w500.png%202x" style="max-width:110px; display:block;">
+                </td>
+                <td align="right"
+                    style="text-transform:uppercase; font-size:13px;
+                           color:#ffffff; ;">
+                  WWW.INSPACE.CO.KR
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="center" class="inner-padding"
+              style="padding:12px 24px 6px 24px;
+                     font-size:40px; font-weight:600;
+                     color:#ffffff; ;">
+            <div class="main-title"
+                 style="color:#ffffff; ;">
+              InSpace Weekly
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="center" class="inner-padding sub-title"
+              style="padding:0 24px 8px 24px;
+                     font-size:15px; font-weight:300; opacity:0.85;
+                     color:#ffffff; ;">
+            2025년 12월 11일 ~ 2025년 12월 18일
+          </td>
+        </tr>
+
+        <tr>
+          <td class="inner-padding" style="padding:8px 24px 12px 24px;">
+            <table width="100%">
+              <tr>
+                <td></td>
+                <td align="right"
+                    style="font-size:13px; line-height:1.6;
+                           color:#ffffff; ;">
+                  한컴 인스페이스<br>12월 3주차 뉴스레터
+                  <div style="margin-top:4px; letter-spacing:0.14em;
+                              color:#ffffff; ;">
+                    업데이트: 2025.12.19
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+
+<!-- 본문 -->
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:24px 0 16px 0;">
+  <tr>
+    <td align="center">
+      <table cellpadding="0" cellspacing="0" border="0"
+             style="max-width:700px; width:100%; margin:0 auto;">
+        <tr>
+          <td class="inner-padding" style="padding:0 16px 0 16px;">
+
+            <!-- 이전 뉴스레터 보기 버튼 -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
+              <tr>
+                <td
+                  style="border-radius:12px;
+                        overflow:hidden;
+                        border:1px solid #e5e7eb;
+                        background-image:url('https://hancom-inspace.github.io/Weekly-Newsletter/assets/archivebutton.png');
+                        background-size:cover;
+                        background-position:center;
+                        background-repeat:no-repeat;"
+                        box-shadow:0 10px 24px rgba(0,0,0,0.14);">
+
+                  <a href="https://hancom-inspace.github.io/Weekly-Newsletter/archive.html"
+                    style="display:block; text-decoration:none; color:inherit;">
+
+                    <div style="background:rgba(255,255,255,0.70); padding:20px 18px;">
+                      <div style="font-size:14px; font-weight:700; color:#000000; margin-bottom:4px;">
+                        아카이브
+                      </div>
+                      <div style="font-size:18px; font-weight:700; color:#000000;">
+                        이전 뉴스레터 다시 보기 →
+                      </div>
+                    </div>
+
+                  </a>
+                </td>
+              </tr>
+            </table>
+
+            
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
+  <tr><td align="center">
+    <table cellpadding="0" cellspacing="0" border="0"
+           style="width:100%; max-width: 700px;
+                  border:1px solid #e5e7eb;
+                  border-radius:12px;
+                  overflow:hidden;
+                  box-sizing:border-box;
+                  box-shadow:0 10px 24px rgba(0,0,0,0.14);">
+      <tr>
+        <td style="
+            background-image:url('https://hancom-inspace.github.io/Weekly-Newsletter/assets/insightcard2.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat:no-repeat;
+            padding:0;">
+
+          <!-- 가독성 오버레이 -->
+          <div style="background:rgba(255,255,255,0.65);
+                      padding:15px;">
+
+            <div style="font-size:20px; font-weight:800; color:#000000;">
+              🔍 Weekly Focus Insight
+            </div>
+
+            <div style="font-size:14px; color:#000000; line-height:1.7; font-weight:500;
+                        padding-top:10px; word-break: keep-all; overflow-wrap: break-word;">
+              <p style='margin:0 0 10px 0; line-height:1.75;'>이번 주 지리공간 정보와 위성 데이터 활용이 단순 기술적 도구를 넘어 전략적 인프라와 거버넌스로 전환되는 흐름이 뚜렷하게 나타났습니다. 이는 위성 영상과 합성개구레이더(SAR) 데이터가 기후 변화 분석, 재난 대응, 군사 작전, 인권 증거 확보 등 다양한 분야에서 핵심 증거와 운영 기반으로 자리매김했기 때문입니다.</p><p style='margin:0 0 10px 0; line-height:1.75;'>예를 들어, 고산 아시아 지역의 눈 밀도 시공간 변동 연구와 인도네시아 국가 위기 센터의 재난 대응 체계 구축은 위성 기반 지리공간 정보가 환경·재난 거버넌스에 필수적 역할을 한다는 점을 보여줍니다. 동시에, 위성 영상의 법의학적 활용과 군사 작전 분석 사례는 지리공간 정보가 국제법 집행과 안보 전략에서 증거 인프라로서 기능하는 새로운 패러다임을 시사합니다.</p><p style='margin:0 0 10px 0; line-height:1.75;'>이러한 흐름은 단순한 데이터 수집과 분석 단계를 넘어, 지리공간 정보가 정책 결정과 전략적 대응의 중추 인프라로 자리잡고 있음을 의미하며, 이에 따라 조직들은 위성 데이터의 신뢰성 확보와 지상 인프라 보안 강화에 집중해야 합니다. 특히, 위성사진 수출 규제 완화와 국제 협력 확대, 그리고 지상국 보안 강화는 글로벌 지리공간 정보 활용의 지속 가능성을 좌우할 핵심 과제로 부상하고 있으므로, 관련 규제 환경과 보안 체계를 면밀히 점검하고 대응 전략을 마련하는 것이 필요합니다.</p><p style='margin:0 0 10px 0; line-height:1.75;'>다음 주에는 위성 데이터의 실시간 주문형 접근 플랫폼 확장과 SAR 위성 기술의 상용화 진전이 지리공간 정보 인프라 고도화에 미치는 영향을 주목할 필요가 있습니다.</p>
+            </div>
+
+          </div>
+
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
+
+            
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:36px;">
+  <tr>
+    <td align="center">
+      <table cellpadding="0" cellspacing="0" border="0"
+             style="width:100%;
+                    max-width:700px;
+                    background:#f9fafb;
+                    border:1px solid #e5e7eb;
+                    border-radius:12px;
+                    padding:20px;
+                    box-sizing:border-box;
+                    box-shadow:0 10px 24px rgba(0,0,0,0.14);">
+        <tr>
+          <td>
+            
+<div style="font-size:26px; font-weight:800; color:#111827;
+            margin-bottom:24px; line-height:1.3;">
+  🛰️ 위성 영상 / SAR·광학·하이퍼스펙트럴 이미지 분석
+</div>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td style="padding:0; margin:0;">
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+        <tr>
+
+          <!-- 썸네일 -->
+          <td valign="top" width="135" style="padding:0;">
+            <a href="https://news.google.com/rss/articles/CBMiYEFVX3lxTE5NaERwdG16a0NPdS0yNVZScUk5RmFrUy1hSldQSnhMVjRQNlBCd3QxdlZfMTA0d2stUmRiaHFrdFM1UFhKZmdJMVZZUXBPTG5NR3pvODFCUGJPN3gwVW95Qg?oc=5" target="_blank" style="text-decoration:none;">
+              <img src="https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg" width="120" height="120"
+                   style="display:block; border-radius:14px; object-fit:cover;"
+                   onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+            </a>
+          </td>
+
+          <!-- 제목/부제목 -->
+          <td valign="top" style="padding-left:6px;">
+
+            <div style="font-size:18px; font-weight:700; color:#111;
+                        margin-bottom:4px; line-height:1.35;">
+              위성사진 수출도 규제에 막혀…민간 위성기업, 제도부터 바꿔야 - 아시아경제
+            </div>
+
+            
+            <div style="font-size:14px; color:#555; margin-bottom:4px; line-height:1.35;">
+              위성사진 수출도 규제에 막혀…민간 위성기업, 제도부터 바꿔야 - 아시아경제
+            </div>
+
+            <div style="font-size:12px; color:#888; margin-bottom:2px;">
+              2025-12-16
+            </div>
+
+          </td>
+
+        </tr>
+
+        <!-- 요약 -->
+        <tr>
+          <td colspan="2" style="padding-top:12px;">
+            <div style="font-size:14px; color:#333; line-height:1.8;">
+              국내 민간 위성기업들이 위성사진 수출 규제로 인해 어려움을 겪고 있으며, 이를 해결하기 위해 관련 제도 개선이 시급하다는 지적이 나오고 있다. 위성 영상 데이터의 활용과 해외 진출을 확대하기 위해서는 규제 완화와 제도적 지원이 필요하다.
+            </div>
+          </td>
+        </tr>
+
+        <!-- 원문 링크 -->
+        <tr>
+          <td colspan="2" style="padding-top:6px;">
+            <a href="https://news.google.com/rss/articles/CBMiYEFVX3lxTE5NaERwdG16a0NPdS0yNVZScUk5RmFrUy1hSldQSnhMVjRQNlBCd3QxdlZfMTA0d2stUmRiaHFrdFM1UFhKZmdJMVZZUXBPTG5NR3pvODFCUGJPN3gwVW95Qg?oc=5" target="_blank"
+               style="font-size:13px; color:#0066cc; text-decoration:none;">
+              자세히 보기 →
+            </a>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td style="padding:0; margin:0;">
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+        <tr>
+
+          <!-- 썸네일 -->
+          <td valign="top" width="135" style="padding:0;">
+            <a href="https://www.globalsecurity.org/space/library/news/2025/space-251217-finmod01.htm" target="_blank" style="text-decoration:none;">
+              <img src="https://www.globalsecurity.org/space/library/news/images/finmod.png" width="120" height="120"
+                   style="display:block; border-radius:14px; object-fit:cover;"
+                   onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+            </a>
+          </td>
+
+          <!-- 제목/부제목 -->
+          <td valign="top" style="padding-left:6px;">
+
+            <div style="font-size:18px; font-weight:700; color:#111;
+                        margin-bottom:4px; line-height:1.35;">
+              핀란드, 폴란드·네덜란드와 SAR 위성 협력 의향서 체결 예정
+            </div>
+
+            
+            <div style="font-size:14px; color:#555; margin-bottom:4px; line-height:1.35;">
+              Finland to sign letter of intent on SAR satellite cooperation with Poland and the Netherlands
+            </div>
+
+            <div style="font-size:12px; color:#888; margin-bottom:2px;">
+              2025-12-18
+            </div>
+
+          </td>
+
+        </tr>
+
+        <!-- 요약 -->
+        <tr>
+          <td colspan="2" style="padding-top:12px;">
+            <div style="font-size:14px; color:#333; line-height:1.8;">
+              핀란드 국방부는 올해 초 핀란드 기업 ICEYE Oy로부터 합성개구레이더(SAR) 위성을 도입하는 것을 승인했으며, SAR 위성 활용을 위한 국제 협력을 구축하고자 폴란드 및 네덜란드와 협력 의향서를 체결할 계획이다. 이번 협력은 위성 영상 분석 및 방위 분야에서의 공동 대응력 강화를 목표로 한다.
+            </div>
+          </td>
+        </tr>
+
+        <!-- 원문 링크 -->
+        <tr>
+          <td colspan="2" style="padding-top:6px;">
+            <a href="https://www.globalsecurity.org/space/library/news/2025/space-251217-finmod01.htm" target="_blank"
+               style="font-size:13px; color:#0066cc; text-decoration:none;">
+              자세히 보기 →
+            </a>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td style="padding:0; margin:0;">
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+        <tr>
+
+          <!-- 썸네일 -->
+          <td valign="top" width="135" style="padding:0;">
+            <a href="https://www.helpnetsecurity.com/2025/12/18/oystein-thorvaldsen-ksat-space-ground-stations-security/" target="_blank" style="text-decoration:none;">
+              <img src="https://img.helpnetsecurity.com/wp-content/uploads/2025/12/13164716/oystein_thorvaldsen-2-ksat.webp" width="120" height="120"
+                   style="display:block; border-radius:14px; object-fit:cover;"
+                   onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+            </a>
+          </td>
+
+          <!-- 제목/부제목 -->
+          <td valign="top" style="padding-left:6px;">
+
+            <div style="font-size:18px; font-weight:700; color:#111;
+                        margin-bottom:4px; line-height:1.35;">
+              우주 공간의 취약점은 궤도가 아닌 지상에 있다
+            </div>
+
+            
+            <div style="font-size:14px; color:#555; margin-bottom:4px; line-height:1.35;">
+              The soft underbelly of space isn’t in orbit, it’s on the ground
+            </div>
+
+            <div style="font-size:12px; color:#888; margin-bottom:2px;">
+              2025-12-18
+            </div>
+
+          </td>
+
+        </tr>
+
+        <!-- 요약 -->
+        <tr>
+          <td colspan="2" style="padding-top:12px;">
+            <div style="font-size:14px; color:#333; line-height:1.8;">
+              KSAT의 CISO Øystein Thorvaldsen는 지상국이 우주 시스템에 접근하는 현실적인 경로로서 적대 세력의 주요 타깃임을 강조하며, 지상국 보안이 우주 시스템 보호의 핵심임을 설명한다. 그는 많은 위험이 지상 인프라에서 비롯되며, 이에 대한 보안 강화가 우주 영상 및 위성 데이터 분석의 신뢰성을 확보하는 데 필수적이라고 지적한다.
+            </div>
+          </td>
+        </tr>
+
+        <!-- 원문 링크 -->
+        <tr>
+          <td colspan="2" style="padding-top:6px;">
+            <a href="https://www.helpnetsecurity.com/2025/12/18/oystein-thorvaldsen-ksat-space-ground-stations-security/" target="_blank"
+               style="font-size:13px; color:#0066cc; text-decoration:none;">
+              자세히 보기 →
+            </a>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<div style="margin-top:12px; text-align:right;">
+  <a href="https://hancom-inspace.github.io/Weekly-Newsletter/2025/12/19/more_satellite.html"
+     style="display:inline-block; font-size:13px; font-weight:600;
+            color:#111827; text-decoration:none;
+            padding:6px 12px; border-radius:999px;
+            border:1px solid #d1d5db; background:#ffffff;">
+    이 주제 추가 기사 보기 →
+  </a>
+</div>
+
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:36px;">
+  <tr>
+    <td align="center">
+      <table cellpadding="0" cellspacing="0" border="0"
+             style="width:100%;
+                    max-width:700px;
+                    background:#f9fafb;
+                    border:1px solid #e5e7eb;
+                    border-radius:12px;
+                    padding:20px;
+                    box-sizing:border-box;
+                    box-shadow:0 10px 24px rgba(0,0,0,0.14);">
+        <tr>
+          <td>
+            
+<div style="font-size:26px; font-weight:800; color:#111827;
+            margin-bottom:24px; line-height:1.3;">
+  🤖 AI 데이터·분석 플랫폼 / MLOps·자동화
+</div>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td style="padding:0; margin:0;">
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+        <tr>
+
+          <!-- 썸네일 -->
+          <td valign="top" width="135" style="padding:0;">
+            <a href="https://news.google.com/rss/articles/CBMihwVBVV95cUxORWVmMXI1MjdUTGNERXBma1U1R3RFT09zNnFVYXF4bVFUeEU4amlqclR5MlNPUHJ0Nm11dDg1cmhoU3ZOa3RiaWxwcldyYmtfVTE2VWY5X2s2YUJLb2N5ZEtQVmJwRTJ2bjlHVlcwRFoxbUxjcFAtRU9JRlpfU094UDQ2U1VZZmR0MkR3RGlHSGkxd2VIbHpFUUp4SGlxcjU1amhIcXVuSjlyMWNiclk3emt3SlBNcFJReWE0TkttbmU2ckZHV2FqeW85MXVjNHdCWkFqc1BQWWNUTmk0cTE1MzFrdFB1NHdqSFV5QUR4N0VfdjFadVktdFVfM0VscktveEFDbHBKVC1lbHhjbjBKaGxUSEUwQm9XY3J4UkFfMDIxSl93ZGNhQUNmVHFpaFIwd3BreXkzMTcxM1MzOGtkQnlXOGxZWi1tVnJCUzdaYnR3a2RGYk1OU05Hak1hOTljUF8tLXlvMWdvaHNVMjdfN1NHWnZZcHJVNlg0MjlzLVFyZXdaNmJ5ZVVaZkNMV2pvZ3lVeTFSNmdxVnBMOHgxczZ5TGtQSFhOeEh3LUdHRnduRUlCY3kySVcxd09QWmM2ZEpIV1RQbHdkWDNfRUU0eDVPRXhNeXdPT0dEYzJjUkRjY1VfZWZsS2lOZUlKcEk4b193X1pVX2h0THMxRE9QaXd2OWhKZlZZRGFDLS1CcGtRbXROTEU1R0E0SmlpR09GMjFiSlhMSDhLUGViVzhqOFlPcFZ1N0l5SDlJa0EwbXgxbEdKZk45T1B1Uk4zaVFBbWd4YW1zaEwya0pJemk2NWdaaW9DOVgtRHRIQTN2akhfOFZET0pudUtYMFk3ZEJmNGc3NFpBcw?oc=5" target="_blank" style="text-decoration:none;">
+              <img src="https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg" width="120" height="120"
+                   style="display:block; border-radius:14px; object-fit:cover;"
+                   onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+            </a>
+          </td>
+
+          <!-- 제목/부제목 -->
+          <td valign="top" style="padding-left:6px;">
+
+            <div style="font-size:18px; font-weight:700; color:#111;
+                        margin-bottom:4px; line-height:1.35;">
+              안랩클라우드메이트, ‘2025년 민간클라우드 기반 AI·데이터레이크 활용지원 사업’ 완수
+            </div>
+
+            
+            <div style="font-size:14px; color:#555; margin-bottom:4px; line-height:1.35;">
+              안랩클라우드메이트, ‘2025년 민간클라우드 기반 AI·데이터레이크 활용지원 사업’ 완수 - MSN
+            </div>
+
+            <div style="font-size:12px; color:#888; margin-bottom:2px;">
+              2025-12-13
+            </div>
+
+          </td>
+
+        </tr>
+
+        <!-- 요약 -->
+        <tr>
+          <td colspan="2" style="padding-top:12px;">
+            <div style="font-size:14px; color:#333; line-height:1.8;">
+              안랩클라우드메이트가 2025년 민간 클라우드 기반 AI 및 데이터레이크 활용지원 사업을 성공적으로 완수했다. 이번 사업은 AI 데이터 분석 플랫폼과 클라우드 인프라를 활용해 기업의 데이터 활용 역량을 강화하는 데 중점을 두었다.
+            </div>
+          </td>
+        </tr>
+
+        <!-- 원문 링크 -->
+        <tr>
+          <td colspan="2" style="padding-top:6px;">
+            <a href="https://news.google.com/rss/articles/CBMihwVBVV95cUxORWVmMXI1MjdUTGNERXBma1U1R3RFT09zNnFVYXF4bVFUeEU4amlqclR5MlNPUHJ0Nm11dDg1cmhoU3ZOa3RiaWxwcldyYmtfVTE2VWY5X2s2YUJLb2N5ZEtQVmJwRTJ2bjlHVlcwRFoxbUxjcFAtRU9JRlpfU094UDQ2U1VZZmR0MkR3RGlHSGkxd2VIbHpFUUp4SGlxcjU1amhIcXVuSjlyMWNiclk3emt3SlBNcFJReWE0TkttbmU2ckZHV2FqeW85MXVjNHdCWkFqc1BQWWNUTmk0cTE1MzFrdFB1NHdqSFV5QUR4N0VfdjFadVktdFVfM0VscktveEFDbHBKVC1lbHhjbjBKaGxUSEUwQm9XY3J4UkFfMDIxSl93ZGNhQUNmVHFpaFIwd3BreXkzMTcxM1MzOGtkQnlXOGxZWi1tVnJCUzdaYnR3a2RGYk1OU05Hak1hOTljUF8tLXlvMWdvaHNVMjdfN1NHWnZZcHJVNlg0MjlzLVFyZXdaNmJ5ZVVaZkNMV2pvZ3lVeTFSNmdxVnBMOHgxczZ5TGtQSFhOeEh3LUdHRnduRUlCY3kySVcxd09QWmM2ZEpIV1RQbHdkWDNfRUU0eDVPRXhNeXdPT0dEYzJjUkRjY1VfZWZsS2lOZUlKcEk4b193X1pVX2h0THMxRE9QaXd2OWhKZlZZRGFDLS1CcGtRbXROTEU1R0E0SmlpR09GMjFiSlhMSDhLUGViVzhqOFlPcFZ1N0l5SDlJa0EwbXgxbEdKZk45T1B1Uk4zaVFBbWd4YW1zaEwya0pJemk2NWdaaW9DOVgtRHRIQTN2akhfOFZET0pudUtYMFk3ZEJmNGc3NFpBcw?oc=5" target="_blank"
+               style="font-size:13px; color:#0066cc; text-decoration:none;">
+              자세히 보기 →
+            </a>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td style="padding:0; margin:0;">
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+        <tr>
+
+          <!-- 썸네일 -->
+          <td valign="top" width="135" style="padding:0;">
+            <a href="https://financialpost.com/globe-newswire/inbenta-ai-appoints-channel-veteran-brandon-pineda-to-spearhead-aggressive-ecosystem-expansion-as-head-of-global-partnerships-amid-surging-demand-for-production-ready-enterprise-ai" target="_blank" style="text-decoration:none;">
+              <img src="https://smartcdn.gprod.postmedia.digital/financialpost/wp-content/uploads/2025/12/brandon-pineda-inbenta-ai-head-of-global-partnerships.jpeg" width="120" height="120"
+                   style="display:block; border-radius:14px; object-fit:cover;"
+                   onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+            </a>
+          </td>
+
+          <!-- 제목/부제목 -->
+          <td valign="top" style="padding-left:6px;">
+
+            <div style="font-size:18px; font-weight:700; color:#111;
+                        margin-bottom:4px; line-height:1.35;">
+              Inbenta AI, 글로벌 파트너십 책임자로 브랜든 피네다 임명하며 엔터프라이즈 AI 생태계 확장 가속
+            </div>
+
+            
+            <div style="font-size:14px; color:#555; margin-bottom:4px; line-height:1.35;">
+              Inbenta AI Appoints Channel Veteran Brandon Pineda to Spearhead Aggressive Ecosystem Expansion as Head of Global Partnerships Amid Surging Demand for Production-Ready Enterprise AI
+            </div>
+
+            <div style="font-size:12px; color:#888; margin-bottom:2px;">
+              2025-12-18
+            </div>
+
+          </td>
+
+        </tr>
+
+        <!-- 요약 -->
+        <tr>
+          <td colspan="2" style="padding-top:12px;">
+            <div style="font-size:14px; color:#333; line-height:1.8;">
+              Inbenta AI는 생산 준비가 완료된 AI 에이전트 분야의 혁신 기업으로, 채널 전문가 브랜든 피네다를 글로벌 파트너십 책임자로 임명했다. 이번 전략적 인사는 엔터프라이즈 AI에 대한 수요 급증에 대응하여 Inbenta AI의 생태계 확장을 가속화하려는 의지를 반영한다. 이를 통해 기업용 AI 솔루션의 채택과 파트너십 네트워크를 강화할 계획이다.
+            </div>
+          </td>
+        </tr>
+
+        <!-- 원문 링크 -->
+        <tr>
+          <td colspan="2" style="padding-top:6px;">
+            <a href="https://financialpost.com/globe-newswire/inbenta-ai-appoints-channel-veteran-brandon-pineda-to-spearhead-aggressive-ecosystem-expansion-as-head-of-global-partnerships-amid-surging-demand-for-production-ready-enterprise-ai" target="_blank"
+               style="font-size:13px; color:#0066cc; text-decoration:none;">
+              자세히 보기 →
+            </a>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td style="padding:0; margin:0;">
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+        <tr>
+
+          <!-- 썸네일 -->
+          <td valign="top" width="135" style="padding:0;">
+            <a href="https://economictimes.indiatimes.com/news/international/us/micron-stock-soars-11-after-crushing-q1-results-and-strong-forward-guidance-will-mu-stock-keep-rising-as-analysts-call-it-a-strong-buy/articleshow/126060793.cms" target="_blank" style="text-decoration:none;">
+              <img src="https://img.etimg.com/thumb/msid-126060828,width-1200,height-630,imgsize-97742,overlay-economictimes/articleshow.jpg" width="120" height="120"
+                   style="display:block; border-radius:14px; object-fit:cover;"
+                   onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+            </a>
+          </td>
+
+          <!-- 제목/부제목 -->
+          <td valign="top" style="padding-left:6px;">
+
+            <div style="font-size:18px; font-weight:700; color:#111;
+                        margin-bottom:4px; line-height:1.35;">
+              마이크론 주가, 1분기 실적 호조와 강력한 전망에 11% 급등
+            </div>
+
+            
+            <div style="font-size:14px; color:#555; margin-bottom:4px; line-height:1.35;">
+              Micron stock soars 11% after crushing Q1 results and strong forward guidance – will MU stock keep rising as analysts call it a strong buy?
+            </div>
+
+            <div style="font-size:12px; color:#888; margin-bottom:2px;">
+              2025-12-18
+            </div>
+
+          </td>
+
+        </tr>
+
+        <!-- 요약 -->
+        <tr>
+          <td colspan="2" style="padding-top:12px;">
+            <div style="font-size:14px; color:#333; line-height:1.8;">
+              마이크론 테크놀로지의 주가가 1분기 실적 발표 후 11% 이상 급등했다. 회사는 주당 4.78달러, 매출 136억 4천만 달러로 월가 예상치를 크게 상회했으며, 데이터 센터 성장에 힘입어 매출 전망치를 187억 달러로 상향 조정했다. 특히 AI 메모리 수요 급증이 이번 실적 호조의 주요 원인으로 분석된다.
+            </div>
+          </td>
+        </tr>
+
+        <!-- 원문 링크 -->
+        <tr>
+          <td colspan="2" style="padding-top:6px;">
+            <a href="https://economictimes.indiatimes.com/news/international/us/micron-stock-soars-11-after-crushing-q1-results-and-strong-forward-guidance-will-mu-stock-keep-rising-as-analysts-call-it-a-strong-buy/articleshow/126060793.cms" target="_blank"
+               style="font-size:13px; color:#0066cc; text-decoration:none;">
+              자세히 보기 →
+            </a>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<div style="margin-top:12px; text-align:right;">
+  <a href="https://hancom-inspace.github.io/Weekly-Newsletter/2025/12/19/more_ai_platform.html"
+     style="display:inline-block; font-size:13px; font-weight:600;
+            color:#111827; text-decoration:none;
+            padding:6px 12px; border-radius:999px;
+            border:1px solid #d1d5db; background:#ffffff;">
+    이 주제 추가 기사 보기 →
+  </a>
+</div>
+
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:36px;">
+  <tr>
+    <td align="center">
+      <table cellpadding="0" cellspacing="0" border="0"
+             style="width:100%;
+                    max-width:700px;
+                    background:#f9fafb;
+                    border:1px solid #e5e7eb;
+                    border-radius:12px;
+                    padding:20px;
+                    box-sizing:border-box;
+                    box-shadow:0 10px 24px rgba(0,0,0,0.14);">
+        <tr>
+          <td>
+            
+<div style="font-size:26px; font-weight:800; color:#111827;
+            margin-bottom:24px; line-height:1.3;">
+  ✈️ 항공 / 드론·무인기(UAV/UAS) 동향
+</div>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td style="padding:0; margin:0;">
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+        <tr>
+
+          <!-- 썸네일 -->
+          <td valign="top" width="135" style="padding:0;">
+            <a href="https://me.pcmag.com/en/drones/34214/barring-a-christmas-miracle-a-dji-drone-ban-looks-inevitable-heres-what-that-means-for-you" target="_blank" style="text-decoration:none;">
+              <img src="https://sm.pcmag.com/t/pcmag_me/news/b/barring-a-/barring-a-christmas-miracle-a-dji-drone-ban-looks-inevitable_adwu.1200.jpg" width="120" height="120"
+                   style="display:block; border-radius:14px; object-fit:cover;"
+                   onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+            </a>
+          </td>
+
+          <!-- 제목/부제목 -->
+          <td valign="top" style="padding-left:6px;">
+
+            <div style="font-size:18px; font-weight:700; color:#111;
+                        margin-bottom:4px; line-height:1.35;">
+              크리스마스 기적이 없다면 DJI 드론 금지 불가피…사용자에게 미칠 영향은?
+            </div>
+
+            
+            <div style="font-size:14px; color:#555; margin-bottom:4px; line-height:1.35;">
+              Barring a Christmas Miracle, a DJI Drone Ban Looks Inevitable. Here&#x27;s What That Means for You
+            </div>
+
+            <div style="font-size:12px; color:#888; margin-bottom:2px;">
+              2025-12-16
+            </div>
+
+          </td>
+
+        </tr>
+
+        <!-- 요약 -->
+        <tr>
+          <td colspan="2" style="padding-top:12px;">
+            <div style="font-size:14px; color:#333; line-height:1.8;">
+              미국 연방통신위원회(FCC)가 12월 23일부터 DJI 드론과 카메라를 보안 우려로 인해 시장에서 퇴출시키는 조치를 앞두고 있다. 현재까지 보안 감사가 완료되지 않아 금지 조치는 거의 확실시된다. 이번 조치는 드론 사용자와 콘텐츠 제작자들에게 어떤 영향을 미칠지 상세히 분석한다.
+            </div>
+          </td>
+        </tr>
+
+        <!-- 원문 링크 -->
+        <tr>
+          <td colspan="2" style="padding-top:6px;">
+            <a href="https://me.pcmag.com/en/drones/34214/barring-a-christmas-miracle-a-dji-drone-ban-looks-inevitable-heres-what-that-means-for-you" target="_blank"
+               style="font-size:13px; color:#0066cc; text-decoration:none;">
+              자세히 보기 →
+            </a>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td style="padding:0; margin:0;">
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+        <tr>
+
+          <!-- 썸네일 -->
+          <td valign="top" width="135" style="padding:0;">
+            <a href="https://financialpost.com/globe-newswire/boumarang-inc-files-s-1-registration-statement-with-the-u-s-securities-and-exchange-commission" target="_blank" style="text-decoration:none;">
+              <img src="https://smartcdn.gprod.postmedia.digital/financialpost/wp-content/uploads/2025/12/1219-bc-homes.jpg?quality=5&amp;strip=all&amp;w=100&amp;sig=DRw-S5LI-IDdq6qb-SB9kw" width="120" height="120"
+                   style="display:block; border-radius:14px; object-fit:cover;"
+                   onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+            </a>
+          </td>
+
+          <!-- 제목/부제목 -->
+          <td valign="top" style="padding-left:6px;">
+
+            <div style="font-size:18px; font-weight:700; color:#111;
+                        margin-bottom:4px; line-height:1.35;">
+              수소 동력 AI 자율 드론 시스템 선도 기업 Boumarang, 美 증권거래위원회에 S-1 등록서류 제출
+            </div>
+
+            
+            <div style="font-size:14px; color:#555; margin-bottom:4px; line-height:1.35;">
+              Boumarang, Inc. Files S-1 Registration Statement with the U.S. Securities and Exchange Commission
+            </div>
+
+            <div style="font-size:12px; color:#888; margin-bottom:2px;">
+              2025-12-17
+            </div>
+
+          </td>
+
+        </tr>
+
+        <!-- 요약 -->
+        <tr>
+          <td colspan="2" style="padding-top:12px;">
+            <div style="font-size:14px; color:#333; line-height:1.8;">
+              수소 동력과 AI 기술이 결합된 자율 비행 드론 시스템을 개발하는 Boumarang, Inc.가 미국 증권거래위원회(SEC)에 S-1 등록서류를 제출하며 상장 준비에 나섰다. Boumarang은 컴퓨터 비전과 데이터 토큰화 등 AI 기반 기술을 도입해 드론의 자율성과 안전성을 강화하고 있으며, 이를 통해 항공 및 드론 산업 내 혁신적 기술 선도자로 자리매김하고 있다.
+            </div>
+          </td>
+        </tr>
+
+        <!-- 원문 링크 -->
+        <tr>
+          <td colspan="2" style="padding-top:6px;">
+            <a href="https://financialpost.com/globe-newswire/boumarang-inc-files-s-1-registration-statement-with-the-u-s-securities-and-exchange-commission" target="_blank"
+               style="font-size:13px; color:#0066cc; text-decoration:none;">
+              자세히 보기 →
+            </a>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td style="padding:0; margin:0;">
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+        <tr>
+
+          <!-- 썸네일 -->
+          <td valign="top" width="135" style="padding:0;">
+            <a href="https://www.globenewswire.com/news-release/2025/12/18/3208065/0/en/Location-of-Things-Market-Set-to-Reach-US-737-7-Billion-by-2035-as-Satellite-Launches-and-IoT-Expansion-Redefine-Global-Connectivity-Standards-Says-Astute-Analytica.html" target="_blank" style="text-decoration:none;">
+              <img src="https://ml.globenewswire.com/Resource/Download/a77988df-ad1a-4619-9a4e-367c858dc70e" width="120" height="120"
+                   style="display:block; border-radius:14px; object-fit:cover;"
+                   onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+            </a>
+          </td>
+
+          <!-- 제목/부제목 -->
+          <td valign="top" style="padding-left:6px;">
+
+            <div style="font-size:18px; font-weight:700; color:#111;
+                        margin-bottom:4px; line-height:1.35;">
+              위성 발사와 IoT 확장으로 위치 기반 사물 시장, 2035년까지 7,377억 달러 도달 전망
+            </div>
+
+            
+            <div style="font-size:14px; color:#555; margin-bottom:4px; line-height:1.35;">
+              Location of Things Market Set to Reach US$ 737.7 Billion by 2035 as Satellite Launches and IoT Expansion Redefine Global Connectivity Standards Says Astute Analytica
+            </div>
+
+            <div style="font-size:12px; color:#888; margin-bottom:2px;">
+              2025-12-18
+            </div>
+
+          </td>
+
+        </tr>
+
+        <!-- 요약 -->
+        <tr>
+          <td colspan="2" style="padding-top:12px;">
+            <div style="font-size:14px; color:#333; line-height:1.8;">
+              글로벌 위치 기반 사물(Location of Things) 시장이 2025년 350억 달러에서 2035년 7,377억 달러로 연평균 35.6% 성장할 것으로 예상된다. 기업들은 정밀성과 보안을 우선시하며, 전 세계에서 끊김 없는 연결성을 보장하기 위해 민간 5G와 위성 군집에 대규모 투자를 진행 중이다. 단순 추적을 넘어 AI 기반 예측 인텔리전스를 도입하며 위치 정보 활용이 고도화되고 있다.
+            </div>
+          </td>
+        </tr>
+
+        <!-- 원문 링크 -->
+        <tr>
+          <td colspan="2" style="padding-top:6px;">
+            <a href="https://www.globenewswire.com/news-release/2025/12/18/3208065/0/en/Location-of-Things-Market-Set-to-Reach-US-737-7-Billion-by-2035-as-Satellite-Launches-and-IoT-Expansion-Redefine-Global-Connectivity-Standards-Says-Astute-Analytica.html" target="_blank"
+               style="font-size:13px; color:#0066cc; text-decoration:none;">
+              자세히 보기 →
+            </a>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<div style="margin-top:12px; text-align:right;">
+  <a href="https://hancom-inspace.github.io/Weekly-Newsletter/2025/12/19/more_aviation.html"
+     style="display:inline-block; font-size:13px; font-weight:600;
+            color:#111827; text-decoration:none;
+            padding:6px 12px; border-radius:999px;
+            border:1px solid #d1d5db; background:#ffffff;">
+    이 주제 추가 기사 보기 →
+  </a>
+</div>
+
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:36px;">
+  <tr>
+    <td align="center">
+      <table cellpadding="0" cellspacing="0" border="0"
+             style="width:100%;
+                    max-width:700px;
+                    background:#f9fafb;
+                    border:1px solid #e5e7eb;
+                    border-radius:12px;
+                    padding:20px;
+                    box-sizing:border-box;
+                    box-shadow:0 10px 24px rgba(0,0,0,0.14);">
+        <tr>
+          <td>
+            
+<div style="font-size:26px; font-weight:800; color:#111827;
+            margin-bottom:24px; line-height:1.3;">
+  🌐 GeoINT / 지리공간 정보, 위성·지도 기반 정보 분석
+</div>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td style="padding:0; margin:0;">
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+        <tr>
+
+          <!-- 썸네일 -->
+          <td valign="top" width="135" style="padding:0;">
+            <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTFA2YU94eEhia0FyTnlqYlJJNi1Qb1RjXzF5OExkOWVqdXRObWFrc1pyTDc4Y25FS2FWY1hGdW5oV05KZG55WDA1RXpaMlJ2SGZobkp1ajcyOGI3QQ?oc=5" target="_blank" style="text-decoration:none;">
+              <img src="https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg" width="120" height="120"
+                   style="display:block; border-radius:14px; object-fit:cover;"
+                   onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+            </a>
+          </td>
+
+          <!-- 제목/부제목 -->
+          <td valign="top" style="padding-left:6px;">
+
+            <div style="font-size:18px; font-weight:700; color:#111;
+                        margin-bottom:4px; line-height:1.35;">
+              산청군, 지적·공간정보 우수사례 국민권익위원장상 수상
+            </div>
+
+            
+            <div style="font-size:14px; color:#555; margin-bottom:4px; line-height:1.35;">
+              산청군, 지적·공간정보 우수사례 국민권익위원장상 수상 - 브릿지경제
+            </div>
+
+            <div style="font-size:12px; color:#888; margin-bottom:2px;">
+              2025-12-12
+            </div>
+
+          </td>
+
+        </tr>
+
+        <!-- 요약 -->
+        <tr>
+          <td colspan="2" style="padding-top:12px;">
+            <div style="font-size:14px; color:#333; line-height:1.8;">
+              산청군이 지적 및 공간정보 분야에서 우수사례로 인정받아 국민권익위원장상을 수상했다. 이번 수상은 지리공간 정보 활용과 관리에서 뛰어난 성과를 보여준 사례로 평가받았다.
+            </div>
+          </td>
+        </tr>
+
+        <!-- 원문 링크 -->
+        <tr>
+          <td colspan="2" style="padding-top:6px;">
+            <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTFA2YU94eEhia0FyTnlqYlJJNi1Qb1RjXzF5OExkOWVqdXRObWFrc1pyTDc4Y25FS2FWY1hGdW5oV05KZG55WDA1RXpaMlJ2SGZobkp1ajcyOGI3QQ?oc=5" target="_blank"
+               style="font-size:13px; color:#0066cc; text-decoration:none;">
+              자세히 보기 →
+            </a>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td style="padding:0; margin:0;">
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+        <tr>
+
+          <!-- 썸네일 -->
+          <td valign="top" width="135" style="padding:0;">
+            <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0338605" target="_blank" style="text-decoration:none;">
+              <img src="https://journals.plos.org/plosone/article/figure/image?id=10.1371/journal.pone.0338605.g011&amp;size=inline" width="120" height="120"
+                   style="display:block; border-radius:14px; object-fit:cover;"
+                   onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+            </a>
+          </td>
+
+          <!-- 제목/부제목 -->
+          <td valign="top" style="padding-left:6px;">
+
+            <div style="font-size:18px; font-weight:700; color:#111;
+                        margin-bottom:4px; line-height:1.35;">
+              1960년부터 2023년까지 고산 아시아 지역의 눈 밀도 시공간 변동 특성 및 영향 요인 분석
+            </div>
+
+            
+            <div style="font-size:14px; color:#555; margin-bottom:4px; line-height:1.35;">
+              Spatiotemporal variation characteristics and influencing factors of snow density in the High Mountain Asia from 1960 to 2023
+            </div>
+
+            <div style="font-size:12px; color:#888; margin-bottom:2px;">
+              2025-12-16
+            </div>
+
+          </td>
+
+        </tr>
+
+        <!-- 요약 -->
+        <tr>
+          <td colspan="2" style="padding-top:12px;">
+            <div style="font-size:14px; color:#333; line-height:1.8;">
+              기후 변화 맥락에서 고산 아시아 지역의 눈 밀도에 큰 변동이 관찰되었으나, 그 시공간적 패턴과 주요 원인은 완전히 밝혀지지 않았다. 본 연구는 ERA5 및 ERA5-Land 재분석 데이터를 통합하여 1960년부터 2023년까지 눈 밀도의 변동 특성과 이를 유발하는 기후적 요인을 심층 분석하였다. 이 연구는 지리공간 정보와 위성 기반 데이터 분석을 통해 기후 변화가 산악 지역의 눈 상태에 미치는 영향을 이해하는 데 중요한 기초 자료를 제공한다.
+            </div>
+          </td>
+        </tr>
+
+        <!-- 원문 링크 -->
+        <tr>
+          <td colspan="2" style="padding-top:6px;">
+            <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0338605" target="_blank"
+               style="font-size:13px; color:#0066cc; text-decoration:none;">
+              자세히 보기 →
+            </a>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td style="padding:0; margin:0;">
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+        <tr>
+
+          <!-- 썸네일 -->
+          <td valign="top" width="135" style="padding:0;">
+            <a href="http://opiniojuris.org/2025/12/11/symposium-on-forensic-and-counter-forensic-approaches-to-international-law-remote-sensing-of-mass-atrocities-from-space-how-satellite-capabilities-may-qualify-knowledge-in-complicity-and-trigger-du/" target="_blank" style="text-decoration:none;">
+              <img src="https://i0.wp.com/opiniojuris.org/wp-content/uploads/negative-space-colorful-abstract-painting.jpg?fit=1200%2C832" width="120" height="120"
+                   style="display:block; border-radius:14px; object-fit:cover;"
+                   onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+            </a>
+          </td>
+
+          <!-- 제목/부제목 -->
+          <td valign="top" style="padding-left:6px;">
+
+            <div style="font-size:18px; font-weight:700; color:#111;
+                        margin-bottom:4px; line-height:1.35;">
+              국제법의 법의학 및 반법의학 접근법 심포지엄: 우주에서의 대량 학살 원격 감지 – 위성 능력이 공모 지식 자격과 존중 의무 촉발에 미치는 영향
+            </div>
+
+            
+            <div style="font-size:14px; color:#555; margin-bottom:4px; line-height:1.35;">
+              Symposium on Forensic and Counter-Forensic Approaches to International Law: Remote Sensing of Mass Atrocities From Space – How Satellite Capabilities May Qualify Knowledge in Complicity and Trigger Duties to Ensure Respect
+            </div>
+
+            <div style="font-size:12px; color:#888; margin-bottom:2px;">
+              2025-12-11
+            </div>
+
+          </td>
+
+        </tr>
+
+        <!-- 요약 -->
+        <tr>
+          <td colspan="2" style="padding-top:12px;">
+            <div style="font-size:14px; color:#333; line-height:1.8;">
+              KU Leuven과 독일 ATHENE 연구소의 Pedro R. Borges de Carvalho 박사과정생이 참여한 심포지엄에서는 위성 원격 감지를 활용해 대량 학살 현장의 지표 흔적을 법의학적으로 분석하는 방법을 논의했다. 위성 기술이 국제법상 공모 지식의 판단과 관련 의무 이행을 촉진하는 역할을 할 수 있음을 강조하며, 지리공간 정보가 인권 및 국제법 집행에 중요한 증거로 활용될 수 있음을 보여준다.
+            </div>
+          </td>
+        </tr>
+
+        <!-- 원문 링크 -->
+        <tr>
+          <td colspan="2" style="padding-top:6px;">
+            <a href="http://opiniojuris.org/2025/12/11/symposium-on-forensic-and-counter-forensic-approaches-to-international-law-remote-sensing-of-mass-atrocities-from-space-how-satellite-capabilities-may-qualify-knowledge-in-complicity-and-trigger-du/" target="_blank"
+               style="font-size:13px; color:#0066cc; text-decoration:none;">
+              자세히 보기 →
+            </a>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<div style="margin-top:12px; text-align:right;">
+  <a href="https://hancom-inspace.github.io/Weekly-Newsletter/2025/12/19/more_geoint.html"
+     style="display:inline-block; font-size:13px; font-weight:600;
+            color:#111827; text-decoration:none;
+            padding:6px 12px; border-radius:999px;
+            border:1px solid #d1d5db; background:#ffffff;">
+    이 주제 추가 기사 보기 →
+  </a>
+</div>
+
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:36px;">
+  <tr>
+    <td align="center">
+      <table cellpadding="0" cellspacing="0" border="0"
+             style="width:100%;
+                    max-width:700px;
+                    background:#f9fafb;
+                    border:1px solid #e5e7eb;
+                    border-radius:12px;
+                    padding:20px;
+                    box-sizing:border-box;">
+        <tr>
+          <td>
+            
+<div style="font-size:26px; font-weight:800; color:#111827;
+            margin-bottom:24px; line-height:1.3;">
+  💡 최신 연구동향
+</div>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:18px;">
+  <tr>
+    <!-- 여기 td에는 패딩/마진만 두고, 실제 카드 스타일은 안쪽 div에 줌 -->
+    <td style="padding:0; margin:0;">
+
+      <!-- ✅ 카드 전체를 감싸는 링크 -->
+      <a href="https://doi.org/10.3390/rs17244049" target="_blank"
+         style="display:block; text-decoration:none; color:inherit;">
+
+        <!-- 실제 카드 모양(배경, 테두리, 패딩)은 이 div에 적용 -->
+        <div style="background:#ffffff; border-radius:12px;
+                    border:1px solid #e5e7eb;
+                    padding:16px 18px; box-sizing:border-box;
+                    box-shadow:0 10px 24px rgba(0,0,0,0.14);">
+
+          <!-- 영문 원제목 (굵게) -->
+          <div style="font-size:17px; font-weight:700; color:#111827;
+                      line-height:1.4; margin-bottom:4px;">
+            Quantifying Broad-Leaved Korean Pine Forest Structure Using Terrestrial Laser Scanning (TLS), Changbai Mountain, China
+          </div>
+
+          <!-- 소 -->
+          <div style="font-size:12px; font-weight:500; color:#374151; margin-bottom:2px;">
+            MDPI - Remote Sensing
+          </div>
+
+          <!-- 발행일 -->
+          <div style="font-size:12px; color:#6b7280; margin-bottom:8px;">
+            2025-12-17
+          </div>
+
+          <!-- 요약 (본문/요약 내용) -->
+          <div style="font-size:14px; color:#374151; line-height:1.7;">
+            Accurate assessment of stand structure is fundamental for elucidating the relationship between forest structure and ecological function, which is vital for enhancing forest quality and ecosystem...
+          </div>
+
+        </div>
+      </a>
+      <!-- 링크 끝 -->
+
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:18px;">
+  <tr>
+    <!-- 여기 td에는 패딩/마진만 두고, 실제 카드 스타일은 안쪽 div에 줌 -->
+    <td style="padding:0; margin:0;">
+
+      <!-- ✅ 카드 전체를 감싸는 링크 -->
+      <a href="https://doi.org/10.3390/rs17244046" target="_blank"
+         style="display:block; text-decoration:none; color:inherit;">
+
+        <!-- 실제 카드 모양(배경, 테두리, 패딩)은 이 div에 적용 -->
+        <div style="background:#ffffff; border-radius:12px;
+                    border:1px solid #e5e7eb;
+                    padding:16px 18px; box-sizing:border-box;
+                    box-shadow:0 10px 24px rgba(0,0,0,0.14);">
+
+          <!-- 영문 원제목 (굵게) -->
+          <div style="font-size:17px; font-weight:700; color:#111827;
+                      line-height:1.4; margin-bottom:4px;">
+            Discrepant Pathway in Regulating ET Under Change in Community Composition of Alpine Grassland in the Source Region of the Yellow River
+          </div>
+
+          <!-- 소 -->
+          <div style="font-size:12px; font-weight:500; color:#374151; margin-bottom:2px;">
+            MDPI - Remote Sensing
+          </div>
+
+          <!-- 발행일 -->
+          <div style="font-size:12px; color:#6b7280; margin-bottom:8px;">
+            2025-12-17
+          </div>
+
+          <!-- 요약 (본문/요약 내용) -->
+          <div style="font-size:14px; color:#374151; line-height:1.7;">
+            Understanding evapotranspiration (ET) dynamics under community composition transitions in grasslands is crucial for interpreting alpine ecosystem responses to climate change. We investigated...
+          </div>
+
+        </div>
+      </a>
+      <!-- 링크 끝 -->
+
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:18px;">
+  <tr>
+    <!-- 여기 td에는 패딩/마진만 두고, 실제 카드 스타일은 안쪽 div에 줌 -->
+    <td style="padding:0; margin:0;">
+
+      <!-- ✅ 카드 전체를 감싸는 링크 -->
+      <a href="https://doi.org/10.3390/rs17244053" target="_blank"
+         style="display:block; text-decoration:none; color:inherit;">
+
+        <!-- 실제 카드 모양(배경, 테두리, 패딩)은 이 div에 적용 -->
+        <div style="background:#ffffff; border-radius:12px;
+                    border:1px solid #e5e7eb;
+                    padding:16px 18px; box-sizing:border-box;
+                    box-shadow:0 10px 24px rgba(0,0,0,0.14);">
+
+          <!-- 영문 원제목 (굵게) -->
+          <div style="font-size:17px; font-weight:700; color:#111827;
+                      line-height:1.4; margin-bottom:4px;">
+            A New Convective Initiation Definition and Its Characteristics in Central and Eastern China Based on Fengyun-4A Satellite Cloud Imagery
+          </div>
+
+          <!-- 소 -->
+          <div style="font-size:12px; font-weight:500; color:#374151; margin-bottom:2px;">
+            MDPI - Remote Sensing
+          </div>
+
+          <!-- 발행일 -->
+          <div style="font-size:12px; color:#6b7280; margin-bottom:8px;">
+            2025-12-17
+          </div>
+
+          <!-- 요약 (본문/요약 내용) -->
+          <div style="font-size:14px; color:#374151; line-height:1.7;">
+            With the upgrading of geostationary meteorological satellites, their capabilities in Convective Initiation (CI) identification have been enhanced. To improve the applicability of the ARGI-based CI...
+          </div>
+
+        </div>
+      </a>
+      <!-- 링크 끝 -->
+
+    </td>
+  </tr>
+</table>
+
+<div style="margin-top:12px; text-align:right;">
+  <a href="https://hancom-inspace.github.io/Weekly-Newsletter/2025/12/19/more_research.html"
+     style="display:inline-block; font-size:13px; font-weight:600;
+            color:#111827; text-decoration:none;
+            padding:6px 12px; border-radius:999px;
+            border:1px solid #d1d5db; background:#ffffff;">
+    최신 연구 더 보기 →
+  </a>
+</div>
+
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<!-- 푸터 -->
+<table class="footer-wrap" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background:#1e293b; padding:24px 0 32px 0;">
+
+  <tr>
+    <td align="center">
+      <table cellpadding="0" cellspacing="0" border="0"
+             style="max-width:700px; width:100%; margin:0 auto;">
+        <tr>
+          <td class="inner-padding"
+              style="padding:12px 16px;
+                     font-size:12px;
+                     color:#e2e8f0;
+                     text-align:center;
+                     line-height:1.6;">
+
+            본 메일은 한컴인스페이스 사내 구성원을 위한 주간 뉴스 브리핑입니다.<br>
+            외부로의 무단 전재 및 공유는 지양해 주시기 바랍니다.<br><br>
+            &copy; 2025 Hancom InSpace. All Rights Reserved.
+
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+
+<script>
+(function () {
+  var layer = document.getElementById('main-bg-layer');
+  var video = document.getElementById('main-bg-video');
+  var img   = document.getElementById('main-bg-image');
+  var wash  = document.getElementById('main-bg-whitewash');
+
+  if (!layer || !wash) return;
+
+  layer.style.display = 'block';
+
+  var FADE_START = 200;
+  var FADE_END   = 800;
+
+  var duration = 0;
+  var ready = false;
+
+  if (video) {
+    video.addEventListener('loadedmetadata', function () {
+      duration = video.duration || 0;
+      ready = true;
+    });
+  }
+
+  function clamp01(x) {
+    return Math.max(0, Math.min(1, x));
+  }
+
+  function getDocScrollMax() {
+    var doc = document.documentElement;
+    return Math.max(0, (doc.scrollHeight || 0) - window.innerHeight);
+  }
+
+  function updateFade(scrollY) {
+    var t = clamp01((scrollY - FADE_START) / Math.max(1, (FADE_END - FADE_START)));
+
+    wash.style.opacity = String(1 - t);
+
+    if (video) video.style.opacity = String(t);
+    if (img)   img.style.opacity   = String(t);
+
+    return t;
+  }
+
+  var targetTime = 0;
+  var currentTime = 0;
+  var easing = 0.08;
+
+  function computeTargetTime(scrollY) {
+    if (!video || !ready || !duration) return 0;
+
+    var scrollMax = getDocScrollMax();
+    var usable = Math.max(1, scrollMax);   // 전체 스크롤 구간 사용
+    var p = clamp01(scrollY / usable);     // 0부터 바로 매핑
+
+    return p * duration;
+  }
+
+
+  function tick() {
+    if (video && ready && duration) {
+      currentTime += (targetTime - currentTime) * easing;
+      if (isFinite(currentTime)) {
+        try { video.currentTime = currentTime; } catch(e) {}
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function onScroll() {
+    var y = window.scrollY || window.pageYOffset || 0;
+
+    // fade는 독립적으로 계속 계산
+    updateFade(y);
+
+    // (NEW) fade 진행 중에도 항상 타임라인 목표값 갱신
+    targetTime = computeTargetTime(y);
+  }
+
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+
+  onScroll();
+  requestAnimationFrame(tick);
+})();
+</script>
+
+
+
+</body>
+</html>
