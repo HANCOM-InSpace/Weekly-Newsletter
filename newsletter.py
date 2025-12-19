@@ -4077,7 +4077,7 @@ print("="*60 + "\n")
 
 # # **08-2 카드/섹션 HTML + 최종 뉴스레터 HTML 생성**
 
-# In[111]:
+# In[115]:
 
 
 # ============================
@@ -4660,6 +4660,8 @@ def build_more_page_html(topic_extra_articles, date_range, newsletter_date, head
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+
 
 
 <title>{header_title}</title>
@@ -4686,7 +4688,7 @@ def build_more_page_html(topic_extra_articles, date_range, newsletter_date, head
     flex-direction: column;
     min-height: 100vh;
     background:#f3f4f6;
-    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","맑은 고딕",system-ui,sans-serif;
+    font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","맑은 고딕",system-ui,sans-serif;
   }}
 
 
@@ -4738,8 +4740,9 @@ def build_more_page_html(topic_extra_articles, date_range, newsletter_date, head
           <tr>
             <td align="center"
                 style="padding:0px 24px 12px 24px;
-                       font-size:28px; font-weight:700;
-                       color:#000000; ;">
+                      font-size:28px; font-weight:700;
+                      font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','맑은 고딕',system-ui,sans-serif;
+                      color:#000000; ;">
               {h(header_title)}
             </td>
           </tr>
@@ -5099,6 +5102,8 @@ def build_research_more_page_html(extra_articles, date_range, newsletter_date, h
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+
 
 
 
@@ -5126,7 +5131,7 @@ def build_research_more_page_html(extra_articles, date_range, newsletter_date, h
     flex-direction: column;
     min-height: 100vh;
     background:#f3f4f6;
-    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","맑은 고딕",system-ui,sans-serif;
+    font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","맑은 고딕",system-ui,sans-serif;
   }}
 
   .content-wrapper {{
@@ -5177,10 +5182,12 @@ def build_research_more_page_html(extra_articles, date_range, newsletter_date, h
           <tr>
             <td align="center"
                 style="padding:0px 24px 12px 24px;
-                       font-size:28px; font-weight:800;
-                       color:#000000; ;">
+                      font-size:28px; font-weight:700;
+                      font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','맑은 고딕',system-ui,sans-serif;
+                      color:#000000; ;">
               {h(header_title)}
             </td>
+
           </tr>
 
           <tr>
@@ -6801,7 +6808,7 @@ for topic_num, url in TOPIC_MORE_URLS.items():
 # # **09 이메일 자동 발송**
 # ### **(Colab에서 실행하면 테스트 이메일로, Github 실행 시, 실제 수신자에게)**
 
-# In[112]:
+# In[116]:
 
 
 SEND_EMAIL = os.environ.get("SEND_EMAIL", "true").lower() == "true"
@@ -6854,7 +6861,7 @@ else:
 
 # # **10. 최종 통계 출력**
 
-# In[113]:
+# In[117]:
 
 
 # ============================
