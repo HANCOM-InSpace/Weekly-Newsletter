@@ -4077,7 +4077,7 @@ print("="*60 + "\n")
 
 # # **08-2 카드/섹션 HTML + 최종 뉴스레터 HTML 생성**
 
-# In[115]:
+# In[119]:
 
 
 # ============================
@@ -4705,15 +4705,15 @@ def build_more_page_html(topic_extra_articles, date_range, newsletter_date, head
   <table class="hero-bg" width="100%" cellpadding="0" cellspacing="0" border="0"
        style="background-image:url('{header_bg}');
               background-size:cover;
-              background-position:center 50%;
+              background-position:center 52%;
               background-repeat:no-repeat;">
     <tr>
       <td align="center" class="hero-header-cell"
           bgcolor="#000000"
           style="padding:0 24px 14px 24px;
                  background: linear-gradient(to bottom right,
-                             rgba(255,255,255,0.55),
-                             rgba(255,255,255,0.55));
+                             rgba(255,255,255,0.70),
+                             rgba(255,255,255,0.70));
                  color:#ffffff; ;">
 
         <table cellpadding="0" cellspacing="0" border="0"
@@ -5147,15 +5147,15 @@ def build_research_more_page_html(extra_articles, date_range, newsletter_date, h
   <table class="hero-bg" width="100%" cellpadding="0" cellspacing="0" border="0"
        style="background-image:url('{header_bg}');
               background-size:cover;
-              background-position:center 50%;
+              background-position:center 52%;
               background-repeat:no-repeat;">
     <tr>
       <td align="center" class="hero-header-cell"
           bgcolor="#000000"
           style="padding:0 24px 14px 24px;
                  background: linear-gradient(to bottom right,
-                             rgba(255,255,255,0.55),
-                             rgba(255,255,255,0.55));
+                             rgba(255,255,255,0.70),
+                             rgba(255,255,255,0.70));
                  color:#ffffff; ;">
 
         <table cellpadding="0" cellspacing="0" border="0"
@@ -6808,7 +6808,7 @@ for topic_num, url in TOPIC_MORE_URLS.items():
 # # **09 이메일 자동 발송**
 # ### **(Colab에서 실행하면 테스트 이메일로, Github 실행 시, 실제 수신자에게)**
 
-# In[116]:
+# In[120]:
 
 
 SEND_EMAIL = os.environ.get("SEND_EMAIL", "true").lower() == "true"
@@ -6861,7 +6861,7 @@ else:
 
 # # **10. 최종 통계 출력**
 
-# In[117]:
+# In[121]:
 
 
 # ============================
