@@ -4077,7 +4077,7 @@ print("="*60 + "\n")
 
 # # **08-2 카드/섹션 HTML + 최종 뉴스레터 HTML 생성**
 
-# In[18]:
+# In[25]:
 
 
 # ============================
@@ -5417,8 +5417,8 @@ def build_archive_page_html(archive_items):
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: -1;
-    opacity: 0.5;
+    z-index: -3;
+    opacity: 1;
   }}
 
   .bg-image {{
@@ -5427,7 +5427,7 @@ def build_archive_page_html(archive_items):
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -2;              /* video(-1)보다 뒤로 */
+    z-index: -4;              /* video(-1)보다 뒤로 */
     background-image: url('https://hancom-inspace.github.io/Weekly-Newsletter/assets/archive_bg_fallback1.png');
     background-size: cover;
     background-position: center top;
@@ -5435,6 +5435,34 @@ def build_archive_page_html(archive_items):
     display: none;   /* 데스크톱 기본값 */
   }}
 
+  /* ✅ 추가: 비디오/이미지 위에 깔리는 검은 딤 레이어 */
+  .bg-dim{{
+    position: fixed;
+    inset: 0;
+    z-index: -2;                  /* ✅ 비디오/이미지(-3) 위 */
+    background: rgba(0,0,0,0.35); /* 데스크톱 기본 딤 강도 */
+    pointer-events: none;
+  }}
+
+  /* 모바일 */
+  @media (max-width: 768px){{
+    .bg-video{{ display: none; }}
+    .bg-image{{
+      display: block;
+
+      /* ✅ 모바일 이미지가 너무 또렷한 문제 해결:
+        - 아주 살짝 blur
+        - 살짝 어둡게 (brightness)
+        - 살짝 채도/대비 줄이기 (선택) */
+      filter: blur(2px) brightness(0.78) saturate(0.95);
+      transform: scale(1.03); /* blur 가장자리 깨짐 방지 */
+    }}
+
+    /* ✅ 모바일에서 흰 글씨 가독성 강화: 딤 조금 더 */
+    .bg-dim{{
+      background: rgba(0,0,0,0.48);
+    }}
+  }}
 
   .archive-wrap {{
     min-height: 100vh;
@@ -5443,6 +5471,11 @@ def build_archive_page_html(archive_items):
       radial-gradient(circle at top,
         rgba(148,163,184,0.25) 0,
         transparent 55%);
+  }}
+
+  .archive-card-label,
+  .archive-card-date{{
+    text-shadow: 0 1px 6px rgba(0,0,0,0.35);
   }}
 
 
@@ -5583,7 +5616,7 @@ def build_archive_page_html(archive_items):
   <video id="bgVideo" class="bg-video" preload="auto" muted playsinline>
     <source src="{ARCHIVE_VIDEO_URL}" type="video/mp4" />
   </video>
-
+  <div class="bg-dim"></div>
   <div class="archive-wrap">
     <center>
       <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:700px; margin:0 auto;">
@@ -5938,7 +5971,7 @@ ARCHIVE_PAGE_PATH = "docs/archive.html"
 ARCHIVE_PAGE_URL = f"{BASE_URL}/archive.html"
 
 # ▼ 아카이브 상단 스크롤 비디오(mp4) 경로 (여기에 네 영상 URL 넣기)
-ARCHIVE_VIDEO_URL = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/archive_bg_video1.mp4"
+ARCHIVE_VIDEO_URL = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/archivebgvideofinal.mp4"
 
 # ============================================================
 # ▼ (NEW) 메인 뉴스레터 배경 스크롤 비디오/대체 이미지 설정
@@ -6808,7 +6841,7 @@ for topic_num, url in TOPIC_MORE_URLS.items():
 # # **09 이메일 자동 발송**
 # ### **(Colab에서 실행하면 테스트 이메일로, Github 실행 시, 실제 수신자에게)**
 
-# In[19]:
+# In[26]:
 
 
 SEND_EMAIL = os.environ.get("SEND_EMAIL", "true").lower() == "true"
@@ -6861,7 +6894,7 @@ else:
 
 # # **10. 최종 통계 출력**
 
-# In[20]:
+# In[ ]:
 
 
 # ============================
