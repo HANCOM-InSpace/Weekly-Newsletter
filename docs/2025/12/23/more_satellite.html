@@ -1,0 +1,780 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+
+
+
+<title>위성 영상 - 추가 기사</title>
+
+<style>
+  /* 모바일 최적화 */
+  @media (max-width: 768px) {
+    .hero-bg {
+      background-position:center 0 !important;
+    }
+    .hero-header-cell {
+      padding:32px 0 28px 0 !important;
+    }
+  }
+
+  /* 푸터를 항상 아래로 밀어주는 레이아웃 */
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background:#f3f4f6;
+    font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","맑은 고딕",system-ui,sans-serif;
+  }
+
+
+  .content-wrapper {
+    flex: 1;
+  }
+</style>
+
+</head>
+
+<body>
+
+  <!-- 헤더 (메일과 유사한 스타일) -->
+  <table class="hero-bg" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background-image:url('https://hancom-inspace.github.io/Weekly-Newsletter/assets/headerbackground.jpg');
+              background-size:cover;
+              background-position:center 52%;
+              background-repeat:no-repeat;">
+    <tr>
+      <td align="center" class="hero-header-cell"
+          bgcolor="#000000"
+          style="padding:8px 24px 8px 24px;
+                 background: linear-gradient(to bottom right,
+                             rgba(255,255,255,0.70),
+                             rgba(255,255,255,0.70));
+                 color:#ffffff; ;">
+
+        <table cellpadding="0" cellspacing="0" border="0"
+               style="max-width:700px; width:100%;
+                      color:#000000; margin:0 auto;">
+
+          <tr>
+            <td style="padding:16px 24px 8px 24px;">
+              <table width="100%">
+                <tr>
+                  <td align="left">
+                    <img src="https://hancom-inspace.github.io/Weekly-Newsletter/assets/hlogo.png" style="max-width:110px; display:block;">
+                  </td>
+                  <td align="right"
+                      style="text-transform:uppercase; font-size:13px; font-weight:500;
+                             color:#000000; ;">
+                    WWW.INSPACE.CO.KR
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center"
+                style="padding:12px 24px 12px 24px;
+                      font-size:28px; font-weight:700;
+                      font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','맑은 고딕',system-ui,sans-serif;
+                      color:#000000; ;">
+              위성 영상 - 추가 기사
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center"
+                style="padding:0 24px 48px 24px;
+                       font-size:14px; font-weight:500; opacity:0.9; line-height:1.5;
+                       color:#000000; ;">
+              2025년 12월 15일 ~ 2025년 12월 22일<br>
+              12월 4주차 뉴스레터
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+
+  <div class="content-wrapper">
+  <!-- 본문 -->
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:24px 0 32px 0;">
+    <tr>
+      <td align="center">
+        <table cellpadding="0" cellspacing="0" border="0"
+              style="max-width:700px; width:100%; margin:0 auto;">
+          <tr>
+            <td style="padding:0 16px 0 16px;">
+
+              <!-- 메인 뉴스레터로 돌아가기 버튼 (카드 위 왼쪽 정렬) -->
+              <div style="padding-bottom:20px; text-align:left;">
+                <a href="https://hancom-inspace.github.io/Weekly-Newsletter/2025/12/23/index.html"
+                  style="display:inline-block;
+                          font-size:13px;
+                          padding:6px 12px;
+                          border-radius:999px;
+                          background:#111827;
+                          color:#ffffff;
+                          text-decoration:none;">
+                  ← 메인 뉴스레터로 돌아가기
+                </a>
+              </div>
+
+              
+<!-- 토픽별 추가 기사 박스 -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td align="center">
+      <table cellpadding="0" cellspacing="0" border="0"
+             style="width:100%;
+                    max-width:700px;
+                    background:#ffffff;
+                    border:1px solid #e5e7eb;
+                    border-radius:12px;
+                    padding:20px;
+                    box-sizing:border-box;">
+        <tr>
+          <td>
+            <div style="font-size:24px; font-weight:700; color:#111827;
+                        margin-bottom:28px;">
+              🛰️ 위성 영상 / SAR·광학·하이퍼스펙트럴 이미지 분석
+            </div>
+            
+<div id="topic-pagination"
+     style="display:flex;
+            justify-content:flex-end;
+            align-items:center;
+            font-size:14px;
+            font-weight:500;
+            color:#374151;
+            margin-top:-10px;
+            margin-bottom:10px;">
+
+  <span id="topic-page-info"
+        style="margin-right:14px;"></span>
+
+  <!-- 이전 버튼 -->
+  <a href="#" id="topic-prev"
+     style="
+       display:inline-flex;
+       align-items:center;
+       justify-content:center;
+       width:32px;
+       height:32px;
+       margin-right:6px;
+       border:1px solid #d1d5db;
+       border-radius:8px;
+       text-decoration:none;
+       background-color:#ffffff;
+       cursor:pointer;
+     ">
+    <span style="
+       display:inline-block;
+       font-size:18px;
+       font-weight:600;
+       color:#374151;
+       transform: translateY(-3px);
+    ">
+      &#x2039;
+    </span>
+  </a>
+
+  <!-- 다음 버튼 -->
+  <a href="#" id="topic-next"
+     style="
+       display:inline-flex;
+       align-items:center;
+       justify-content:center;
+       width:32px;
+       height:32px;
+       border:1px solid #d1d5db;
+       border-radius:8px;
+       text-decoration:none;
+       background-color:#ffffff;
+       cursor:pointer;
+     ">
+    <span style="
+       display:inline-block;
+       font-size:18px;
+       font-weight:600;
+       color:#374151;
+       transform: translateY(-3px);
+    ">
+      &#x203A;
+    </span>
+  </a>
+</div>
+
+            
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  
+              <tr class="topic-article-row" data-index="0">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://economictimes.indiatimes.com/news/international/us/rklb-stock-today-record-21st-launch-and-816-million-deal-are-driving-rocket-lab-stock-up/articleshow/126123211.cms" target="_blank" style="text-decoration:none;">
+                          <img src="https://img.etimg.com/thumb/msid-126123367,width-1200,height-630,imgsize-17668,overlay-economictimes/articleshow.jpg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://economictimes.indiatimes.com/news/international/us/rklb-stock-today-record-21st-launch-and-816-million-deal-are-driving-rocket-lab-stock-up/articleshow/126123211.cms" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            Rocket Lab, 연간 최다 21번째 발사 및 8억1600만 달러 계약으로 주가 상승
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          RKLB stock today: Record 21st launch and $816 million deal are driving Rocket Lab stock up
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-22
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="1">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://www.space.com/space-exploration/launches-spacecraft/rocket-lab-launches-final-mission-of-2025-sends-japanese-earth-observing-satellite-to-orbit-video" target="_blank" style="text-decoration:none;">
+                          <img src="https://cdn.mos.cms.futurecdn.net/X3NTRHqqZiBnGPxfm6fnXF-2560-80.jpg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://www.space.com/space-exploration/launches-spacecraft/rocket-lab-launches-final-mission-of-2025-sends-japanese-earth-observing-satellite-to-orbit-video" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            로켓랩, 2025년 마지막 임무로 일본 민간 지구 관측 위성 발사
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          Rocket Lab launches final mission of 2025, sends Japanese Earth-observing satellite to orbit (video)
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-22
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="2">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://prtimes.jp/main/html/rd/p/000000095.000049970.html" target="_blank" style="text-decoration:none;">
+                          <img src="https://prcdn.freetls.fastly.net/release_image/49970/95/49970-95-1ffde3600123e6a34429f5c7ea1a483a-3191x2593.jpg?format=jpeg&amp;auto=webp&amp;fit=bounds&amp;width=2400&amp;height=1260" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://prtimes.jp/main/html/rd/p/000000095.000049970.html" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            2025년 12월 21일 QPS-SAR15호기 &#x27;스쿠나미-I&#x27; 발사 및 첫 교신 성공
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          2025年12月21日（日本時間）にQPS-SAR15号機「スクナミ-I」が打ち上げられ、初交信に成功しました
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-21
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="3">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://www.globenewswire.com/news-release/2025/12/21/3208889/0/en/Rocket-Lab-Successfully-Launches-for-iQPS-Ends-2025-with-21-Launches-and-100-Mission-Success.html" target="_blank" style="text-decoration:none;">
+                          <img src="https://ml.globenewswire.com/Resource/Download/d5785cc8-1501-4a8f-8c5c-ca3e966db143" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://www.globenewswire.com/news-release/2025/12/21/3208889/0/en/Rocket-Lab-Successfully-Launches-for-iQPS-Ends-2025-with-21-Launches-and-100-Mission-Success.html" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            로켓랩, iQPS 위성 발사 성공하며 2025년 21회 발사 및 100% 미션 성공 기록 달성
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          Rocket Lab Successfully Launches for iQPS, Ends 2025 with 21 Launches and 100% Mission Success
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-21
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="4">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://prtimes.jp/main/html/rd/p/000000094.000049970.html" target="_blank" style="text-decoration:none;">
+                          <img src="https://prcdn.freetls.fastly.net/release_image/49970/94/49970-94-824d2d126edefc1b89bb813b7dac6206-1093x715.png?format=jpeg&amp;auto=webp&amp;fit=bounds&amp;width=2400&amp;height=1260" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://prtimes.jp/main/html/rd/p/000000094.000049970.html" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            QPS연구소 소형 SAR 위성 15호기 &#x27;스쿠나미-I&#x27;, 미국 Rocket Lab 전자 로켓으로 12월 21일 발사 예정
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          QPS研究所小型SAR衛星15号機(※1)「スクナミ-I」米国Rocket Lab社Electronロケットにて12月21日（日）に打上げ予定
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-20
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="5">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://www.nature.com/articles/s41598-025-31842-0" target="_blank" style="text-decoration:none;">
+                          <img src="https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://www.nature.com/articles/s41598-025-31842-0" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            이중편파 레이더 관측을 활용한 태풍 단기 집중호우 경보 연구
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          Typhoon short-term heavy precipitation warning based on dual-polarization radar observations of precipitation particle vertical distribution
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-20
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="6">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://www.spacewar.com/reports/Rheinmetall_ICEYE_Space_Solutions_to_provide_SAR_reconnaissance_data_to_German_military_999.html" target="_blank" style="text-decoration:none;">
+                          <img src="https://www.spxdaily.com/images-hg/iceye-portuguese-air-force-base-sar-radar-hg.jpg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://www.spacewar.com/reports/Rheinmetall_ICEYE_Space_Solutions_to_provide_SAR_reconnaissance_data_to_German_military_999.html" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            라인메탈과 ICEYE, 독일 군에 SAR 정찰 데이터 제공 계약 체결
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          Rheinmetall ICEYE Space Solutions to provide SAR reconnaissance data to German military
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-20
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="7">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://journals.plos.org/plosntds/article?id=10.1371/journal.pntd.0013775" target="_blank" style="text-decoration:none;">
+                          <img src="https://journals.plos.org/plosntds/article/figure/image?id=10.1371/journal.pntd.0013775.g004&amp;size=inline" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://journals.plos.org/plosntds/article?id=10.1371/journal.pntd.0013775" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            신장 지역 에키노코쿠스증의 시공간 분포 및 통제 현황 (2005-2023)
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          Spatiotemporal distribution and control of echinococcosis in Xinjiang, 2005–2023
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-19
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="8">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://www.globalsecurity.org/space/library/news/2025/space-251218-india-pib03.htm" target="_blank" style="text-decoration:none;">
+                          <img src="https://www.globalsecurity.org/space/library/news/images/india-pib.png" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://www.globalsecurity.org/space/library/news/2025/space-251218-india-pib03.htm" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            인도 우주 프로그램의 비전과 도전 과제
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          PARLIAMENT QUESTION: INDIAN SPACE PROGRAMME&#x27;S VISION AND CHALLENGES
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-19
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="9">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://www.spacedaily.com/reports/Sentinel_6B_begins_sea_level_mapping_campaign_999.html" target="_blank" style="text-decoration:none;">
+                          <img src="https://www.spxdaily.com/images-hg/sentinel-6b-sea-levels-across-first-light-hg.jpg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://www.spacedaily.com/reports/Sentinel_6B_begins_sea_level_mapping_campaign_999.html" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            Sentinel 6B, 해수면 지도 작성 캠페인 시작
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          Sentinel 6B begins sea level mapping campaign
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-19
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="10">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://www.jurist.org/news/2025/12/yale-researchers-document-evidence-of-mass-killings-in-sudans-el-fasher/" target="_blank" style="text-decoration:none;">
+                          <img src="https://www.jurist.org/news/wp-content/uploads/sites/4/2025/12/Screenshot-2025-12-17-at-3.43.58-PM.png" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://www.jurist.org/news/2025/12/yale-researchers-document-evidence-of-mass-killings-in-sudans-el-fasher/" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            예일대 연구진, 수단 엘파셔에서 대량 학살 증거 위성 영상으로 확인
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          Yale researchers document evidence of mass killings in Sudan’s El-Fasher
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-17
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="11">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://www.spacedaily.com/reports/SkyFi_and_ICEYE_US_roll_out_direct_tasking_platform_for_SAR_satellite_imagery_999.html" target="_blank" style="text-decoration:none;">
+                          <img src="https://www.spxdaily.com/images-hg/skyfi-iceye-team-up-hg.jpg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://www.spacedaily.com/reports/SkyFi_and_ICEYE_US_roll_out_direct_tasking_platform_for_SAR_satellite_imagery_999.html" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            SkyFi와 ICEYE US, SAR 위성 영상 직접 요청 플랫폼 출시
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          SkyFi and ICEYE US roll out direct tasking platform for SAR satellite imagery
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-16
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="12">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://www.twz.com/news-features/aftermath-of-ukraines-underwater-drone-attack-on-russian-submarine-seen-in-satellite-imagery" target="_blank" style="text-decoration:none;">
+                          <img src="https://www.twz.com/wp-content/uploads/2025/12/after-attack_damaged-quay-with-two-kilo-submarines-nearby_novorossiysk_russia_16dec2025_wvl.jpg?w=1200" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://www.twz.com/news-features/aftermath-of-ukraines-underwater-drone-attack-on-russian-submarine-seen-in-satellite-imagery" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            우크라이나의 수중 드론 공격 후 러시아 잠수함 피해 위성 영상 공개
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          Aftermath Of Ukraine’s Underwater Drone Attack On Russian Submarine Seen In Satellite Imagery
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-16
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+</table>
+
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  </div> <!-- content-wrapper 끝 -->
+
+  <!-- 푸터 -->
+  <table width="100%" cellpadding="0" cellspacing="0" border="0"
+        style="background:#1e293b; padding:24px 0 32px 0;">
+    <tr>
+      <td align="center">
+        <table cellpadding="0" cellspacing="0" border="0"
+              style="max-width:700px; width:100%; margin:0 auto;">
+          <tr>
+            <td class="inner-padding"
+                style="padding:12px 16px;
+                      font-size:12px;
+                      color:#e2e8f0;
+                      text-align:center;
+                      line-height:1.6;">
+
+              본 메일은 한컴인스페이스 사내 구성원을 위한 주간 뉴스 브리핑입니다.<br>
+              외부로의 무단 전재 및 공유는 지양해 주시기 바랍니다.<br><br>
+              &copy; 2025 Hancom InSpace. All Rights Reserved.
+
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <script>
+  (function() {
+    // ✅ 토픽 추가 기사 페이지네이션 (GeoINT/드론/AI/위성 공통)
+    var PAGE_SIZE = 5;  // 한 페이지에 5개씩 보여줌 (10개로 바꾸고 싶으면 여기 숫자만 10으로 변경)
+
+    var rows = Array.prototype.slice.call(
+      document.querySelectorAll('.topic-article-row')
+    );
+    var total = rows.length;
+    var totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    var currentPage = 1;
+
+    var infoEl = document.getElementById('topic-page-info');
+    var prevEl = document.getElementById('topic-prev');
+    var nextEl = document.getElementById('topic-next');
+
+    function render(page) {
+      if (page < 1 || page > totalPages) return;
+      currentPage = page;
+
+      var start = (currentPage - 1) * PAGE_SIZE;
+      var end = start + PAGE_SIZE;
+
+      rows.forEach(function(row, idx) {
+        row.style.display = (idx >= start && idx < end) ? '' : 'none';
+      });
+
+      if (infoEl) {
+        var from = total === 0 ? 0 : start + 1;
+        var to = Math.min(end, total);
+        infoEl.textContent = from + '–' + to + ' of ' + total;
+      }
+
+      if (prevEl) {
+        if (currentPage === 1) {
+          prevEl.style.opacity = '0.3';
+          prevEl.style.pointerEvents = 'none';
+        } else {
+          prevEl.style.opacity = '1';
+          prevEl.style.pointerEvents = 'auto';
+        }
+      }
+
+      if (nextEl) {
+        if (currentPage === totalPages) {
+          nextEl.style.opacity = '0.3';
+          nextEl.style.pointerEvents = 'none';
+        } else {
+          nextEl.style.opacity = '1';
+          nextEl.style.pointerEvents = 'auto';
+        }
+      }
+    }
+
+    if (prevEl) prevEl.addEventListener('click', function(e) {
+      e.preventDefault();
+      render(currentPage - 1);
+    });
+
+    if (nextEl) nextEl.addEventListener('click', function(e) {
+      e.preventDefault();
+      render(currentPage + 1);
+    });
+
+    render(1);
+  })();
+  </script>
+
+
+</body>
+</html>
