@@ -52,7 +52,13 @@
     position: fixed;
     inset: 0;
     z-index: -2;                  /* ✅ 비디오/이미지(-3) 위 */
-    background: rgba(0,0,0,0.48);
+    background:
+      radial-gradient(
+        circle at top,
+        rgba(0,0,0,0.25) 0%,
+        rgba(0,0,0,0.45) 45%,
+        rgba(0,0,0,0.65) 100%
+      );
     pointer-events: none;
   }
 
@@ -263,7 +269,7 @@
 
               
           <div class="archive-card-insight">
-            이번 주에는 디지털 고도 모델과 SAR 위성 영상 기술 확산이 가속되며, 재난 대응과 군사 정찰의 정밀도 강화가 부상하고 있습니다.
+            이번 주에는 위성 영상과 AI 기반 분석 플랫폼 융합 흐름이 가속되며 공간정보가 전략적 인프라로 전환되는 움직임이 강화되고 있습니다.
           </div>
         
 
