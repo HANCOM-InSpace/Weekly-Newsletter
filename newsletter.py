@@ -4077,7 +4077,7 @@ print("="*60 + "\n")
 
 # # **08-2 카드/섹션 HTML + 최종 뉴스레터 HTML 생성**
 
-# In[14]:
+# In[30]:
 
 
 # ============================
@@ -5410,7 +5410,11 @@ def build_archive_page_html(archive_items):
     color:#e5e7eb;
   }}
 
+
   .bg-video {{
+    display: block;
+    filter: blur(2px) brightness(0.78) saturate(0.95);
+    transform: scale(1.03);
     position: fixed;
     top: 0;
     left: 0;
@@ -5435,12 +5439,18 @@ def build_archive_page_html(archive_items):
     display: none;   /* 데스크톱 기본값 */
   }}
 
-  /* ✅ 추가: 비디오/이미지 위에 깔리는 검은 딤 레이어 */
+
   .bg-dim{{
     position: fixed;
     inset: 0;
     z-index: -2;                  /* ✅ 비디오/이미지(-3) 위 */
-    background: rgba(0,0,0,0.35); /* 데스크톱 기본 딤 강도 */
+    background:
+      radial-gradient(
+        circle at top,
+        rgba(0,0,0,0.25) 0%,
+        rgba(0,0,0,0.45) 45%,
+        rgba(0,0,0,0.65) 100%
+      );
     pointer-events: none;
   }}
 
@@ -5544,15 +5554,17 @@ def build_archive_page_html(archive_items):
     box-shadow:0 0 0 1px rgba(15,23,42,0.4);
   }}
 
+
+
   .archive-card {{
       display:block;
       text-decoration:none;
       border-radius:14px;
       border:1px solid rgba(255,255,255,0.55);
       padding:18px 20px;
-      background:rgba(255,255,255,0.18);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       box-shadow:0 10px 28px rgba(15,23,42,0.6);
       transition:transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
   }}
@@ -5680,28 +5692,29 @@ def build_archive_page_html(archive_items):
         var scrollTop = window.pageYOffset || doc.scrollTop || 0;
         var maxScroll = (doc.scrollHeight - window.innerHeight);
 
-        /*
-          ✅ 아카이브는 스크롤이 짧아서 p가 급격히 튐 → 시킹이 자주 발생 → 끊김
-          ✅ "가상 스크롤 길이"를 하한으로 둬서, 스크롤이 짧아도 영상이 천천히 진행되게 함
-          - 숫자가 클수록 더 천천히 진행됨
-        */
-        var VIRTUAL_SCROLL_PX = 2600; // 추천: 1800~4000 범위에서 조절
+
+
+
+        var VIRTUAL_SCROLL_PX = 2600;
         var denom = Math.max(1, Math.max(maxScroll, VIRTUAL_SCROLL_PX));
 
         var p = scrollTop / denom;
         if (p < 0) p = 0;
         if (p > 1) p = 1;
 
-        var desired = p * duration;
+        // ✅ 끝까지 도달 보정
+        var scale = (maxScroll > 0) ? (denom / maxScroll) : 1;
+        var desired = p * duration * scale;
 
-
-
-        // 끝 프레임 안정화 (선택)
-        var END_MARGIN = 0.03;
-        if (desired > duration - END_MARGIN) desired = duration - END_MARGIN;
         if (desired < 0) desired = 0;
+        if (desired > duration) desired = duration;
+        if (scale > 2.5) scale = 2.5;
 
         targetTime = desired;
+
+
+
+
 
         // 스크롤 속도 기반 스무딩 조절
         if (!window.__bgScrubState) {{
@@ -5992,7 +6005,7 @@ ARCHIVE_PAGE_PATH = "docs/archive.html"
 ARCHIVE_PAGE_URL = f"{BASE_URL}/archive.html"
 
 # ▼ 아카이브 상단 스크롤 비디오(mp4) 경로 (여기에 네 영상 URL 넣기)
-ARCHIVE_VIDEO_URL = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/archivebgvideofinal1.mp4"
+ARCHIVE_VIDEO_URL = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/archivebg_1.mp4"
 
 # ============================================================
 # ▼ (NEW) 메인 뉴스레터 배경 스크롤 비디오/대체 이미지 설정
@@ -6862,7 +6875,7 @@ for topic_num, url in TOPIC_MORE_URLS.items():
 # # **09 이메일 자동 발송**
 # ### **(Colab에서 실행하면 테스트 이메일로, Github 실행 시, 실제 수신자에게)**
 
-# In[15]:
+# In[31]:
 
 
 SEND_EMAIL = os.environ.get("SEND_EMAIL", "true").lower() == "true"
@@ -6915,7 +6928,7 @@ else:
 
 # # **10. 최종 통계 출력**
 
-# In[16]:
+# In[32]:
 
 
 # ============================
