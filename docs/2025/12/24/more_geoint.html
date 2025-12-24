@@ -1,0 +1,848 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+
+
+
+<title>GeoINT - 추가 기사</title>
+
+<style>
+  /* 모바일 최적화 */
+  @media (max-width: 768px) {
+    .hero-bg {
+      background-position:center 0 !important;
+    }
+    .hero-header-cell {
+      padding:32px 0 28px 0 !important;
+    }
+  }
+
+  /* 푸터를 항상 아래로 밀어주는 레이아웃 */
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background:#f3f4f6;
+    font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","맑은 고딕",system-ui,sans-serif;
+  }
+
+
+  .content-wrapper {
+    flex: 1;
+  }
+</style>
+
+</head>
+
+<body>
+
+  <!-- 헤더 (메일과 유사한 스타일) -->
+  <table class="hero-bg" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background-image:url('https://hancom-inspace.github.io/Weekly-Newsletter/assets/header_geoint1.png');
+              background-size:cover;
+              background-position:center 52%;
+              background-repeat:no-repeat;">
+    <tr>
+      <td align="center" class="hero-header-cell"
+          bgcolor="#000000"
+          style="padding:8px 24px 8px 24px;
+                 background: linear-gradient(to bottom right,
+                             rgba(255,255,255,0.70),
+                             rgba(255,255,255,0.70));
+                 color:#ffffff; ;">
+
+        <table cellpadding="0" cellspacing="0" border="0"
+               style="max-width:700px; width:100%;
+                      color:#000000; margin:0 auto;">
+
+          <tr>
+            <td style="padding:16px 24px 8px 24px;">
+              <table width="100%">
+                <tr>
+                  <td align="left">
+                    <img src="https://hancom-inspace.github.io/Weekly-Newsletter/assets/hlogo.png" style="max-width:110px; display:block;">
+                  </td>
+                  <td align="right"
+                      style="text-transform:uppercase; font-size:13px; font-weight:500;
+                             color:#000000; ;">
+                    WWW.INSPACE.CO.KR
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center"
+                style="padding:12px 24px 12px 24px;
+                      font-size:28px; font-weight:700;
+                      font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','맑은 고딕',system-ui,sans-serif;
+                      color:#000000; ;">
+              GeoINT - 추가 기사
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center"
+                style="padding:0 24px 48px 24px;
+                       font-size:14px; font-weight:500; opacity:0.9; line-height:1.5;
+                       color:#000000; ;">
+              2025년 12월 16일 ~ 2025년 12월 23일<br>
+              12월 4주차 뉴스레터
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+
+  <div class="content-wrapper">
+  <!-- 본문 -->
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:24px 0 32px 0;">
+    <tr>
+      <td align="center">
+        <table cellpadding="0" cellspacing="0" border="0"
+              style="max-width:700px; width:100%; margin:0 auto;">
+          <tr>
+            <td style="padding:0 16px 0 16px;">
+
+              <!-- 메인 뉴스레터로 돌아가기 버튼 (카드 위 왼쪽 정렬) -->
+              <div style="padding-bottom:20px; text-align:left;">
+                <a href="https://hancom-inspace.github.io/Weekly-Newsletter/2025/12/24/index.html"
+                  style="display:inline-block;
+                          font-size:13px;
+                          padding:6px 12px;
+                          border-radius:999px;
+                          background:#111827;
+                          color:#ffffff;
+                          text-decoration:none;">
+                  ← 메인 뉴스레터로 돌아가기
+                </a>
+              </div>
+
+              
+<!-- 토픽별 추가 기사 박스 -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="margin-bottom:28px;">
+  <tr>
+    <td align="center">
+      <table cellpadding="0" cellspacing="0" border="0"
+             style="width:100%;
+                    max-width:700px;
+                    background:#ffffff;
+                    border:1px solid #e5e7eb;
+                    border-radius:12px;
+                    padding:20px;
+                    box-sizing:border-box;">
+        <tr>
+          <td>
+            <div style="font-size:24px; font-weight:700; color:#111827;
+                        margin-bottom:28px;">
+              🌐 GeoINT / 지리공간 정보, 위성·지도 기반 정보 분석
+            </div>
+            
+<div id="topic-pagination"
+     style="display:flex;
+            justify-content:flex-end;
+            align-items:center;
+            font-size:14px;
+            font-weight:500;
+            color:#374151;
+            margin-top:-10px;
+            margin-bottom:10px;">
+
+  <span id="topic-page-info"
+        style="margin-right:14px;"></span>
+
+  <!-- 이전 버튼 -->
+  <a href="#" id="topic-prev"
+     style="
+       display:inline-flex;
+       align-items:center;
+       justify-content:center;
+       width:32px;
+       height:32px;
+       margin-right:6px;
+       border:1px solid #d1d5db;
+       border-radius:8px;
+       text-decoration:none;
+       background-color:#ffffff;
+       cursor:pointer;
+     ">
+    <span style="
+       display:inline-block;
+       font-size:18px;
+       font-weight:600;
+       color:#374151;
+       transform: translateY(-3px);
+    ">
+      &#x2039;
+    </span>
+  </a>
+
+  <!-- 다음 버튼 -->
+  <a href="#" id="topic-next"
+     style="
+       display:inline-flex;
+       align-items:center;
+       justify-content:center;
+       width:32px;
+       height:32px;
+       border:1px solid #d1d5db;
+       border-radius:8px;
+       text-decoration:none;
+       background-color:#ffffff;
+       cursor:pointer;
+     ">
+    <span style="
+       display:inline-block;
+       font-size:18px;
+       font-weight:600;
+       color:#374151;
+       transform: translateY(-3px);
+    ">
+      &#x203A;
+    </span>
+  </a>
+</div>
+
+            
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  
+              <tr class="topic-article-row" data-index="0">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://timesofindia.indiatimes.com/city/hyderabad/ghmc-to-roll-out-digital-registry-for-properties/articleshow/126127503.cms" target="_blank" style="text-decoration:none;">
+                          <img src="https://static.toiimg.com/photo/92222747.cms" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://timesofindia.indiatimes.com/city/hyderabad/ghmc-to-roll-out-digital-registry-for-properties/articleshow/126127503.cms" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            하이데라바드 GHMC, 부동산 디지털 등록 시스템 도입
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          GHMC to roll out digital registry for properties
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-22
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="1">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://pypi.org/project/text-geo-map/" target="_blank" style="text-decoration:none;">
+                          <img src="https://pypi.org/_fs-ch-1T1wmsGaOgGaSxcX/assets/errorIcon.svg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://pypi.org/project/text-geo-map/" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            text-geo-map, PyPI에 등록된 지리공간 데이터 변환 파이썬 패키지
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          text-geo-map added to PyPI
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-21
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="2">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://weeklyosm.eu/archives/18339" target="_blank" style="text-decoration:none;">
+                          <img src="https://weeklyosm.eu/wp-content/uploads/2025/12/804.png" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://weeklyosm.eu/archives/18339" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            weeklyOSM: Sumatra 홍수 및 산사태 대응 현황 모니터링 대시보드 소개
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          weeklyOSM: weeklyOSM 804
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-21
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="3">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://www.globalsecurity.org/intell/library/news/2025/intell-251218-hpsci01.htm" target="_blank" style="text-decoration:none;">
+                          <img src="https://www.globalsecurity.org/intell/library/news/images/hpsci-logo.png" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://www.globalsecurity.org/intell/library/news/2025/intell-251218-hpsci01.htm" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            미 하원 정보위원회, 정보기관의 상업 정보 활용 실태 청문회 개최
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          House Intel Committee Holds Hearing to Examine IC&#x27;s Use of Commercial Information
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-19
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="4">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://financialpost.com/globe-newswire/intermap-awarded-malaysian-flood-mapping-program-indonesia-ilaspp-phase-2-evaluation-period-extended" target="_blank" style="text-decoration:none;">
+                          <img src="https://smartcdn.gprod.postmedia.digital/financialpost/wp-content/uploads/2025/12/wealthsimple_outlook.jpg?quality=5&amp;strip=all&amp;w=100&amp;sig=2Ih5PxC0u635HVvmJL9lyg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://financialpost.com/globe-newswire/intermap-awarded-malaysian-flood-mapping-program-indonesia-ilaspp-phase-2-evaluation-period-extended" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            인터맵, 말레이시아 홍수 매핑 프로그램 수주; 인도네시아 ILASPP 2단계 평가 기간 연장
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          Intermap Awarded Malaysian Flood Mapping Program; Indonesia ILASPP Phase 2 Evaluation Period Extended
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-18
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="5">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0338920" target="_blank" style="text-decoration:none;">
+                          <img src="https://journals.plos.org/plosone/article/figure/image?id=10.1371/journal.pone.0338920.g007&amp;size=inline" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0338920" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            구글 어스 엔진과 머신러닝을 활용한 도시 토지 이용 변화의 지리공간 모델링 및 예측
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          Geospatial modeling and forecasting of urban land use change using Google Earth Engine and machine learning
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-18
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="6">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://www.globenewswire.com/news-release/2025/12/18/3207998/0/en/eXp-Realty-Elevates-Agent-Tech-Stack-with-Land-id-Collaboration-Bringing-Market-Leading-Property-Mapping-and-Intelligence-to-Agents-Nationwide.html" target="_blank" style="text-decoration:none;">
+                          <img src="https://ml.globenewswire.com/Resource/Download/c10c16cc-9795-4c7f-b6d3-7c8fb0faa5b1" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://www.globenewswire.com/news-release/2025/12/18/3207998/0/en/eXp-Realty-Elevates-Agent-Tech-Stack-with-Land-id-Collaboration-Bringing-Market-Leading-Property-Mapping-and-Intelligence-to-Agents-Nationwide.html" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            eXp Realty, Land id 협업으로 전국 에이전트에 최첨단 부동산 지도 및 정보 제공
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          eXp Realty Elevates Agent Tech-Stack with Land id Collaboration, Bringing Market-Leading Property Mapping and Intelligence to Agents Nationwide
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-18
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="7">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://www.irishtimes.com/business/2025/12/18/roscommon-firm-becomes-euronext-dublins-first-springboard-market-listing/" target="_blank" style="text-decoration:none;">
+                          <img src="https://www.irishtimes.com/resizer/v2/YZLYKX4HWRAJNAQDOMPIHUXDM4.JPG?smart=true&amp;auth=d43a508de5fc4f8a0287abc366df48c4158c4dc6daf9ff23d1b9cb744fd44505&amp;width=1200&amp;height=630" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://www.irishtimes.com/business/2025/12/18/roscommon-firm-becomes-euronext-dublins-first-springboard-market-listing/" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            로스코먼 기반 환경 소프트웨어 기업, 유로넥스트 더블린 스프링보드 마켓 첫 상장
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          Roscommon firm becomes Euronext Dublin’s first ‘springboard’ market listing
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-18
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="8">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://timesofindia.indiatimes.com/city/pune/maha-govt-mandates-schools-to-pin-their-exact-locations-via-udise-plus-gis-capture-mobile-app/articleshow/126019276.cms" target="_blank" style="text-decoration:none;">
+                          <img src="https://static.toiimg.com/thumb/msid-126019378,width-1070,height-580,imgsize-47866,resizemode-75,overlay-toi_sw,pt-32,y_pad-500/photo.jpg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://timesofindia.indiatimes.com/city/pune/maha-govt-mandates-schools-to-pin-their-exact-locations-via-udise-plus-gis-capture-mobile-app/articleshow/126019276.cms" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            마하라슈트라 주정부, UDISE Plus GIS Capture 모바일 앱으로 학교 위치 정확히 등록 의무화
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          Maha govt mandates schools to pin their exact locations via UDISE Plus GIS Capture mobile app
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-16
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="9">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE45aGMtWXRSaGhCcmMwRFJLV2Zsc0ctQnVKeU52RnFLUWs2VkFHZl9XS2FiMnk4R2Rid3FXaDdTWmZ5NTFDRmlIdEM5di1QcGxWQWlpZTNMaUtzSWUzTXVtSXNqTDFHZTVi?oc=5" target="_blank" style="text-decoration:none;">
+                          <img src="https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE45aGMtWXRSaGhCcmMwRFJLV2Zsc0ctQnVKeU52RnFLUWs2VkFHZl9XS2FiMnk4R2Rid3FXaDdTWmZ5NTFDRmlIdEM5di1QcGxWQWlpZTNMaUtzSWUzTXVtSXNqTDFHZTVi?oc=5" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            포항시 공무원 권택병 팀장, 기술사 2관왕…공간정보 분야 ‘전국적 희소 사례’ - 대경일보
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          포항시 공무원 권택병 팀장, 기술사 2관왕…공간정보 분야 ‘전국적 희소 사례’ - 대경일보
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-23
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="10">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxPS2pHS3NHUzJYc3I4TEdXdlFIaF84b0hydmRVdUp4Z1hXN0k3cThtbk1TeksyXzNyM0g4YjJGSVdkeGYxejR0aEFGbTFPcjJ0T2VQa3pLX1Jla3ppTXgyVGxvTEsxWExQVXdRRFNwUnF3NVJHMTN4OTVZZ0M1cG9UNg?oc=5" target="_blank" style="text-decoration:none;">
+                          <img src="https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxPS2pHS3NHUzJYc3I4TEdXdlFIaF84b0hydmRVdUp4Z1hXN0k3cThtbk1TeksyXzNyM0g4YjJGSVdkeGYxejR0aEFGbTFPcjJ0T2VQa3pLX1Jla3ppTXgyVGxvTEsxWExQVXdRRFNwUnF3NVJHMTN4OTVZZ0M1cG9UNg?oc=5" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            디지털전환 시대의 기반, 기본공간정보 항목 재선정 방안 - KDI 경제교육·정보센터
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          디지털전환 시대의 기반, 기본공간정보 항목 재선정 방안 - KDI 경제교육·정보센터
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-23
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="11">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://news.google.com/rss/articles/CBMifEFVX3lxTE1vMjd4ejgzUkpOR3ZFLTFHeWxUeVg3V1Ntc1NhU2U5WExSY0hFSEhEbzNaNi1xNUlVdWdCNHJLWmNLeWdVVkpOVlB0VDlxWGJLTEplODBTdlVtT2wxTEVWamZMUU0zRElRTVdQYmo1ajk3dXhnQ0xuM1F0ZXY?oc=5" target="_blank" style="text-decoration:none;">
+                          <img src="https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://news.google.com/rss/articles/CBMifEFVX3lxTE1vMjd4ejgzUkpOR3ZFLTFHeWxUeVg3V1Ntc1NhU2U5WExSY0hFSEhEbzNaNi1xNUlVdWdCNHJLWmNLeWdVVkpOVlB0VDlxWGJLTEplODBTdlVtT2wxTEVWamZMUU0zRElRTVdQYmo1ajk3dXhnQ0xuM1F0ZXY?oc=5" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            국토부 &quot;공간정보산업 매출 11조2천억 원…1.9% 증가&quot; - 비욘드포스트
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          국토부 &quot;공간정보산업 매출 11조2천억 원…1.9% 증가&quot; - 비욘드포스트
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-22
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="12">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://news.google.com/rss/articles/CBMiU0FVX3lxTE5zSmdocS1FemNoeG5pSlFCcFU5SVNXQWNHREdidHA5ZEFSRVM4RjlVLUI3dHd6eFZLZlBaa3hrbGRxTXl2TnZiSHd1bjJiZG5ZdGxv?oc=5" target="_blank" style="text-decoration:none;">
+                          <img src="https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://news.google.com/rss/articles/CBMiU0FVX3lxTE5zSmdocS1FemNoeG5pSlFCcFU5SVNXQWNHREdidHA5ZEFSRVM4RjlVLUI3dHd6eFZLZlBaa3hrbGRxTXl2TnZiSHd1bjJiZG5ZdGxv?oc=5" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            지난해 공간정보산업 매출 &#x27;소폭 증가&#x27;…고용·사업체 수는 감소
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          지난해 공간정보산업 매출 &#x27;소폭 증가&#x27;…고용·사업체 수는 감소 - 네이트
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-21
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="13">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE9DNTBNRUtSbnhfMjJUMmJUbzVWWG4zTmgtQTRJN1ZwcWt6MHQ3bjBXZlkxZC1udkpJcTV2MGVYLU9xaE83aHF0aGVUUmZ5cWJiaWhweUhocVVkbXM5ZDlabzV3?oc=5" target="_blank" style="text-decoration:none;">
+                          <img src="https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE9DNTBNRUtSbnhfMjJUMmJUbzVWWG4zTmgtQTRJN1ZwcWt6MHQ3bjBXZlkxZC1udkpJcTV2MGVYLU9xaE83aHF0aGVUUmZ5cWJiaWhweUhocVVkbXM5ZDlabzV3?oc=5" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            김성호 이지스 대표 &quot;디지털 어스로 사회 문제 예방 가능… 실적으로 입증할 것&quot;
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          김성호 이지스 대표 &quot;디지털 어스로 사회 문제 예방 가능… 실적으로 입증할 것&quot; - 머니S
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-21
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+              <tr class="topic-article-row" data-index="14">
+                <td style="padding:10px 0; border-bottom:1px solid #e5e7eb;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- 썸네일 -->
+                      <td valign="top" width="96" style="padding-right:8px;">
+                        <a href="https://news.google.com/rss/articles/CBMiggFBVV95cUxObEVocENubUMzY3pGaUwwZ3M0dWlmRk1pTTVraXJsam5ULUI4SWozRFVfZ2dIZ3FnSXVPTDFBZmdFRTJNTVkzVGIxU2h2aGE3Z0xwc2UybVRjMWhzMlF5bWJxZWxHZ2VTU0Vfa0hpNVpYSExfeTNJdUFPd2tPRExyYlNn?oc=5" target="_blank" style="text-decoration:none;">
+                          <img src="https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg" width="80" height="80"
+                               style="display:block; border-radius:10px; object-fit:cover;"
+                               onerror="this.onerror=null; this.src='https://e0.pxfuel.com/wallpapers/597/629/desktop-wallpaper-fun-funny-funny-funny-space.jpg';">
+                        </a>
+                      </td>
+
+                      <!-- 제목/부제목/날짜 -->
+                      <td valign="top">
+                        <div style="font-size:14px; line-height:1.5; margin-bottom:2px;">
+                          <a href="https://news.google.com/rss/articles/CBMiggFBVV95cUxObEVocENubUMzY3pGaUwwZ3M0dWlmRk1pTTVraXJsam5ULUI4SWozRFVfZ2dIZ3FnSXVPTDFBZmdFRTJNTVkzVGIxU2h2aGE3Z0xwc2UybVRjMWhzMlF5bWJxZWxHZ2VTU0Vfa0hpNVpYSExfeTNJdUFPd2tPRExyYlNn?oc=5" target="_blank"
+                             style="color:#111827; text-decoration:none;">
+                            지적측량 용어, 100년만에 바뀐다…‘공간정보관리법’ 개정 - 환경과조경
+                          </a>
+                        </div>
+                        
+        <div style="font-size:12px; color:#6b7280; margin-top:2px; line-height:1.4;">
+          지적측량 용어, 100년만에 바뀐다…‘공간정보관리법’ 개정 - 환경과조경
+        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                          2025-12-21
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            
+</table>
+
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  </div> <!-- content-wrapper 끝 -->
+
+  <!-- 푸터 -->
+  <table width="100%" cellpadding="0" cellspacing="0" border="0"
+        style="background:#1e293b; padding:24px 0 32px 0;">
+    <tr>
+      <td align="center">
+        <table cellpadding="0" cellspacing="0" border="0"
+              style="max-width:700px; width:100%; margin:0 auto;">
+          <tr>
+            <td class="inner-padding"
+                style="padding:12px 16px;
+                      font-size:12px;
+                      color:#e2e8f0;
+                      text-align:center;
+                      line-height:1.6;">
+
+              본 메일은 한컴인스페이스 사내 구성원을 위한 주간 뉴스 브리핑입니다.<br>
+              외부로의 무단 전재 및 공유는 지양해 주시기 바랍니다.<br><br>
+              &copy; 2025 Hancom InSpace. All Rights Reserved.
+
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <script>
+  (function() {
+    // ✅ 토픽 추가 기사 페이지네이션 (GeoINT/드론/AI/위성 공통)
+    var PAGE_SIZE = 5;  // 한 페이지에 5개씩 보여줌 (10개로 바꾸고 싶으면 여기 숫자만 10으로 변경)
+
+    var rows = Array.prototype.slice.call(
+      document.querySelectorAll('.topic-article-row')
+    );
+    var total = rows.length;
+    var totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    var currentPage = 1;
+
+    var infoEl = document.getElementById('topic-page-info');
+    var prevEl = document.getElementById('topic-prev');
+    var nextEl = document.getElementById('topic-next');
+
+    function render(page) {
+      if (page < 1 || page > totalPages) return;
+      currentPage = page;
+
+      var start = (currentPage - 1) * PAGE_SIZE;
+      var end = start + PAGE_SIZE;
+
+      rows.forEach(function(row, idx) {
+        row.style.display = (idx >= start && idx < end) ? '' : 'none';
+      });
+
+      if (infoEl) {
+        var from = total === 0 ? 0 : start + 1;
+        var to = Math.min(end, total);
+        infoEl.textContent = from + '–' + to + ' of ' + total;
+      }
+
+      if (prevEl) {
+        if (currentPage === 1) {
+          prevEl.style.opacity = '0.3';
+          prevEl.style.pointerEvents = 'none';
+        } else {
+          prevEl.style.opacity = '1';
+          prevEl.style.pointerEvents = 'auto';
+        }
+      }
+
+      if (nextEl) {
+        if (currentPage === totalPages) {
+          nextEl.style.opacity = '0.3';
+          nextEl.style.pointerEvents = 'none';
+        } else {
+          nextEl.style.opacity = '1';
+          nextEl.style.pointerEvents = 'auto';
+        }
+      }
+    }
+
+    if (prevEl) prevEl.addEventListener('click', function(e) {
+      e.preventDefault();
+      render(currentPage - 1);
+    });
+
+    if (nextEl) nextEl.addEventListener('click', function(e) {
+      e.preventDefault();
+      render(currentPage + 1);
+    });
+
+    render(1);
+  })();
+  </script>
+
+
+</body>
+</html>
