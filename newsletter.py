@@ -7258,7 +7258,7 @@ else:
 
 # # **10. 최종 통계 출력**
 
-# In[28]:
+# In[34]:
 
 
 # ============================
@@ -7268,46 +7268,169 @@ print("\n" + "="*70)
 print("📊 뉴스레터 생성 최종 통계")
 print("="*70)
 
+import os
+import requests
+from datetime import datetime, timedelta
+
+# 간단한 메모리 캐시 (같은 실행 내 반복 호출 방지)
+_fx_cache = {"rate": None, "ts": None}
+
+def get_usd_to_krw_rate(default_rate: float = 1300.0, cache_minutes: int = 60) -> float:
+    """
+    당일(최신) USD->KRW 환율을 조회합니다.
+    - 기본: open.er-api.com (키 불필요)
+    - 실패 시: 환경변수 USD_TO_KRW -> default_rate 순으로 폴백
+    """
+    # 1) 캐시 확인
+    now = datetime.utcnow()
+    if _fx_cache["rate"] is not None and _fx_cache["ts"] is not None:
+        if now - _fx_cache["ts"] < timedelta(minutes=cache_minutes):
+            return float(_fx_cache["rate"])
+
+    # 2) 환경변수 우선 적용(운영에서 강제 고정하고 싶을 때)
+    env_rate = os.environ.get("USD_TO_KRW")
+    if env_rate:
+        try:
+            r = float(env_rate)
+            _fx_cache["rate"], _fx_cache["ts"] = r, now
+            return r
+        except ValueError:
+            pass
+
+    # 3) 외부 환율 API 호출 (키 불필요)
+    try:
+        # 문서: https://open.er-api.com/v6/latest/USD :contentReference[oaicite:1]{index=1}
+        url = "https://open.er-api.com/v6/latest/USD"
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+
+        # 응답에 따라 키가 rates일 수 있음
+        rates = data.get("rates") or {}
+        krw = rates.get("KRW")
+        if krw is None:
+            raise ValueError("KRW rate not found")
+
+        krw = float(krw)
+        _fx_cache["rate"], _fx_cache["ts"] = krw, now
+        return krw
+
+    except Exception:
+        # 4) 최종 폴백
+        return float(default_rate)
+
 # ============================
-# 1. OpenAI 토큰 사용량
+# 1. OpenAI 토큰 사용량 (실측 우선) + 비용 계산 (cached input 반영)
 # ============================
 print("\n💰 OpenAI API 사용량:")
 print("-" * 50)
 
+# 모델별 가격(USD / 1M tokens)
+# ※ 사용자가 올린 표 기준: gpt-4.1-mini (input 0.40 / cached 0.10 / output 1.60)
+MODEL_PRICING_PER_1M = {
+    "gpt-4.1-mini": {"input": 0.40, "cached_input": 0.10, "output": 1.60},
+    # 필요 시 다른 모델도 추가
+    # "gpt-4o-mini": {"input": 0.15, "cached_input": 0.075, "output": 0.60},
+}
+
+USD_TO_KRW = get_usd_to_krw_rate(default_rate=1400.0)
+
+def _estimate_cost_usd(model: str, input_tokens: int, cached_input_tokens: int, output_tokens: int) -> dict:
+    p = MODEL_PRICING_PER_1M.get(model)
+    if not p:
+        return {
+            "model": model,
+            "input_tokens": input_tokens,
+            "cached_input_tokens": cached_input_tokens,
+            "output_tokens": output_tokens,
+            "input_cost": None,
+            "cached_input_cost": None,
+            "output_cost": None,
+            "total_cost": None,
+            "warning": f"MODEL_PRICING_PER_1M에 '{model}' 가격이 없어 비용 계산을 생략했습니다.",
+        }
+
+    # cached_input_tokens는 input_tokens의 부분집합으로 잡히는 게 일반적이지만,
+    # 혹시 누적 로직/SDK 차이로 cached가 더 크게 잡히면 안전하게 클램프합니다.
+    cached = max(0, min(int(cached_input_tokens), int(input_tokens)))
+    non_cached_input = max(0, int(input_tokens) - cached)
+
+    input_cost = (non_cached_input / 1_000_000) * float(p["input"])
+    cached_input_cost = (cached / 1_000_000) * float(p["cached_input"])
+    output_cost = (int(output_tokens) / 1_000_000) * float(p["output"])
+
+    return {
+        "model": model,
+        "input_tokens": int(input_tokens),
+        "cached_input_tokens": int(cached),
+        "output_tokens": int(output_tokens),
+        "non_cached_input_tokens": int(non_cached_input),
+        "input_cost": input_cost,
+        "cached_input_cost": cached_input_cost,
+        "output_cost": output_cost,
+        "total_cost": input_cost + cached_input_cost + output_cost,
+        "warning": None,
+    }
+
 try:
-    # 실제 사용한 기사 수 기준 추정
-    total_articles = len(df_final) if 'df_final' in globals() else 0
-    research_articles = len(research_processed_articles) if 'research_processed_articles' in globals() else 0
+    model_name = globals().get("MODEL_NAME", "gpt-4.1-mini")
 
-    # GPT-4.1-mini 평균 토큰 사용량 추정
-    # - 일반 기사 요약: 약 800 토큰/기사 (입력 500 + 출력 300)
-    # - 연구논문 요약: 약 1200 토큰/논문 (입력 800 + 출력 400)
+    # (A) 실측 토큰이 있으면 그걸 사용
+    if "total_tokens_used" in globals() and isinstance(total_tokens_used, dict):
+        measured_in = int(total_tokens_used.get("input", 0) or 0)
+        measured_cached_in = int(total_tokens_used.get("cached_input", 0) or 0)
+        measured_out = int(total_tokens_used.get("output", 0) or 0)
+    else:
+        measured_in, measured_cached_in, measured_out = 0, 0, 0
 
-    estimated_article_tokens = total_articles * 800
-    estimated_research_tokens = research_articles * 1200
-    estimated_total_tokens = estimated_article_tokens + estimated_research_tokens
+    measured_total = measured_in + measured_out
 
-    print(f"  • 일반 기사 처리: 약 {total_articles}건 × 800 토큰 = {estimated_article_tokens:,} 토큰")
-    print(f"  • 연구논문 처리: 약 {research_articles}건 × 1,200 토큰 = {estimated_research_tokens:,} 토큰")
-    print(f"  • 총 예상 토큰: 약 {estimated_total_tokens:,} 토큰")
+    # (B) 실측이 0이면(=usage 누적이 안 된 실행) 기존 방식 “대략치”로 fallback
+    if measured_total <= 0:
+        total_articles = len(df_final) if "df_final" in globals() else 0
+        research_articles = len(research_processed_articles) if "research_processed_articles" in globals() else 0
 
-    # 비용 계산 (GPT-4.1-mini 기준: $0.15/1M input tokens, $0.60/1M output tokens)
-    # 평균적으로 input:output = 65:35 비율로 가정
-    input_tokens = int(estimated_total_tokens * 0.65)
-    output_tokens = int(estimated_total_tokens * 0.35)
+        estimated_article_tokens = total_articles * 800
+        estimated_research_tokens = research_articles * 1200
+        estimated_total_tokens = estimated_article_tokens + estimated_research_tokens
 
-    input_cost = (input_tokens / 1_000_000) * 0.15
-    output_cost = (output_tokens / 1_000_000) * 0.60
-    total_cost = input_cost + output_cost
+        measured_in = int(estimated_total_tokens * 0.65)
+        measured_out = int(estimated_total_tokens * 0.35)
+        measured_cached_in = 0  # fallback에서는 cached를 알 수 없음
+        measured_total = measured_in + measured_out
 
-    print(f"\n  💵 예상 비용:")
-    print(f"     - Input 토큰: {input_tokens:,} × $0.15/1M = ${input_cost:.4f}")
-    print(f"     - Output 토큰: {output_tokens:,} × $0.60/1M = ${output_cost:.4f}")
-    print(f"     - 총 비용: ${total_cost:.4f} (약 ₩{int(total_cost * 1300):,}원)")
+        print("  ⚠️ 실측 usage 누적값이 없어 추정치로 대체합니다.")
+        print(f"  • 일반 기사 처리(추정): {total_articles}건 × 800 = {estimated_article_tokens:,} tokens")
+        print(f"  • 연구논문 처리(추정): {research_articles}건 × 1,200 = {estimated_research_tokens:,} tokens")
+    else:
+        print("  ✅ OpenAI usage(실측) 기반으로 계산합니다.")
+
+    print(f"  • Input tokens         : {measured_in:,}")
+    print(f"  • Cached input tokens  : {measured_cached_in:,}")
+    print(f"  • Output tokens        : {measured_out:,}")
+    print(f"  • Total tokens (I+O)   : {measured_total:,}")
+
+    cost = _estimate_cost_usd(model_name, measured_in, measured_cached_in, measured_out)
+
+    if cost["warning"]:
+        print(f"\n  ⚠️ {cost['warning']}")
+        total_cost = 0.0
+    else:
+        total_cost = float(cost["total_cost"])
+        p = MODEL_PRICING_PER_1M[model_name]
+
+        print("\n  💵 예상 비용(USD):")
+        print(f"     - Input (non-cached): {cost['non_cached_input_tokens']:,} × ${p['input']}/1M = ${cost['input_cost']:.6f}")
+        print(f"     - Input (cached)    : {cost['cached_input_tokens']:,} × ${p['cached_input']}/1M = ${cost['cached_input_cost']:.6f}")
+        print(f"     - Output            : {cost['output_tokens']:,} × ${p['output']}/1M = ${cost['output_cost']:.6f}")
+        print(f"     - Total             : ${total_cost:.6f}")
+        print(f"  💵 예상 비용(KRW, 환율 {USD_TO_KRW:.0f}): 약 ₩{int(total_cost * USD_TO_KRW):,}원")
 
 except Exception as e:
-    print(f"  ⚠️ 토큰 사용량 계산 실패: {e}")
-    total_cost = 0
+    print(f"  ⚠️ 토큰/비용 계산 실패: {e}")
+    total_cost = 0.0
+
+
 
 # ============================
 # 2. 메인 vs 추가 기사 분포
@@ -7408,10 +7531,22 @@ print("="*70)
 total_news = total_news if 'total_news' in globals() else (len(df_final) if 'df_final' in globals() else 0)
 total_research = len(research_processed_articles) if 'research_processed_articles' in globals() else 0
 
+# ✅ USD_TO_KRW가 위에서 이미 정의되어 있다고 가정 (없으면 fallback으로 조회)
+try:
+    _usd_to_krw_final = float(USD_TO_KRW)
+except Exception:
+    _usd_to_krw_final = get_usd_to_krw_rate(default_rate=1400.0)
+
 # 🔥 수정: 일반 뉴스에 한글/영문 개수 표시
 print(f"📰 일반 뉴스: {total_news}개 (영문: {total_english_count}개, 한글: {total_korean_count}개)")
 print(f"🔬 연구동향: {total_research}개")
-print(f"💰 예상 비용: ${total_cost:.4f} (약 ₩{int(total_cost * 1300):,}원)" if total_cost > 0 else "💰 예상 비용: 계산 불가")
+
+if total_cost and total_cost > 0:
+    krw_cost = int(total_cost * _usd_to_krw_final)
+    print(f"💰 예상 비용: ${total_cost:.4f} (약 ₩{krw_cost:,}원, 환율 {_usd_to_krw_final:.0f}원/USD)")
+else:
+    print("💰 예상 비용: 계산 불가")
+
 print("="*70)
 print("✅ 뉴스레터 생성 완료!")
 print("="*70 + "\n")
