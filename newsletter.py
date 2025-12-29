@@ -9,7 +9,7 @@
 
 # # **01-1 설치 & import**
 
-# In[ ]:
+# In[2]:
 
 
 # ============================
@@ -49,7 +49,7 @@ if IN_COLAB:
 
 # # **01-2 라이브러리 설치**
 
-# In[ ]:
+# In[3]:
 
 
 # ============================
@@ -93,7 +93,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # # **02-1 설정 (API 키)**
 
-# In[ ]:
+# In[4]:
 
 
 # ============================================================
@@ -118,7 +118,7 @@ NEWSDATA_BASE_URL_LATEST = "https://newsdata.io/api/1/latest"
 
 # # **02-2 설정 (날짜, 주제, 키워드, 상수)**
 
-# In[ ]:
+# In[5]:
 
 
 # 사용할 GPT mini 모델 이름 (예: "gpt-4.1-mini", 나중에 "gpt-5.1-mini"로 교체 가능)
@@ -132,7 +132,7 @@ client = OpenAI()
 # ============================================================
 # GitHub 계정 아이디와 레포 이름
 GITHUB_OWNER = "hancom-inspace"              # 예: "junwoo0920"
-GITHUB_REPO  = "Weekly-Newsletter"    # GitHub에서 만든 레포 이름
+GITHUB_REPO  = "Newsletter"    # GitHub에서 만든 레포 이름
 
 # GitHub Pages 최종 URL (Settings → Pages에 표시되는 주소)
 # 보통 형태: https://{owner}.github.io/{repo}
@@ -338,7 +338,7 @@ MIN_TOTAL_PER_TOPIC = ARTICLES_PER_TOPIC_FINAL + 6  # 3 + 6 = 9
 
 # # **03 NewsAPI로 기사 수집**
 
-# In[ ]:
+# In[6]:
 
 
 # ============================
@@ -1560,7 +1560,7 @@ if IN_COLAB:
 
 # # **03-1 언어별 비율 계산 함수**
 
-# In[ ]:
+# In[7]:
 
 
 # ============================
@@ -1617,7 +1617,7 @@ def is_korean_article(article_dict):
 
 # # **04 GPT (엄격 필터링/분류/요약)**
 
-# In[ ]:
+# In[8]:
 
 
 # ============================
@@ -1927,7 +1927,7 @@ if IN_COLAB:
 
 # # **05 부족한 토픽은 백업 프롬프트로 채우기 + 토픽당 3개 맞추기**
 
-# In[ ]:
+# In[9]:
 
 
 # ============================
@@ -2050,7 +2050,7 @@ print("CSV 저장 완료: newsletter_articles.csv")
 
 # # **06 메인(3개) + 더보기 기사 분리**
 
-# In[ ]:
+# In[10]:
 
 
 # ============================
@@ -2461,7 +2461,7 @@ print("\n" + "="*60 + "\n")
 
 # # **07 최신 연구동향 (학술지 섹션) 설정**
 
-# In[ ]:
+# In[11]:
 
 
 # ============================================
@@ -2898,7 +2898,7 @@ def collect_research_articles_from_crossref(
 
 # # **07-2 최신 연구동향 추가**
 
-# In[ ]:
+# In[12]:
 
 
 # ============================================
@@ -3236,7 +3236,7 @@ else:
 
 # # **07-1 썸네일 추출 (기본 썸네일 포함)**
 
-# In[ ]:
+# In[13]:
 
 
 import re
@@ -3800,7 +3800,7 @@ print("(본문 영역 위주 + sidebar/related 제외 + 스마트 필터 + canon
 
 # # **08-1 인사이트 생성**
 
-# In[ ]:
+# In[14]:
 
 
 # ============================================================
@@ -4077,25 +4077,25 @@ print("="*60 + "\n")
 
 # # **08-2 카드/섹션 HTML + 최종 뉴스레터 HTML 생성**
 
-# In[ ]:
+# In[15]:
 
 
 # ============================
 # 08-2. 카드/섹션 HTML + 더보기 페이지 + 최종 뉴스레터 HTML
 # ============================
-W_HEADER_BACKGROUND = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/hheader2.png"
-HLOGO_URL = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/hlogo.png"
+W_HEADER_BACKGROUND = "https://hancom-inspace.github.io/Newsletter/assets/hheader2.png"
+HLOGO_URL = "https://hancom-inspace.github.io/Newsletter/assets/hlogo.png"
 
 # (NEW) 토픽별 더보기 페이지 헤더 이미지
 TOPIC_MORE_HEADER_BACKGROUNDS = {
-    1: "https://hancom-inspace.github.io/Weekly-Newsletter/assets/header_geoint1.png",
-    2: "https://hancom-inspace.github.io/Weekly-Newsletter/assets/header_aviation.png",
-    3: "https://hancom-inspace.github.io/Weekly-Newsletter/assets/header_ai_platform1.png",
-    4: "https://hancom-inspace.github.io/Weekly-Newsletter/assets/header_satellite.jpg",
+    1: "https://hancom-inspace.github.io/Newsletter/assets/header_geoint1.png",
+    2: "https://hancom-inspace.github.io/Newsletter/assets/header_aviation.png",
+    3: "https://hancom-inspace.github.io/Newsletter/assets/header_ai_platform1.png",
+    4: "https://hancom-inspace.github.io/Newsletter/assets/header_satellite.jpg",
 }
 
 # (NEW) 연구동향 더보기 페이지 헤더 이미지
-RESEARCH_MORE_HEADER_BACKGROUND = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/header_research2.png"
+RESEARCH_MORE_HEADER_BACKGROUND = "https://hancom-inspace.github.io/Newsletter/assets/header_research2.png"
 
 
 if "weekly_focus_insight" not in globals() or not (weekly_focus_insight or "").strip():
@@ -5447,7 +5447,7 @@ def build_archive_page_html(archive_items):
     width: 100%;
     height: 100%;
     z-index: -4;              /* video(-3)보다 뒤로 */
-    background-image: url('https://hancom-inspace.github.io/Weekly-Newsletter/assets/archive_bg_fallback1.png');
+    background-image: url('https://hancom-inspace.github.io/Newsletter/assets/archive_bg_fallback1.png');
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
@@ -6019,13 +6019,13 @@ ARCHIVE_PAGE_PATH = "docs/archive.html"
 ARCHIVE_PAGE_URL = f"{BASE_URL}/archive.html"
 
 # ▼ 아카이브 상단 스크롤 비디오(mp4) 경로 (여기에 네 영상 URL 넣기)
-ARCHIVE_VIDEO_URL = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/archivebg_1.mp4"
+ARCHIVE_VIDEO_URL = "https://hancom-inspace.github.io/Newsletter/assets/archivebg_1.mp4"
 
 # ============================================================
 # ▼ (NEW) 메인 뉴스레터 배경 스크롤 비디오/대체 이미지 설정
 # ============================================================
-MAIN_BG_VIDEO_URL = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/mainbg1.mp4"  # ← 메인에 깔 영상
-MAIN_BG_FALLBACK_IMAGE_URL = "https://hancom-inspace.github.io/Weekly-Newsletter/assets/main_bg_fallback.png"  # ← 모바일 대체 이미지
+MAIN_BG_VIDEO_URL = "https://hancom-inspace.github.io/Newsletter/assets/mainbg1.mp4"  # ← 메인에 깔 영상
+MAIN_BG_FALLBACK_IMAGE_URL = "https://hancom-inspace.github.io/Newsletter/assets/main_bg_fallback.png"  # ← 모바일 대체 이미지
 
 # fade/인터랙션 시작 스크롤 위치(px) (2~3번 스크롤 느낌으로 조정)
 MAIN_BG_FADE_START_PX = 200
@@ -6252,7 +6252,7 @@ weekly_focus_html = f"""
                   box-shadow:0 10px 24px rgba(0,0,0,0.14);">
       <tr>
         <td style="
-            background-image:url('https://hancom-inspace.github.io/Weekly-Newsletter/assets/insightcard2.png');
+            background-image:url('https://hancom-inspace.github.io/Newsletter/assets/insightcard2.png');
             background-size: cover;
             background-position: center;
             background-repeat:no-repeat;
@@ -6634,7 +6634,7 @@ newsletter_html = f"""
                   style="border-radius:12px;
                         overflow:hidden;
                         border:1px solid #e5e7eb;
-                        background-image:url('https://hancom-inspace.github.io/Weekly-Newsletter/assets/archivebutton.png');
+                        background-image:url('https://hancom-inspace.github.io/Newsletter/assets/archivebutton.png');
                         background-size:cover;
                         background-position:center;
                         background-repeat:no-repeat;"
@@ -6915,7 +6915,7 @@ for topic_num, url in TOPIC_MORE_URLS.items():
 # # **09 이메일 자동 발송**
 # ### **(Colab에서 실행하면 테스트 이메일로, Github 실행 시, 실제 수신자에게)**
 
-# In[ ]:
+# In[16]:
 
 
 SEND_EMAIL = os.environ.get("SEND_EMAIL", "true").lower() == "true"
@@ -6982,7 +6982,7 @@ else:
 
 # # **10. 최종 통계 출력**
 
-# In[ ]:
+# In[17]:
 
 
 # ============================
@@ -7164,7 +7164,7 @@ if _in_colab():
     from datetime import datetime, timezone, timedelta
 
     GITHUB_OWNER = os.environ.get("GITHUB_OWNER", "HANCOM-InSpace")
-    GITHUB_REPO  = os.environ.get("GITHUB_REPO", "Weekly-Newsletter")
+    GITHUB_REPO  = os.environ.get("GITHUB_REPO", "Newsletter")
     BRANCH       = os.environ.get("GITHUB_BRANCH", "main")
 
     TARGET_PATH  = "newsletter.py"  # weekly 메인 파일명에 맞게 유지/수정
