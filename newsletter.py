@@ -9,7 +9,7 @@
 
 # # **01-1 GitHub 연동 설정 (Colab 전용)**
 
-# In[1]:
+# In[ ]:
 
 
 # ============================
@@ -49,7 +49,7 @@ if IN_COLAB:
 
 # # **01-2 라이브러리 설치**
 
-# In[2]:
+# In[ ]:
 
 
 # ============================
@@ -109,7 +109,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # # **02-1 설정 (API 키)**
 
-# In[3]:
+# In[ ]:
 
 
 # ============================================================
@@ -134,7 +134,7 @@ NEWSDATA_BASE_URL_LATEST = "https://newsdata.io/api/1/latest"
 
 # # **02-2 설정 (기본 설정, 날짜, 수집 기간, 이미지)**
 
-# In[4]:
+# In[ ]:
 
 
 # 사용할 GPT mini 모델 이름 (예: "gpt-4.1-mini", 나중에 "gpt-5.1-mini"로 교체 가능)
@@ -358,7 +358,7 @@ MIN_TOTAL_PER_TOPIC = ARTICLES_PER_TOPIC_FINAL + 6  # 3 + 6 = 9
 
 # # **03 NewsAPI로 기사 수집**
 
-# In[5]:
+# In[ ]:
 
 
 # ============================
@@ -1580,7 +1580,7 @@ if IN_COLAB:
 
 # # **03-1 언어별 비율 계산 함수**
 
-# In[6]:
+# In[ ]:
 
 
 # ============================
@@ -1637,7 +1637,7 @@ def is_korean_article(article_dict):
 
 # # **04 GPT (엄격 필터링/분류/요약)**
 
-# In[7]:
+# In[ ]:
 
 
 # ============================
@@ -1947,7 +1947,7 @@ if IN_COLAB:
 
 # # **05 부족한 토픽은 백업 프롬프트로 채우기 + 토픽당 3개 맞추기**
 
-# In[8]:
+# In[ ]:
 
 
 # ============================
@@ -2070,7 +2070,7 @@ print("CSV 저장 완료: newsletter_articles.csv")
 
 # # **06 메인(3개) + 더보기 기사 분리**
 
-# In[9]:
+# In[ ]:
 
 
 # ============================
@@ -2481,7 +2481,7 @@ print("\n" + "="*60 + "\n")
 
 # # **06-1 한컴인스페이스 기사 추가**
 
-# In[10]:
+# In[ ]:
 
 
 # ============================================================
@@ -3027,7 +3027,7 @@ print("✓ 한컴인스페이스 뉴스 수집 완료")
 
 # # **07 최신 연구동향 (학술지 섹션) 설정**
 
-# In[11]:
+# In[ ]:
 
 
 # ============================================
@@ -3464,7 +3464,7 @@ def collect_research_articles_from_crossref(
 
 # # **07-1 최신 연구동향 추가**
 
-# In[12]:
+# In[ ]:
 
 
 # ============================================
@@ -3802,7 +3802,7 @@ else:
 
 # # **07-2 썸네일 추출 (기본 썸네일 포함)**
 
-# In[13]:
+# In[ ]:
 
 
 import re
@@ -4398,7 +4398,7 @@ print("(본문 영역 위주 + sidebar/related 제외 + 스마트 필터 + canon
 
 # # **07-3 한컴인스페이스 TOP 기사 요약 생성**
 
-# In[14]:
+# In[ ]:
 
 
 # ============================================================
@@ -4477,7 +4477,7 @@ for a in inspace_top_articles:
 
 # # **08-1 인사이트 생성**
 
-# In[15]:
+# In[ ]:
 
 
 # ============================================================
@@ -4754,13 +4754,13 @@ print("="*60 + "\n")
 
 # # **08-2 카드/섹션 HTML + 최종 뉴스레터 HTML 생성**
 
-# In[16]:
+# In[62]:
 
 
 # ============================
 # 08-2. 카드/섹션 HTML + 더보기 페이지 + 최종 뉴스레터 HTML
 # ============================
-W_HEADER_BACKGROUND = "https://dekim-inspace.github.io/Newsletter/assets/hheader2.png"
+W_HEADER_BACKGROUND = "https://dekim-inspace.github.io/Newsletter/assets/USA_Sejong21.jpg"
 HLOGO_URL = "https://dekim-inspace.github.io/Newsletter/assets/hlogo.png"
 
 # (NEW) 토픽별 더보기 페이지 헤더 이미지
@@ -7740,8 +7740,18 @@ newsletter_html = f"""
 
 
 <title>한컴인스페이스 {WEEK_LABEL} 뉴스레터</title>
+
+<!-- Pretendard -->
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+
+<!-- Asta Sans -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Asta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
 
 <style>
   @media (max-width: 768px) {{
@@ -7828,17 +7838,23 @@ newsletter_html = f"""
   }}
 
   body {{
-    display: flex;
-    flex-direction: column;
-
-    min-height: 100vh;
-    min-height: 100svh;
-    min-height: 100dvh;
-
+    margin: 0;
+    padding: 0;
     background: #f3f4f6;
 
-    font-family: "Pretendard", -apple-system, BlinkMacSystemFont,
-                "Apple SD Gothic Neo", "맑은 고딕", system-ui, sans-serif;
+    font-family: "Asta Sans",
+                -apple-system, BlinkMacSystemFont,
+                "Apple SD Gothic Neo", "맑은 고딕",
+                system-ui, sans-serif;
+  }}
+
+  .main-title {{
+  font-family: "Pretendard",
+               -apple-system, BlinkMacSystemFont,
+               "Apple SD Gothic Neo", "맑은 고딕",
+               system-ui, sans-serif;
+
+  font-weight: 850; /* 850은 웹폰트에 없으니 800 권장 */
   }}
 
 
@@ -7867,8 +7883,7 @@ newsletter_html = f"""
 
 </head>
 
-<body style="margin:0; padding:0; background:#f3f4f6;
-             font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","맑은 고딕",system-ui,sans-serif;">
+<body style="margin:0; padding:0; background:#f3f4f6;">
 
 
 <!-- (NEW) 메인 배경 레이어: 이메일에서는 JS가 안 돌아 display:none 그대로라 영상/이미지가 “안 보임(흰색 유지)” -->
@@ -7914,10 +7929,10 @@ newsletter_html = f"""
             <table width="100%">
               <tr>
                 <td align="left">
-                  <img src="{HLOGO_URL}" style="max-width:110px; display:block;">
+                  <img src="{HLOGO_URL}" style="max-width:150px; display:block;">
                 </td>
                 <td align="right"
-                    style="text-transform:uppercase; font-size:13px; font-weight:500;
+                    style="text-transform:uppercase; font-size:15px; font-weight:500;
                            color:#000000; ;">
                   WWW.INSPACE.CO.KR
                 </td>
@@ -7941,7 +7956,7 @@ newsletter_html = f"""
         <tr>
           <td align="center" class="inner-padding sub-title"
               style="padding:0 24px 8px 24px;
-                     font-size:15px; font-weight:500; opacity:0.85;
+                     font-size:15px; font-weight:550;
                      color:#000000; ;">
             {date_range}
           </td>
@@ -7953,7 +7968,7 @@ newsletter_html = f"""
               <tr>
                 <td></td>
                 <td align="right"
-                    style="font-size:13px; line-height:1.6; font-weight:500;
+                    style="font-size:15px; line-height:1.6; font-weight:550;
                            color:#000000; ;">
                   한컴 인스페이스<br>{WEEK_LABEL} 뉴스레터
                   <div style="margin-top:4px; letter-spacing:0.14em;
@@ -8288,7 +8303,7 @@ for topic_num, url in TOPIC_MORE_URLS.items():
 # # **09 이메일 자동 발송**
 # ### **(Colab에서 실행하면 테스트 이메일로, Github 실행 시, 실제 수신자에게)**
 
-# In[17]:
+# In[63]:
 
 
 SEND_EMAIL = os.environ.get("SEND_EMAIL", "true").lower() == "true"
@@ -8355,7 +8370,7 @@ else:
 
 # # **10. 최종 통계 출력**
 
-# In[18]:
+# In[ ]:
 
 
 # ============================
