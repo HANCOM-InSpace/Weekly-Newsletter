@@ -7,7 +7,7 @@
 # ![image.png](data:image/png;base64,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)
 # 
 
-# # **01-1 설치 & import**
+# # **01-1 GitHub 연동 설정 (Colab 전용)**
 
 # In[1]:
 
@@ -132,7 +132,7 @@ NEWSDATA_BASE_URL_LATEST = "https://newsdata.io/api/1/latest"
 
 
 
-# # **02-2 설정 (날짜, 주제, 키워드, 상수)**
+# # **02-2 설정 (기본 설정, 날짜, 수집 기간, 이미지)**
 
 # In[4]:
 
@@ -2070,7 +2070,7 @@ print("CSV 저장 완료: newsletter_articles.csv")
 
 # # **06 메인(3개) + 더보기 기사 분리**
 
-# In[9]:
+# In[31]:
 
 
 # ============================
@@ -2481,7 +2481,7 @@ print("\n" + "="*60 + "\n")
 
 # # **06-1 한컴인스페이스 기사 추가**
 
-# In[20]:
+# In[32]:
 
 
 # ============================================================
@@ -2992,7 +2992,7 @@ print("✓ 한컴인스페이스 뉴스 수집 완료")
 
 # # **07 최신 연구동향 (학술지 섹션) 설정**
 
-# In[21]:
+# In[33]:
 
 
 # ============================================
@@ -3429,7 +3429,7 @@ def collect_research_articles_from_crossref(
 
 # # **07-1 최신 연구동향 추가**
 
-# In[22]:
+# In[34]:
 
 
 # ============================================
@@ -3767,7 +3767,7 @@ else:
 
 # # **07-2 썸네일 추출 (기본 썸네일 포함)**
 
-# In[23]:
+# In[35]:
 
 
 import re
@@ -4363,7 +4363,7 @@ print("(본문 영역 위주 + sidebar/related 제외 + 스마트 필터 + canon
 
 # # **07-3 한컴인스페이스 TOP 기사 요약 생성**
 
-# In[24]:
+# In[36]:
 
 
 # ============================================================
@@ -4442,7 +4442,7 @@ for a in inspace_top_articles:
 
 # # **08-1 인사이트 생성**
 
-# In[25]:
+# In[37]:
 
 
 # ============================================================
@@ -4719,7 +4719,7 @@ print("="*60 + "\n")
 
 # # **08-2 카드/섹션 HTML + 최종 뉴스레터 HTML 생성**
 
-# In[26]:
+# In[38]:
 
 
 # ============================
@@ -5055,42 +5055,44 @@ def build_inspace_news_section_html(top_articles, more_articles, more_url):
         published = art.get("published", "")
         source = art.get("source", "")
 
-        date_source = published
-        if source:
-            date_source = f"{published} · {source}"
-
         inner.append(f"""
 <table width="100%" cellpadding="0" cellspacing="0" border="0"
        style="margin-bottom:28px;">
   <tr>
     <td style="padding:0; margin:0;">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td valign="top" width="135" style="padding:0;">
-            <a href="{url}" target="_blank" style="text-decoration:none;">
+      <a href="{url}" target="_blank"
+         style="text-decoration:none; color:inherit; display:block;
+                padding:12px; margin:-12px; border-radius:12px;
+                transition:background-color 0.2s ease;"
+         onmouseover="this.style.backgroundColor='#ffffff'"
+         onmouseout="this.style.backgroundColor='transparent'">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td valign="top" width="135" style="padding:0;">
               <img src="{h(thumb)}" width="120" height="120"
                    style="display:block; border-radius:14px; object-fit:cover;"
                    onerror="this.onerror=null; this.src='{DEFAULT_THUMB}';">
-            </a>
-          </td>
-          <td valign="top" style="padding-left:6px;">
-            <div style="font-size:18px; font-weight:700; color:#111;
-                        margin-bottom:4px; line-height:1.35;">
-              {title}
-            </div>
-            <div style="font-size:12px; color:#888; margin-bottom:2px;">
-              {h(date_source)}
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2" style="padding-top:12px;">
-            <div style="font-size:14px; color:#333; line-height:1.8;">
-              {summary}
-            </div>
-          </td>
-        </tr>
-      </table>
+            </td>
+            <td valign="top" style="padding-left:6px;">
+              <div style="font-size:18px; font-weight:700; color:#111;
+                          margin-bottom:4px; line-height:1.35;">
+                {title}
+              </div>
+              {f'<div style="font-size:12px; font-weight:500; color:#374151; margin-bottom:2px;">{h(source)}</div>' if source else ''}
+              <div style="font-size:12px; color:#6b7280; margin-bottom:2px;">
+                {h(published)}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding-top:12px;">
+              <div style="font-size:14px; color:#333; line-height:1.8;">
+                {summary}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </a>
     </td>
   </tr>
 </table>
@@ -5172,33 +5174,36 @@ def build_inspace_more_page_html(more_articles, date_range, newsletter_date):
         </div>'''
 
         rows.append(f"""
-          <tr class="inspace-article-row" data-index="{idx}">
-            <td style="padding:0; border-bottom:1px solid #e5e7eb;">
-              <a href="{url}" target="_blank"
-                style="text-decoration:none; color:inherit; display:block; padding:10px 0;">
-                <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                  <tr>
-                    <td valign="top" width="96" style="padding-right:8px;">
-                      <img src="{h(thumb)}" width="80" height="80"
-                          style="display:block; border-radius:10px; object-fit:cover;"
-                          onerror="this.onerror=null; this.src='{DEFAULT_THUMB}';">
-                    </td>
+                  <tr class="inspace-article-row" data-index="{idx}">
+                    <td style="padding:0; border-bottom:1px solid #e5e7eb;">
+                      <a href="{url}" target="_blank"
+                        style="text-decoration:none; color:inherit; display:block; padding:10px 0;
+                              transition:background-color 0.2s ease;"
+                        onmouseover="this.style.backgroundColor='#f3f4f6'"
+                        onmouseout="this.style.backgroundColor='transparent'">
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                          <tr>
+                            <td valign="top" width="96" style="padding-right:8px;">
+                              <img src="{h(thumb)}" width="80" height="80"
+                                  style="display:block; border-radius:10px; object-fit:cover;"
+                                  onerror="this.onerror=null; this.src='{DEFAULT_THUMB}';">
+                            </td>
 
-                    <td valign="top">
-                      <div style="font-size:14px; line-height:1.5; margin-bottom:2px; color:#111827;">
-                        {title}
-                      </div>
-                      {sub_block}
-                      <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
-                        {h(published)}
-                      </div>
+                            <td valign="top">
+                              <div style="font-size:14px; line-height:1.5; margin-bottom:2px; color:#111827;">
+                                {title}
+                              </div>
+                              {sub_block}
+                              <div style="font-size:11px; color:#9ca3af; margin-top:2px;">
+                                {h(published)}
+                              </div>
+                            </td>
+                          </tr>
+                        </table>
+                      </a>
                     </td>
                   </tr>
-                </table>
-              </a>
-            </td>
-          </tr>
-        """)
+                """)
 
 
     table_html = f"""
@@ -8248,7 +8253,7 @@ for topic_num, url in TOPIC_MORE_URLS.items():
 # # **09 이메일 자동 발송**
 # ### **(Colab에서 실행하면 테스트 이메일로, Github 실행 시, 실제 수신자에게)**
 
-# In[27]:
+# In[39]:
 
 
 SEND_EMAIL = os.environ.get("SEND_EMAIL", "true").lower() == "true"
@@ -8315,7 +8320,7 @@ else:
 
 # # **10. 최종 통계 출력**
 
-# In[28]:
+# In[40]:
 
 
 # ============================
